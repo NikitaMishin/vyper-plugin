@@ -1,12 +1,9 @@
 <idea-plugin>
     <id>com.vyperplugin.vyper-plugin</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>Vyper</name>
+    <vendor email="replace" url="repalace">NikAndAlex</vendor>
 
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-    ]]></description>
+    <description>Plugin for smart contract language called Vyper.</description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -16,6 +13,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <fileTypeFactory implementation="com.vyperplugin.VyperFileTypeFactory"/>
     </extensions>
 
     <actions>
