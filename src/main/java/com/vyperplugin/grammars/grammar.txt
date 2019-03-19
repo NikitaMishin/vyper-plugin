@@ -1,49 +1,123 @@
 
 
-// todo add constant variable and unit type they can be anywere in file
-// strict order 
-Contract = (ImportDirective* ImplementsDirective* StructDefinition* ExternalInterfaces* ContractDefinition) 
+Contract = (ImportDirective | ImplementsDirective | StructDefinition | ExternalInterfaces | ContractDefinition | UnitsDefinition | UserDefinedConstantsExpression)* 
+
 
 // could be  declared in any point of file once
 UnitsDefinition = 'units' '{'
-     (Identifier ':' StringLiteral ',')*
-     (Identifier ':' StringLiteral) {0,1}
+     ( (Identifier ':' StringLiteral) ( ',' Identifier ':' StringLiteral)* )?
 '}'
 
 
-// USER-define constants
+// could be  declared in any point of file once
+UserDefinedConstantsExpression = Identifier ':' 'constant' '(' TYPE')' '=' Expression
 
-//
 
 //import
 ImportDirective = 'import' StringLiteral 'as' Identifier
                 | 'from'   StringLiteral 'import' Identifier
 
-// implelents statements
-ImplementsDirective =  'implements:' Identifier
+
+
+// implements statements
+ImplementsDirective =  'implements' ':' Identifier
+
+
 
 //structs
+// could be default assignment
 StructDefinition = 'struct' Identifier ':'
-    (VariableDeclaration ',')*
-    (VariableDeclaration    ) {0,1}
+    LocalVariableDefinition*
+
+
 
 // external interfaces
 ExternalInterfaces = 'contract' Identifier ':'
-       ( 'def' Identifier '(' FunctionArg* (LastFunctionArg){0,1} ')' ('->' Type)? ':' (modifying|constant) ',' )*
-       ( 'def' Identifier '(' FunctionArg* (LastFunctionArg){0,1} ')' ('->' Type)? ':' (modifying|constant)     )  {0,1}
-FunctionArg = Identifier ':' BaseType ','
-LastFunctionArg = Identifier ':' BaseType
+       ( 'def' Identifier '(' FunctionArgs? ')' ('->' TYPE)? ':' ExternalFunStatus )+
+ExternalFunStatus = 'modifying' | 'constant'
+FunctionArgs = Identifier ':' TYPE  (',' Identifier ':' TYPE )*
 
-// also strict order
-ContractDefinition = EventDeclaration* VariableDeclaration* FunctionDeclaration*
 
-EventDeclaration = Identifier ':' 'event' '(' '{'  EventProperty* LastEventProperty{0,1} '}' ')'
 
-EventProperty = Identifier ':' ValueType ','
-LastEventProperty = Identifier ':' ValueType
+ContractDefinition = (EventDeclaration | StateVariableDeclaration | FunctionDefinition)*
 
-// VariableDeclarationExpression below this
-VariableDeclaration = VariableDeclarationExpression
+EventDeclaration = Identifier ':' 'event' '(' '{'   EventProperty? '}' ')'
+EventProperty = Identifier ':' ValueType  (',' Identifier ':' ValueType)* 
+
+
+// VARIABLES
+
+// state varaibales  May not assign value whilst defining type
+StateVariableDeclaration = Identifier ':'   (  StateVariableModifier '(' TYPE ')'  | TYPE )
+
+// StateVariableModifier if omitted then it's private
+StateVariableModifier = 'public' 
+
+
+// semantic : map could not be inside functions
+LocalVariableDefinition = LocalVariableDeclaration | LocalVariableDeclaration '=' Expression 
+LocalVariableDeclaration = Identifier ':' TYPE 
+
+// FUNCTIONS
+FunctionDefinition = 
+    FunctionModifier* 
+    'def' Identifier '(' FunctionArgs?  ')' '->' TYPE':'
+          Statement* 
+
+FunctionModifier = '@public' |  '@private' | '@constant' | '@payable' | '@nonrentant' '(' UNIQUE_KEY ')'
+UNIQUE_KEY = what is this???
+
+// statements
+
+Statement = IfStatement | ForStatement | Continue | Break | Return |  Raise | EmitStatement | SimpleStatement | PassStatement
+IfStatement = 'if'  Expression ':'
+                    Statement 
+              ( ('else' ':' Statement ) | ('elif' Expression ':' Statement)* ) ?
+
+SimpleStatement = LocalVariableDefinition | ExpressionStatement
+ForStatement = 'for' Identifier 'in' Expression ':' Statement
+Continue = 'continue'
+Break = 'break'
+Return = 'return' Expression?
+Raise = 'raise'
+EmitStatement = 'log.'FunctionCall
+PassStatement = 'pass'
+
+
+// Precedence by order (???)
+Expression
+ = IndexAccess
+  | MemberAccess
+  | FunctionCall
+  | '(' Expression ')'
+  |  ( ('!' | '~'  |  '+' | '-') Expression ) | ('clear' '(' Expression   ')' ) )
+  | Expression '**' Expression
+  | Expression ('*' | '/' | '%') Expression
+  | Expression ('+' | '-') Expression
+  | Expression ('<' | '>' | '<=' | '>=') Expression
+  | Expression ('==' | '!=') Expression
+  | Expression 'and' Expression
+  | Expression 'or' Expression
+  | Expression ( '=' |  '+=' | '-=' | '*=' | '/=' | '%=') Expression
+  | PrimaryExpression
+
+
+PrimaryExpression = BooleanLiteral
+                  | NumberLiteral
+                  | HexLiteral
+                  | StringLiteral
+                  | Identifier
+               //   | ElementaryTypeNameExpression
+
+MemberAccess = Expression '.' Identifier
+IndexAccess = Expression '[' Expression? ']'
+
+
+FunctionCall = Expression '(' FunctionCallArguments ')'
+FunctionCallArguments = '{' NameValueList? '}'
+                      | ExpressionList?
+ExpressionList = Expression ( ',' Expression )*
+
 
 
 // TYPES
@@ -80,15 +154,10 @@ StringLiteral = '"' ([^"\r\n\\] | '\\' .)* '"'
 NumberLiteral = HexNumber | DecimalNumber  
 DecimalNumber = [0-9]+ ( '.' [0-9]* )? ( [eE] [0-9]+ )?
 HexNumber = '0' [xX] [0-9a-fA-F]+
+HexLiteral = 'hex' ('"' ([0-9a-fA-F]{2})* '"' | '\'' ([0-9a-fA-F]{2})* '\'')
 
 //Builtin Constants
 Constants = 'ZERO_ADDRESS' | 'EMPTY_BYTES32' | 'MAX_INT128' | 'MIN_INT128' | 'MAX_DECIMAL' | 'MIN_DECIMAL' | 'MAX_UINT256'
 
-// expression parts
-// todo
-
- 
-
-//Statement = IfStatement | ForStatement | Block | Continue | Break | Return | Raise | EmitStatement | SimpleStatement )
 
 
