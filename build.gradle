@@ -1,6 +1,25 @@
+buildscript {
+    
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.5'
+}
+
+apply plugin: 'kotlin'
+
+sourceSets {
+    main.kotlin.srcDirs += 'src/main/kotlin'
+    main.java.srcDirs += 'src/main/java'
+    main.resources.srcDirs += 'src/main/resources'
 }
 
 group 'com.vyperplugin'
