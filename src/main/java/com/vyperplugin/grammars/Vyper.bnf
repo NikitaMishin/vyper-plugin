@@ -154,10 +154,15 @@ LocalVariableDefinition ::=  ( LocalVariableDeclaration '=' Expression ) | Local
 
 LocalVariableDeclaration ::= Identifier ':' TYPE
 
+MultiLineString ::=  'regexp:"""[a-zA-Z0-9\s\n\r@\-]+"""'   {
+ pin=1
+}
+
 // FUNCTIONS
 FunctionDefinition ::=
     FunctionModifier
     def Identifier '(' FunctionArgs?  ')' ('->' TYPE)?':'
+          MultiLineString?
           Statement* {
           pin=2
 }
