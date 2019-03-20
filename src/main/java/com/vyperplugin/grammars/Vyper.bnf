@@ -154,7 +154,7 @@ LocalVariableDefinition ::=  ( LocalVariableDeclaration '=' Expression ) | Local
 
 LocalVariableDeclaration ::= Identifier ':' TYPE
 
-MultiLineString ::=  'regexp:"""[a-zA-Z0-9\s\n\r@\-]+"""'   {
+MultiLineString ::=  'regexp:"""[^(""")]+"""'   {
  pin=1
 }
 
