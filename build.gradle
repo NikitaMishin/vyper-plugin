@@ -16,12 +16,6 @@ plugins {
 
 apply plugin: 'kotlin'
 
-sourceSets {
-    main.kotlin.srcDirs += 'src/main/kotlin'
-    main.java.srcDirs += 'src/main/java'
-    main.resources.srcDirs += 'src/main/resources'
-}
-
 group 'com.vyperplugin'
 version '1.0-SNAPSHOT'
 

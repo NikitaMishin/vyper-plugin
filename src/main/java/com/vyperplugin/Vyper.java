@@ -8,4 +8,5 @@ public class Vyper extends Language {
     private Vyper() {
         super("Vyper");
     }
+
 }
