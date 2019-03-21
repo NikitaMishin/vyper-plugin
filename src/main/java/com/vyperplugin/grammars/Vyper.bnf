@@ -1,6 +1,25 @@
 
 
 {
+
+
+  parserClass="com.vyperplugin.parser.VyperParser"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Vyper"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.vyperplugin.psi"
+  psiImplPackage="com.vyperplugin.psi.impl"
+//  implements="com.vyperplugin.psi.VyperElement"
+
+  elementTypeHolderClass="com.vyperplugin.psi.VyperTypes"
+//  elementTypePrefix=""
+  elementTypeClass="com.vyperplugin.psi.VyperElementType"
+  tokenTypeClass="com.vyperplugin.psi.VyperTokenType"
+//  tokenTypeClass="com.vyperplugin.lang.core.VyperTokenTypes"
+
+
+
 tokens = [
    // simple
    //newline = "regexp:(\n|\r\n)"
@@ -64,27 +83,26 @@ tokens = [
     hexNumber='regexp:(0[xX][_0-9a-fA-F]+)'
     // add language constansts
 
-   // end literals
+     timestamp = 'regexp:^(/.)timestamp'
+     timedelta = 'regexp:^(/.)timedelta'
+     wei_value = 'regexp:^(/.)wei_value'
+
+  constant='constant'
+  public='public'
+  private='private'
+  nonreentrant='nonreentrant'
+  payable='payable'
+  modifying='modifying'
+  event='event'
 
 
 
     Identifier='regexp:[a-zA-Z_$][a-zA-Z_$0-9]*'
 
-    MultiLineStringToken =  'regexp:"""((?!""")[\d\D])*?"""'
-
-
-   //end types
-
-
-
-
-        // this is a special grammar for "preview only" because grammar-kit seems to not
-        // support whitespaces
-//    pragmaAll='regexp:[\^a-zA-Z_0-9.<>"]*'
-
-
+    MultiLineStringToken =  'regexp:"""[\d\D]*?"""'
 
 ]
+
 extends(".*Expression") = Expression
 }
 
@@ -92,8 +110,7 @@ extends(".*Expression") = Expression
 
 // : External contract and struct declarations must come before event declarations, global declarations,
 // and function definitions
-SourceUnit ::= ( ImportDirective | UserDefinedConstantsExpression | ImplementsDirective
-              | StructDefinition | UnitsDefinition | ExternalInterfaces  |  ContractDefinition  )*
+private SourceUnit ::= ( ImportDirective | UserDefinedConstantsExpression | ImplementsDirective | StructDefinition | UnitsDefinition | ExternalInterfaces  |  ContractDefinition )*
 
 
 UnitsDefinition ::= units ':''{'
@@ -109,7 +126,7 @@ UserDefinedConstantsExpression ::= Identifier ':' constant '(' TYPE')' '=' Expre
  pin=3
 }
 
-ImportDirective ::= ( import IMPORT_PATH as Identifier )
+private ImportDirective ::= ( import IMPORT_PATH as Identifier )
                    |( from  IMPORT_PATH import Identifier  ) {
 pin(".*")=3
 }
@@ -122,8 +139,9 @@ pin=1
 
 // external interfaces ok
 ExternalInterfaces ::= contract Identifier ':'
-                ( def Identifier '(' FunctionArgs? ')' ('->' TYPE)? ':' ExternalFunStatus )+ {pin=1}
-ExternalFunStatus ::= modifying | constant
+                ( def Identifier '(' FunctionArgs? ')' ('->' TYPE)? ':' ExternalFunStatus )+
+                {pin(".*")=1}
+private ExternalFunStatus ::= modifying | constant
 FunctionArgs ::= Identifier ':' TYPE ('=' Expression)?  (',' Identifier ':' TYPE ('=' Expression)? )*
 
 
@@ -144,14 +162,14 @@ EventProperty ::= Identifier ':'    (IndexedData | TYPE)
 
 IndexedData ::= IndexedType '(' TYPE ')'
 
-IndexedType ::= 'indexed'
+private IndexedType ::= 'indexed'
 
 // VARIABLES
 
 // state varaibales  May not assign value whilst defining type
 StateVariableDeclaration ::= Identifier ':'   (  StateVariableModifier '(' TYPE ')'  | TYPE )
 // StateVariableModifier if omitted then it's private
-StateVariableModifier ::= 'public'
+private StateVariableModifier ::= public
 
 
 // semantic : map could not be inside functions
@@ -173,8 +191,8 @@ FunctionDefinition ::=
 }
 
 FunctionModifier ::= FunctionModifierOptional* FunctionModifierMandatory FunctionModifierOptional*
-FunctionModifierMandatory ::= '@public' |  '@private'
-FunctionModifierOptional ::= '@constant' | '@payable' | '@nonreentrant' '(' UNIQUE_KEY ')'
+private FunctionModifierMandatory ::= '@' (public|private)
+private FunctionModifierOptional ::=  '@' (constant | payable | (nonreentrant '(' UNIQUE_KEY ')'))
 UNIQUE_KEY ::=  stringLiteralSingle | stringLiteralDouble
 
 // statements
@@ -195,26 +213,26 @@ ForStatement ::= for Identifier in Expression ':' Statement+{
 pin=1
 }
 
-Continue ::= continue
+private Continue ::= continue
 
-Break ::= break
+private Break ::= break
 
-Return ::= return Expression? {
+private Return ::= return Expression? {
 pin=1
 }
-Raise ::= raise
+private Raise ::= raise
 
 EmitStatement ::= 'log.'FunctionCallExpression {
 pin=1
 }
 
-PassStatement ::= pass
+private PassStatement ::= pass
 
 Expression ::=
   AssignmentExpression
   | FunctionCallExpression
-  | CallExpression
   | ParenthesiziedExpression
+  | CallExpression
   | NewExpression
   | AssertExpression
   | EqExpression
@@ -271,10 +289,10 @@ ParenthesiziedExpression ::= '(' Expression ')' {pin=1}
 ClearExpression ::= clear '(' Expression ')' {pin=1}
 
 
-UnaryExpression ::=  ('NOT' | '~'  |  '+' | '-') Expression
+UnaryExpression ::=  (NOT | '~'  |  '+' | '-') Expression
 InlineArrayExpression ::= '[' Expression (',' Expression)* ']'
-AndExpression ::=  Expression 'AND' Expression
-OrExpression ::= Expression 'OR' Expression
+AndExpression ::=  Expression AND Expression
+OrExpression ::= Expression OR Expression
 EqExpression ::= Expression ('==' | '!=') Expression
 CompExpression ::= Expression ('<' | '>' | '<=' | '>=') Expression
 
@@ -299,62 +317,47 @@ PrimaryExpression ::= BooleanLiteral
                   | HexLiteral
                   | StringLiteral
                   | Constants
+                  | TYPE
                   | Identifier
-
-               //   | ElementaryTypeNameExpression
-
-
 
 
 
 
 // TYPES seems okay
-TYPE ::=    ReferenceType| UnitType  |  ValueType | StructType
+TYPE ::=  ReferenceType| UnitType  |  ValueType | StructType
 
 UnitType ::=    Timestamp | Timedelta | Wei_value | Wei | CustomUnitType
-CustomUnitType ::= (Int128|UInt256) '(' Expression ')'
-Timestamp ::= 'timestamp'
-Timedelta ::= 'timedelta'
-Wei_value ::= 'wei_value'
-Wei ::= 'wei'
+CustomUnitType ::= (int128|uint256) '(' Expression ')'
+private Timestamp ::= timestamp
+private Timedelta ::= timedelta
+private Wei_value ::= wei_value
+private Wei ::= wei
 
-ValueType ::= BoolType | NumberType | AddressType | Byte32Type | BytesType | StringType
+ValueType ::= int128 | uint256| bytes32 | address
+             | bytes32 '[' (DecimalNumber | Identifier) ']' | fixed | bool |
+                string   '[' (DecimalNumber | Identifier) ']'
 
-BoolType ::= 'bool'
-NumberType ::= Int128 |UInt256 | DecimalNumber
-Int128 ::= 'int128'
-UInt256 ::= 'uint256'
-AddressType ::= 'address'
-Byte32Type ::= 'bytes32'
-BytesType ::= 'bytes'   '[' (DecimalNumber | Identifier) ']'
-StringType ::= 'string' '[' (DecimalNumber | Identifier) ']'
-
-
-
-ReferenceType ::= ListType  | MapType
+private ReferenceType ::= ListType  | MapType
 
 ListType ::= (UnitType| ValueType|StructType) '[' (DecimalNumber | Identifier) ']'
                     ('[' (DecimalNumber | Identifier) ']')*
 StructType ::= Identifier
+
 MapType ::= map  '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')' {
 pin=1
 }
 
-
-
 // LITERALS seems works
-BooleanLiteral ::= booleanLiteral
+private BooleanLiteral ::= booleanLiteral
 
-AddressLiteral ::= hexLiteral
-NumberLiteral ::= HexNumber | DecimalNumber
-StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB|MultiLineString
-DecimalNumber ::= decimalNumber
 
-//???
-HexNumber ::= hexNumber
-HexLiteral ::= hexLiteral
+private NumberLiteral ::= HexNumber | DecimalNumber |FixedNumber
+private StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB|MultiLineString
+private DecimalNumber ::= decimalNumber
+private HexNumber ::= hexNumber
+private HexLiteral ::= hexLiteral
+private  FixedNumber ::=fixedNumber
 
 //Builtin Constants
-Constants ::= ZERO_ADDRESS | EMPTY_BYTES32 | MAX_INT128 | MIN_INT128
+private Constants ::= ZERO_ADDRESS | EMPTY_BYTES32 | MAX_INT128 | MIN_INT128
              | MAX_DECIMAL | MIN_DECIMAL | MAX_UINT256
-
