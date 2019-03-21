@@ -70,6 +70,8 @@ tokens = [
 
     Identifier='regexp:[a-zA-Z_$][a-zA-Z_$0-9]*'
 
+    MultiLineStringToken =  'regexp:"""((?!""")[\d\D])*?"""'
+
 
    //end types
 
@@ -154,7 +156,7 @@ LocalVariableDefinition ::=  ( LocalVariableDeclaration '=' Expression ) | Local
 
 LocalVariableDeclaration ::= Identifier ':' TYPE
 
-MultiLineString ::=  'regexp:"""[^(""")]+"""'   {
+MultiLineString ::=  MultiLineStringToken   {
  pin=1
 }
 
@@ -335,7 +337,7 @@ BooleanLiteral ::= booleanLiteral
 
 AddressLiteral ::= hexLiteral
 NumberLiteral ::= HexNumber | DecimalNumber
-StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB
+StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB|MultiLineString
 DecimalNumber ::= decimalNumber
 HexNumber ::= hexNumber
 HexLiteral ::= hexLiteral
