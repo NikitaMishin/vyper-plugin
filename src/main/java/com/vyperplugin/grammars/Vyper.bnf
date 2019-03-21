@@ -224,10 +224,12 @@ Expression ::=
   | UnaryExpression
   | ClearExpression
   | IndexAccessExpression
+  | SelfAccessExpression
   | MemberAccessExpression
   | InlineArrayExpression
   | PrimaryExpression
 
+SelfAccessExpression ::= self '.' Identifier
 
 NewExpression ::= Identifier '(' '{' (  NewInitializerExpression
                              (',' NewInitializerExpression)*)? '}'  ')'
@@ -261,7 +263,7 @@ FunctionCallExpression ::= (Identifier '(' FunctionCallArguments? ')') |
 IndexAccessExpression ::= Expression '[' Expression? ']'
 ParenthesiziedExpression ::= '(' Expression ')' {pin=1}
 
-ClearExpression ::= 'clear' '(' Expression ')' {pin=1}
+ClearExpression ::= clear '(' Expression ')' {pin=1}
 
 
 UnaryExpression ::=  ('NOT' | '~'  |  '+' | '-') Expression
