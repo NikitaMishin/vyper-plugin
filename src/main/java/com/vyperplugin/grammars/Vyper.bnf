@@ -90,7 +90,8 @@ extends(".*Expression") = Expression
 
 
 
-// пустой контракт тогда корректный? в ремиксе такой компилится
+// : External contract and struct declarations must come before event declarations, global declarations,
+// and function definitions
 SourceUnit ::= ( ImportDirective | UserDefinedConstantsExpression | ImplementsDirective
               | StructDefinition | UnitsDefinition | ExternalInterfaces  |  ContractDefinition  )*
 
@@ -101,6 +102,7 @@ UnitsDefinition ::= units ':''{'
 pin(".*") = 1
 //программно чекать до след newLine наверное чтобы дать возможность дальше парситиь
 }
+
 
 
 UserDefinedConstantsExpression ::= Identifier ':' constant '(' TYPE')' '=' Expression  {
@@ -133,6 +135,7 @@ StructDefinition ::= struct Identifier ':'
 ContractDefinition ::= (EventDeclaration | StateVariableDeclaration | FunctionDefinition)+
 
 //ok
+//Events must all come before global declarations and function definitions
 EventDeclaration ::= Identifier ':' event '(' '{'   EventProperty? '}' ')'  {
 pin=3
 }
@@ -188,7 +191,7 @@ pin(".*")=1
 private SimpleStatement ::= LocalVariableDefinition | ExpressionStatement
 private ExpressionStatement ::= Expression
 
-ForStatement ::= for Identifier in Expression ':' Statement{
+ForStatement ::= for Identifier in Expression ':' Statement+{
 pin=1
 }
 
@@ -229,6 +232,8 @@ Expression ::=
   | InlineArrayExpression
   | PrimaryExpression
 
+
+//self function call?
 SelfAccessExpression ::= self '.' Identifier
 
 NewExpression ::= Identifier '(' '{' (  NewInitializerExpression
@@ -240,12 +245,12 @@ NewInitializerExpression ::= NewExpression | (Identifier ':' Expression)
 AssignmentExpression ::=
     Expression ('=' | '+=' | '-=' | '*=' | '/=' | '%=')
     Expression { rightAssociative=true  }
-
+//??
 CallExpression ::= Expression
                  ( ( '.' Identifier ) | ( '[' Expression ']' ) )*
                   '(' FunctionCallArguments? ')' ('(' FunctionCallArguments? ')')*
 
-
+//??
 FunctionCallExpression ::= (Identifier '(' FunctionCallArguments? ')') |
                            ( ( PrimaryExpression | NewExpression | TypeName  )
                            ( ( '.' Identifier ) | ( '[' Expression? ']' ) )*
@@ -277,10 +282,13 @@ PlusMinExpression ::= Expression ('+' | '-') Expression
 MultDivExpression ::= Expression ('*' | '/' | '%') Expression
 ExponentExpression ::= Expression '**' Expression
 
-AssertExpression ::= assert Expression (',' stringLiteral)?
+//multistring??
+AssertExpression ::= assert Expression AssertMessage?
+private AssertMessage ::= ',' (stringLiteralDouble| stringLiteralSingle | MultiLineString)
 
 FunctionCallArguments ::= '{' NameValueList? '}'
                       | ExpressionList?
+
 ExpressionList ::= Expression ( ',' Expression )*
 
 
@@ -341,6 +349,8 @@ AddressLiteral ::= hexLiteral
 NumberLiteral ::= HexNumber | DecimalNumber
 StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB|MultiLineString
 DecimalNumber ::= decimalNumber
+
+//???
 HexNumber ::= hexNumber
 HexLiteral ::= hexLiteral
 
