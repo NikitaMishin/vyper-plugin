@@ -14,6 +14,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <fileTypeFactory implementation="com.vyperplugin.VyperFileTypeFactory"/>
+
+        <lang.parserDefinition language="Vyper" implementationClass="com.vyperplugin.VyperParserDefinition"/>
+         <lang.syntaxHighlighterFactory language="Vyper" implementationClass="VyperHighlighterFactory"/>
+
+
     </extensions>
 
     <actions>
