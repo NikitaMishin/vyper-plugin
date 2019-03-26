@@ -2,12 +2,8 @@ package com.vyperplugin
 
 import com.intellij.lang.Language
 
-class Vyper : Language("Vyper") {
-
-    companion object {
-        val INSTANCE = Vyper()
-    }
-
+object VyperLanguage : Language("Vyper", "text/vyper") {
     override fun isCaseSensitive() = true
-
 }
+
+

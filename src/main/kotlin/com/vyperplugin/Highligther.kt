@@ -4,9 +4,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
-import com.vyperplugin.VyperLexerAdapter
 import com.vyperplugin.psi.VyperTypes.*
-import gnu.trove.THashMap
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors as Defaults
 
 class VyperHighlighterFactory : SingleLazyInstanceSyntaxHighlighterFactory() {
@@ -35,25 +33,20 @@ class VyperHighlighter : SyntaxHighlighterBase() {
         val VYPER_VALUE_TYPE = TextAttributesKey.createTextAttributesKey("VYPER_VALUE_TYPE", Defaults.KEYWORD)
         val VYPER_COMMENT = TextAttributesKey.createTextAttributesKey("VYPER_COMMENT", Defaults.LINE_COMMENT)
 
-        private val tokenMapping: MutableMap<IElementType, TextAttributesKey>
-
-        init {
-            tokenMapping = THashMap<IElementType, TextAttributesKey>()
-            tokenMapping
-                    .plus(modificators().map { it to VYPER_MODIFICATOR })
-                    .plus(constants().map { it to VYPER_CONSTANT })
-                    .plus(valueTypes().map { it to VYPER_VALUE_TYPE })
-                    .plus(referenceTypes().map { it to VYPER_REFERENCE_TYPE })
-                    .plus(unitTypes().map { it to VYPER_UNIT_TYPE })
-                    .plus(boolLiteral().map { it to VYPER_BOOLEAN_LITERAL })
-                    .plus(stringLiterals().map { it to VYPER_STRING_LITERAL })
-                    .plus(numericLiterals().map { it to VYPER_NUMBER_LITERAL })
-                    .plus(operators().map { it to VYPER_OPERATOR })
-                    .plus(keywords().map { it to VYPER_KEYWORD })
-                    .plus(identifier().map { it to VYPER_IDENTIFIER })
-                    .plus(comment().map { it to VYPER_COMMENT })
-
-        }
+        private val tokenMapping: MutableMap<IElementType, TextAttributesKey> =
+                HashMap<IElementType, TextAttributesKey>()
+                        .plus(modificators().map { it to VYPER_MODIFICATOR })
+                        .plus(constants().map { it to VYPER_CONSTANT })
+                        .plus(valueTypes().map { it to VYPER_VALUE_TYPE })
+                        .plus(referenceTypes().map { it to VYPER_REFERENCE_TYPE })
+                        .plus(unitTypes().map { it to VYPER_UNIT_TYPE })
+                        .plus(boolLiteral().map { it to VYPER_BOOLEAN_LITERAL })
+                        .plus(stringLiterals().map { it to VYPER_STRING_LITERAL })
+                        .plus(numericLiterals().map { it to VYPER_NUMBER_LITERAL })
+                        .plus(operators().map { it to VYPER_OPERATOR })
+                        .plus(keywords().map { it to VYPER_KEYWORD })
+                        .plus(identifier().map { it to VYPER_IDENTIFIER })
+                        .plus(comment().map { it to VYPER_COMMENT }).toMutableMap()
 
 
         private fun keywords() = setOf<IElementType>(

@@ -3,7 +3,7 @@
     <name>Vyper</name>
     <vendor email="replace" url="repalace">NikAndAlex</vendor>
 
-    <description>Plugin for smart contract language called Vyper.</description>
+    <description>Plugin for smart contract language Vyper.</description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->

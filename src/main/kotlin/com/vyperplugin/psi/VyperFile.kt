@@ -3,12 +3,11 @@ package com.vyperplugin.psi
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
-import com.vyperplugin.Vyper
 import com.vyperplugin.VyperFileType
+import com.vyperplugin.VyperLanguage
+import javax.swing.Icon
 
-import javax.swing.*
-
-class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Vyper.INSTANCE) {
+class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, VyperLanguage) {
 
     override fun getFileType(): FileType {
         return VyperFileType.INSTANCE
