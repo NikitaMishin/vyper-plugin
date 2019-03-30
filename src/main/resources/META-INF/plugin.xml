@@ -22,6 +22,11 @@
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
-    </actions>
+    <action id="Vyper.NewVyperFile"
+            class="com.vyperplugin.actions.createVyperFileAction"
+            text="Vyper File"
+            description="Create new Vyper file">
+        <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+    </action>
+    </actions>>
 </idea-plugin>
