@@ -25,13 +25,27 @@ repositories {
     mavenCentral()
 }
 
+
+compileKotlin {
+    kotlinOptions.jvmTarget = 1.8
+}
+
+
+
+
+
+
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile fileTree(dir:'lib',include:'*.jar')
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
 intellij {
     version '2018.3.5'
 }
+
+
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>
