@@ -68,6 +68,7 @@ public class StartAnalysisDialogue extends JDialog {
         this.pack();
         this.setLocationRelativeTo(null);
         this.progressBar1.setIndeterminate(true);
+        this.setModal(true);
         this.setVisible(true);
     }
 
@@ -79,7 +80,7 @@ public class StartAnalysisDialogue extends JDialog {
         StartAnalysisDialogue dialog = new StartAnalysisDialogue();
         dialog.pack();
         dialog.progressBar1.setIndeterminate(true);
-        dialog.setModal(true);
+        dialog.setModal(false);
         dialog.setVisible(true);
 
         System.exit(0);

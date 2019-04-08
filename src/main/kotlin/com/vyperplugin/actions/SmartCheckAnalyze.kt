@@ -1,22 +1,26 @@
+@file:Suppress("ObsoleteExperimentalCoroutines")
+
 package com.vyperplugin.actions
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.vfs.VirtualFile
-import com.vyperplugin.SmartCheckAnalysisInformation
+import com.vyperplugin.docker.SmartCheckDocker
 import com.vyperplugin.gui.smartcheck.AnalysisInformationDialogue
 import com.vyperplugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
 import com.vyperplugin.gui.smartcheck.StartAnalysisDialogue
 import com.vyperplugin.gui.smartcheck.StartAnalysisDialogue.ANALYSIS_CANCELLED
 import com.vyperplugin.gui.smartcheck.StartAnalysisDialogue.ANALYSIS_FINISHED
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.async
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import java.nio.file.Path
-import java.nio.file.Paths
+
 
 class SmartCheckAnalyze(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")) : AnAction() {
 
+    private val smartcheckDocker =  SmartCheckDocker()
 
     override fun actionPerformed(e: AnActionEvent) = this.performAction(e)
 
@@ -27,15 +31,16 @@ class SmartCheckAnalyze(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")
             return NoFilesWithVyperAreSelectedDialogue().display()
         }
 
-        val pathsToFilesToAnalyze: Array<Path> = files.map { Paths.get(it.path) }.toTypedArray()
         //show dialog with progress bar
         val startAnalysisDialog = StartAnalysisDialogue()
         val analysisListener = SmartCheckAnalysisListener(startAnalysisDialog)
 
         startAnalysisDialog.addPropertyChangeListener(analysisListener)
-        startAnalysisDialog.display()
+        GlobalScope.async {
+            startAnalysisDialog.display()
+        }
+        startAnalyze(files, analysisListener)
 
-        startAnalyze(pathsToFilesToAnalyze, analysisListener)
     }
 
 
@@ -43,9 +48,10 @@ class SmartCheckAnalyze(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")
             PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext)
 
 
-    private fun startAnalyze(filenames: Array<Path>, propertyChangeListener: PropertyChangeListener) {
+    private fun startAnalyze(filenames: Array<VirtualFile>, propertyChangeListener: PropertyChangeListener) {
         // i think it should be blocking call
-        val analysisInformation = filenames.map { Pair(it.fileName, translateAnalysisInfoToString(analyzeVyperFile(it))) }
+        val analysisInformation = filenames
+                .map { Pair(it.path, translateAnalysisInfoToString(analyzeVyperFile(it))) }
 
 //        //wait for finish
 //        // when finish manually call to close
@@ -55,21 +61,18 @@ class SmartCheckAnalyze(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")
         analysisInformation.forEach {
             run {
                 val frame = AnalysisInformationDialogue()
-                frame.setAnalysisInfo(it.first.toString(), it.second)
+                frame.setAnalysisInfo(it.first, it.second)
                 frame.display()
             }
         }
 
     }
 
-    private fun analyzeVyperFile(filepath: Path): SmartCheckAnalysisInformation {
-        //TODO add real analysis
-        return SmartCheckAnalysisInformation()
-    }
+    private fun analyzeVyperFile(file: VirtualFile): List<String> = smartcheckDocker
+                .analyzeFileinBindDir(file.parent.path, file.path.split("/").last())
 
-    private fun translateAnalysisInfoToString(smartCheckAnalysisInformation: SmartCheckAnalysisInformation): String {
-        //TODO add real process Info to String
-        return "<html><p>Analysiss for file blalalalalalalalal</p><br/><p>Find bud ing : fdfdfdfdfdfdfdfdfdfdf</p><p>Completed</p> </html>"
+    private fun translateAnalysisInfoToString(information: List<String>): String {
+        return "<html>${information.reduce { acc, elem -> acc.plus("<p>"+elem+"</p>") }}<p>Completed</p></html>"
     }
 
 }

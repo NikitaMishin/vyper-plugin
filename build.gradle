@@ -2,6 +2,7 @@ buildscript {
     
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -23,6 +24,7 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 
@@ -37,10 +39,18 @@ compileKotlin {
 
 
 dependencies {
-    compile fileTree(dir:'lib',include:'*.jar')
+  //  compile group: 'net.sf.saxon', name: 'Saxon-HE', version: '9.5.1-8'
+//    compile files('libs/smartcheck-2.1-SNAPSHOT-jar-with-dependencies.jar')
+// https://mvnrepository.com/artifact/com.spotify/docker-client
+    compile group: 'com.spotify', name: 'docker-client', version: '8.15.2' 
+//implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
+    // https://mvnrepository.com/artifact/net.sf.saxon/Saxon-HE
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
+configurations {
+    compile.exclude  module: "slf4j-api" 
+}
 intellij {
     version '2018.3.5'
 }
