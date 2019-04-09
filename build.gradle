@@ -40,16 +40,13 @@ compileKotlin {
 
 dependencies {
   //  compile group: 'net.sf.saxon', name: 'Saxon-HE', version: '9.5.1-8'
-//    compile files('libs/smartcheck-2.1-SNAPSHOT-jar-with-dependencies.jar')
-// https://mvnrepository.com/artifact/com.spotify/docker-client
-    compile group: 'com.spotify', name: 'docker-client', version: '8.15.2' 
-//implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
-    // https://mvnrepository.com/artifact/net.sf.saxon/Saxon-HE
+    compile group: 'com.spotify', name: 'docker-client', version: '8.15.2'
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
 configurations {
-    compile.exclude  module: "slf4j-api" 
+    // turn of when test docker withoud deplyoingg plugin
+    compile.exclude  module: "slf4j-api"
 }
 intellij {
     version '2018.3.5'

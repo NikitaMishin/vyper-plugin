@@ -28,7 +28,7 @@
             description="Create new Vyper file">
         <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
     </action>
-        <action id="vyper.smartcheckanalyze" class="com.vyperplugin.actions.SmartCheckAnalyze"
+        <action id="vyper.smartcheckanalyze" class="com.vyperplugin.actions.SmartCheckAnalyzeAction"
                 text="Smart_Check_Analyze" description="Analyze vyper code with smartcheck">
             <add-to-group group-id="AnalyzeActions" anchor="first"/>
         </action>

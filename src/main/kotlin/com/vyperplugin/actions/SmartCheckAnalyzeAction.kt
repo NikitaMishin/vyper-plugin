@@ -1,5 +1,3 @@
-@file:Suppress("ObsoleteExperimentalCoroutines")
-
 package com.vyperplugin.actions
 
 import com.intellij.openapi.actionSystem.AnAction
@@ -8,19 +6,17 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.vfs.VirtualFile
 import com.vyperplugin.docker.SmartCheckDocker
 import com.vyperplugin.gui.smartcheck.AnalysisInformationDialogue
+import com.vyperplugin.gui.smartcheck.AnalysisWaitDialogue
+import com.vyperplugin.gui.smartcheck.AnalysisWaitDialogue.*
 import com.vyperplugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
-import com.vyperplugin.gui.smartcheck.StartAnalysisDialogue
-import com.vyperplugin.gui.smartcheck.StartAnalysisDialogue.ANALYSIS_CANCELLED
-import com.vyperplugin.gui.smartcheck.StartAnalysisDialogue.ANALYSIS_FINISHED
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
+import kotlin.concurrent.thread
 
 
-class SmartCheckAnalyze(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")) : AnAction() {
+class SmartCheckAnalyzeAction(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")) : AnAction() {
 
-    private val smartcheckDocker =  SmartCheckDocker()
+    private val smartCheckDocker = SmartCheckDocker()
 
     override fun actionPerformed(e: AnActionEvent) = this.performAction(e)
 
@@ -32,14 +28,15 @@ class SmartCheckAnalyze(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")
         }
 
         //show dialog with progress bar
-        val startAnalysisDialog = StartAnalysisDialogue()
+        val startAnalysisDialog = AnalysisWaitDialogue()
         val analysisListener = SmartCheckAnalysisListener(startAnalysisDialog)
 
         startAnalysisDialog.addPropertyChangeListener(analysisListener)
-        GlobalScope.async {
-            startAnalysisDialog.display()
+
+        thread(start = true) {
+            startAnalyze(files, analysisListener)
         }
-        startAnalyze(files, analysisListener)
+        startAnalysisDialog.display()
 
     }
 
@@ -48,13 +45,16 @@ class SmartCheckAnalyze(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")
             PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext)
 
 
-    private fun startAnalyze(filenames: Array<VirtualFile>, propertyChangeListener: PropertyChangeListener) {
-        // i think it should be blocking call
-        val analysisInformation = filenames
-                .map { Pair(it.path, translateAnalysisInfoToString(analyzeVyperFile(it))) }
+    private fun startAnalyze(filenames: Array<VirtualFile>, propertyChangeListener: SmartCheckAnalysisListener) {
 
-//        //wait for finish
-//        // when finish manually call to close
+        val analysisInformation: MutableList<Pair<String, String>> = mutableListOf()
+        for (i in 0 until filenames.size) {
+            if (propertyChangeListener.statusAnalysis == ANALYSIS_CANCELLED) {
+                return
+            }
+            analysisInformation.add(Pair(filenames[i].path, translateAnalysisInfoToString(analyzeVyperFile(filenames[i]))))
+        }
+
         propertyChangeListener.propertyChange(
                 PropertyChangeEvent(this, ANALYSIS_FINISHED, null, null))
 
@@ -68,22 +68,25 @@ class SmartCheckAnalyze(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")
 
     }
 
-    private fun analyzeVyperFile(file: VirtualFile): List<String> = smartcheckDocker
-                .analyzeFileinBindDir(file.parent.path, file.path.split("/").last())
+    private fun analyzeVyperFile(file: VirtualFile): List<String> = smartCheckDocker
+            .analyzeFileinBindDir(file.parent.path, file.path.split("/").last())
 
     private fun translateAnalysisInfoToString(information: List<String>): String {
-        return "<html>${information.reduce { acc, elem -> acc.plus("<p>"+elem+"</p>") }}<p>Completed</p></html>"
+        return "<html>${information.reduce { acc, elem -> acc.plus("<p>" + elem + "</p>") }}<p>Completed</p></html>"
     }
 
 }
 
 
 // follow to cancel operation in form and complete result in actual analysis
-class SmartCheckAnalysisListener(private val startAnalysis: StartAnalysisDialogue) : PropertyChangeListener {
+class SmartCheckAnalysisListener(private val startAnalysis: AnalysisWaitDialogue) : PropertyChangeListener {
+    var statusAnalysis: String? = ANALYSIS_START
     override fun propertyChange(p0: PropertyChangeEvent?) {
         if (p0?.propertyName.equals(ANALYSIS_CANCELLED)) {
             startAnalysis.close()
+            statusAnalysis = ANALYSIS_CANCELLED
         } else if (p0?.propertyName.equals(ANALYSIS_FINISHED)) {
+            statusAnalysis = ANALYSIS_FINISHED
             startAnalysis.close()
         }
     }
