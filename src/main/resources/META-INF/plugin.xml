@@ -18,6 +18,11 @@
         <lang.parserDefinition language="Vyper" implementationClass="com.vyperplugin.VyperParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Vyper" implementationClass="com.vyperplugin.VyperHighlighterFactory"/>
 
+        <applicationService serviceInterface="com.vyperplugin.settings.VyperSettings" serviceImplementation="com.vyperplugin.settings.VyperSettings"/>
+        <applicationConfigurable groupId="language" displayName="Vyper" id="preferences.Vyper" instance="com.vyperplugin.settings.VyperSettingsConfigurable"/>
+
+
+        <!--      <configurationType implementation=""/> -->>
 
     </extensions>
 
