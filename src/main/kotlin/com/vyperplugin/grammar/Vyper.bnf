@@ -15,9 +15,12 @@
   elementTypeClass="com.vyperplugin.psi.VyperElementType"
   tokenTypeClass="com.vyperplugin.psi.VyperTokenType"
 
+  parserUtilClass = "com.vyperplugin.parser.ParserUtil"
+
 
 
 tokens = [
+   DECORATOR = '@'
    comment='regexp:(#.*)'
    SEMICOLON=';'
    COMMA=','
@@ -81,71 +84,129 @@ tokens = [
     payable='payable'
     modifying='modifying'
     event='event'
+    range = 'range'
 
     newline = 'regexp:(\n|(\r\n))'
     WHITE_SPACE = 'regexp:\s+'
 
-    Identifier='regexp:[a-zA-Z_$][a-zA-Z_$0-9]*'
+    Identifier='regexp:([A-Za-z_]\w*)'
+    //add !@ etc.
+//    BadStatementString = 'regexp:(\w+)'
     //ALL='regexp:[\^a-zA-Z_0-9.<>"]*' for preview
 ]
 
+//to handle left recursion
 extends(".*Expression") = Expression
 
 }
+
+VyperFile ::= ((!<<eof>> SourceUnit) (&INDEQ SourceUnit)*)?
+
+external INDEQ ::= indEq
+external INDEQNSP ::= indEqAndNoSpaces
+external INDLT ::= indLt
+external INDGT ::= indGt
+external INDNONE ::= indNone
+external OPTIND ::= indOpt
 
 
 
 // : External contract and struct declarations must come before event declarations, global declarations,
 // and function definitions
-private SourceUnit ::= ( ImportDirective | UserDefinedConstantsExpression | ImplementsDirective | StructDefinition | UnitsDefinition | ExternalInterfaces  |  ContractDefinition )*
+private SourceUnit ::= ( ImportDirective
+                        | UserDefinedConstantsExpression
+                        | ImplementsDirective
+                        | StructDefinition
+                        | UnitsDefinition
+                        | ExternalInterfaces
+                        | EventDeclaration
+                        | FunctionDefinition
+                        | StateVariableDeclaration
+                        | BadStatement)
+                        {recoverWhile=structRecover}
 
 
-UnitsDefinition ::= units ':''{'
+BadStatement ::= Identifier | BAD_CHARACTER
+private recoverINDLT ::= !(&INDLT)
+/*
+units: {
+    cm: "centimeter",
+    km: "kilometer"
+}
+*/
+UnitsDefinition ::= UnitsDefinitionPrefix '}'
+
+private UnitsDefinitionPrefix ::= units  (&INDNONE ':') (&INDNONE '{')
      ( (Identifier ':' StringLiteral) ( ',' Identifier ':' StringLiteral)* )?
-'}'  {
-pin(".*") = 1
+  {
+pin = 1
+recoverWhile = unitsRecover
 //программно чекать до след newLine наверное чтобы дать возможность дальше парситиь
 }
+//will consume all the file if '}' not found
+private unitsRecover::=!('}')
 
 
 
-UserDefinedConstantsExpression ::= Identifier ':' constant '(' TYPE')' '=' Expression  {
- pin=3
+UserDefinedConstantsExpression ::= Identifier &INDNONE ':' &INDNONE constant &INDNONE'(' TYPE ')' &INDNONE'=' &INDNONE Expression  {
+ pin=5
 }
 
-private ImportDirective ::= ( import IMPORT_PATH as Identifier )
-                   |( from  IMPORT_PATH import Identifier  )  {
-pin(".*")=3
+private ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
+                   |( from  &INDNONE IMPORT_PATH &INDNONE import &INDNONE Identifier  )  {
+pin(".*")=1
 }
-IMPORT_PATH ::= Identifier  ('.' Identifier)*
+
+IMPORT_PATH ::= Identifier  (&INDNONE '.' &INDNONE Identifier)*
 
 // implements statements
-ImplementsDirective ::=  implements ':' Identifier (',' Identifier )*  {
+ImplementsDirective ::=  implements &INDNONE ':' &INDNONE Identifier (&INDNONE ',' &INDNONE Identifier )* {
 pin=1
 }
 
 // external interfaces ok
-ExternalInterfaces ::= contract Identifier ':'
-                ( def Identifier '(' FunctionArgs? ')' ('->' TYPE)? ':' ExternalFunStatus )+
-                {pin(".*")=1}
+ExternalInterfaces ::= contract &INDNONE Identifier &INDNONE ':'
+                        <<indented (ExternalInterfaceBody+) >>
+                {pin=1}
+
+private ExternalInterfaceBody ::= ( def &INDNONE Identifier &INDNONE '('
+( FunctionArgs)? ')' (&INDNONE '->' &INDNONE TYPE)? &INDNONE ':' &INDNONE ExternalFunStatus )
+{pin = 1}
 private ExternalFunStatus ::= modifying | constant
+
+
 FunctionArgs ::= Identifier ':' TYPE ('=' Expression)?  (',' Identifier ':' TYPE ('=' Expression)? )*
 
-
 // could be default assignment
-StructDefinition ::= struct Identifier ':'
-      LocalVariableDefinition+
+StructDefinition ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
+pin = 1
+}
+
+private StructBody ::= StructSingleDef | <<indented (StructMultipleDef) >>
+private StructSingleDef ::= (&INDNONE StructLocalVariableDefinition)
+
+private StructMultipleDef ::= StructLocalVariableDefinition (&INDEQ StructLocalVariableDefinition )*
+//{recoverWhile=recoverStruct}
+private StructLocalVariableDefinition ::= LocalVariableDefinition | BadStatement
+{recoverWhile=structRecover}
+
+//private recoverINDEQ ::=!(&INDEQ)
+private structRecover ::= !(&INDEQ | &INDLT |<<eof>>)
+private recoverStruct ::= !(&INDLT | &INDEQ)
 
 
-ContractDefinition ::= (EventDeclaration | StateVariableDeclaration | FunctionDefinition)+
+//ContractDefinition ::= ContractDefinition_+
+//private ContractDefinition_ ::= (EventDeclaration | StateVariableDeclaration | FunctionDefinition)
+//                                {recoverWhile=structRecover}
 
 //ok
 //Events must all come before global declarations and function definitions
-EventDeclaration ::= Identifier ':' event '(' '{'   EventProperty? '}' ')'  {
-pin=3
+EventDeclaration ::= Identifier &INDNONE ':' &INDNONE event &INDNONE '(' '{'   EventProperty? '}' ')'  {
+pin=5
 }
+
 EventProperty ::= Identifier ':'    (IndexedData | TYPE)
-                (',' Identifier ':' (IndexedData|TYPE)  )*
+                (',' Identifier ':' (IndexedData |TYPE))*
 
 IndexedData ::= IndexedType '(' TYPE ')'
 
@@ -153,63 +214,98 @@ private IndexedType ::= 'indexed'
 
 // VARIABLES
 
-// state varaibales  May not assign value whilst defining type
-StateVariableDeclaration ::= Identifier ':'   (  StateVariableModifier '(' TYPE ')'  | TYPE )
+// state variables  May not assign value whilst defining type
+StateVariableDeclaration ::= Identifier &INDNONE ':' (  (&INDNONE StateVariableModifier &INDNONE '(' &INDNONE TYPE &INDNONE ')')
+| (&INDNONE TYPE ))
 // StateVariableModifier if omitted then it's private
 private StateVariableModifier ::= public
 
 
 // semantic : map could not be inside functions
-LocalVariableDefinition ::=  ( LocalVariableDeclaration '=' Expression ) | LocalVariableDeclaration
+LocalVariableDefinition ::=  ( LocalVariableDeclaration (&INDNONE '=') (&INDNONE Expression) ) |
+                           LocalVariableDeclaration
 
-LocalVariableDeclaration ::= Identifier ':' TYPE
+LocalVariableDeclaration ::= Identifier &INDNONE ':' &INDNONE TYPE
 
-MultiLineString ::=  MultiLineStringToken   {
- pin=1
-}
+//Colon ::= (&INDNONE ':')
+//Type ::=  (&INDNONE TYPE)
+
+MultiLineString ::=  MultiLineStringToken
 
 // FUNCTIONS
-FunctionDefinition ::=
-    FunctionModifier
-    def Identifier '(' FunctionArgs?  ')' ('->' TYPE)?':'
-          MultiLineString?
-          Statement+ {
-          pin=2
-}
 
-FunctionModifier ::= FunctionModifierOptional* FunctionModifierMandatory FunctionModifierOptional*
-private FunctionModifierMandatory ::= '@' (public|private)
-private FunctionModifierOptional ::=  '@' (constant | payable | (nonreentrant '(' UNIQUE_KEY ')'))
+private FunDef ::= def (&INDNONE Identifier) (&INDNONE '(') FunctionArgs?  ')' (&INDNONE '->' &INDNONE TYPE)? (&INDNONE ':')
+                   {pin = 1}
+private FunBody ::= (&INDNONE Statement)
+                    | <<indented ((MultiLineString)? &INDEQ Statement (&INDEQ Statement)*) >>
+FunctionDefinition ::=
+    FunctionModifier (&INDEQ FunctionModifier)*
+//    def &INDNONE Identifier &INDNONE '(' FunctionArgs?  ')' (&INDNONE '->' &INDNONE TYPE)? (&INDNONE ':')
+//    FunBody
+    FunDef
+    FunBody
+   {pin=1}
+
+
+//FunctionModifier ::= (&INDEQ FunctionModifierOptional)* (&INDEQ FunctionModifierMandatory) (&INDEQ FunctionModifierOptional)*
+//private FunctionModifierMandatory ::= DECORATOR ((&INDNONE public) | (&INDNONE private)) {pin = 1}
+FunctionModifier ::=  (DECORATOR (&INDNONE (public | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))))
+                      {pin = 1}
+
 UNIQUE_KEY ::=  stringLiteralSingle | stringLiteralDouble
 
 // statements
-Statement ::= IfStatement | ForStatement | Continue | Break | Return |  Raise | EmitStatement | SimpleStatement | PassStatement
+Statement ::= PassStatement
+              | IfStatement
+              | ForStatement
+              | Continue
+              | Break
+              | Return
+              | Raise
+              | EmitStatement
+              | SimpleStatement
+              | BadStatement
+              {recoverWhile = recoverStatement}
 
-IfStatement ::= if  Expression ':'
-                    Statement+
-              (elif Expression ':' Statement+)*  (else ':' Statement+ )?
-{
-pin(".*")=1
-}
+private recoverStatement ::= !(&INDEQ|&INDLT)
+
+
+private CondStmt ::= Expression &INDNONE ':' ((&INDNONE Statement)
+                                     | <<indented (Statement (&INDEQ Statement)*)>>)
+
+private ElifStmt ::= elif &INDNONE CondStmt
+                     {pin = 1}
+
+private ElseStmt ::= else &INDNONE ':' ((&INDNONE Statement)
+                                       | <<indented (Statement (&INDEQ Statement)*)>>)
+                     {pin = 1}
+
+IfStatement ::= if &INDNONE CondStmt
+                (&INDEQ ElifStmt)*
+                (&INDEQ ElseStmt)?
+                {pin=1}
 
 
 private SimpleStatement ::= LocalVariableDefinition | ExpressionStatement
 private ExpressionStatement ::= Expression
 
-ForStatement ::= for Identifier in Expression ':' Statement+{
+ForStatement ::= for &INDNONE Identifier &INDNONE in &INDNONE Expression &INDNONE ':'
+                    (&INDNONE Statement
+                    | <<indented (Statement (&INDEQ Statement)*)>>){
 pin=1
 }
+
 
 private Continue ::= continue
 
 private Break ::= break
 
-private Return ::= return Expression? {
+private Return ::= return (&INDNONE Expression)? {
 pin=1
 }
 private Raise ::= raise
 
-EmitStatement ::= 'log.'FunctionCallExpression {
+EmitStatement ::= 'log.' &INDNONE FunctionCallExpression {
 pin=1
 }
 
@@ -217,7 +313,8 @@ private PassStatement ::= pass
 
 Expression ::=
   AssignmentExpression
-  | FunctionCallExpression
+  | RangeExpression
+//  | FunctionCallExpression
   | ParenthesiziedExpression
   | CallExpression
   | NewExpression
@@ -233,51 +330,61 @@ Expression ::=
   | ClearExpression
   | IndexAccessExpression
   | SelfAccessExpression
+//  | SelfFunctionCall
   | MemberAccessExpression
+  | MemberIndexAccess
   | InlineArrayExpression
   | PrimaryExpression
 
 
 //self function call?
-SelfAccessExpression ::= self '.' Identifier
 
-NewExpression ::= Identifier '(' '{' (  NewInitializerExpression
-                             (',' NewInitializerExpression)*)? '}'  ')'
-//add implekent and mixin
-//}
-NewInitializerExpression ::= NewExpression | (Identifier ':' Expression)
+private RangeInterval ::= PrimaryExpression ',' PrimaryExpression ',' PrimaryExpression
+                         | PrimaryExpression ',' PrimaryExpression
+                         | PrimaryExpression
+
+
+RangeExpression ::= range &INDNONE '(' RangeInterval ')'
+
+
+SelfAccessExpression ::= self (&INDNONE '.') (&INDNONE Identifier)
+
+//SelfFunctionCall ::= self &INDNONE '.' Identifier &INDNONE '(' (FunctionArgs)? ')'
+
+NewExpression ::= Identifier (&INDNONE'(') '{' (  ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression)
+                             (',' ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression))*)? '}' ')'
 
 AssignmentExpression ::=
-    Expression ('=' | '+=' | '-=' | '*=' | '/=' | '%=')
+    Expression (&INDNONE ('=' | '+=' | '-=' | '*=' | '/=' | '%='))
     Expression { rightAssociative=true  }
 //??
 CallExpression ::= Expression
-                 ( ( '.' Identifier ) | ( '[' Expression ']' ) )*
-                  '(' FunctionCallArguments? ')' ('(' FunctionCallArguments? ')')*
+                 ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression ']' ) )*
+                  &INDNONE '(' FunctionCallArguments? ')' (&INDNONE '(' FunctionCallArguments? ')')*
 
 //??
-FunctionCallExpression ::= (Identifier '(' FunctionCallArguments? ')') |
+FunctionCallExpression ::= (Identifier &INDNONE '(' FunctionCallArguments? ')') |
                            ( ( PrimaryExpression | NewExpression | TypeName  )
-                           ( ( '.' Identifier ) | ( '[' Expression? ']' ) )*
-                                     '(' FunctionCallArguments? ')' )  {
+                           ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )*
+                                     &INDNONE '(' FunctionCallArguments? ')' )  {
    //implements and mixin
 }
 
 
+//left recursion?
+MemberAccessExpression ::= Expression &INDNONE DotAccess
+MemberIndexAccess ::=  Expression &INDNONE '.' Expression &INDNONE '[' Expression']' {extends=Expression}
+private DotAccess ::= '.' (&INDNONE Identifier)
+//recover?
+IndexAccessExpression ::= Expression &INDNONE '[' Expression']'
+//recover?
+ParenthesiziedExpression ::= '(' Expression ')' {pin = 1}
 
-  MemberAccessExpression ::= Expression '.' Identifier {
-      pin = 2
-     //implements and mixin
-  }
-
-IndexAccessExpression ::= Expression '[' Expression? ']'
-ParenthesiziedExpression ::= '(' Expression ')' {pin=1}
-
-ClearExpression ::= clear '(' Expression ')' {pin=1}
+ClearExpression ::= clear &INDNONE '(' Expression ')' {pin=1}
 
 
-UnaryExpression ::=  (NOT | '~'  |  '+' | '-') Expression
-InlineArrayExpression ::= '[' Expression (',' Expression)* ']'
+UnaryExpression ::=  (NOT | '~'  |  '+' | '-') &INDNONE Expression
+InlineArrayExpression ::= '[' Expression (',' Expression)*  ']' {pin = 1}
 AndExpression ::=  Expression AND Expression
 OrExpression ::= Expression OR Expression
 EqExpression ::= Expression ('==' | '!=') Expression
@@ -288,53 +395,54 @@ MultDivExpression ::= Expression ('*' | '/' | '%') Expression
 ExponentExpression ::= Expression '**' Expression
 
 //multistring??
-AssertExpression ::= assert Expression AssertMessage?
+AssertExpression ::= assert &INDNONE Expression &INDNONE AssertMessage? {pin = 1}
 private AssertMessage ::= ',' (stringLiteralDouble| stringLiteralSingle | MultiLineString)
 
-FunctionCallArguments ::= '{' NameValueList? '}'
-                      | ExpressionList?
-
-ExpressionList ::= Expression ( ',' Expression )*
+FunctionCallArguments ::= Expression? ( &INDNONE ',' Expression )*
 
 
 
 
-PrimaryExpression ::= BooleanLiteral
+PrimaryExpression ::= Identifier
+                  |BooleanLiteral
                   | NumberLiteral
                   | HexLiteral
                   | StringLiteral
                   | Constants
+                  //type??
                   | TYPE
-                  | Identifier
+
 
 
 
 
 // TYPES seems okay
-TYPE ::=  ReferenceType| UnitType  |  ValueType | StructType
+TYPE ::=  ReferenceType
+          | UnitType
+          | ValueType
+          | StructType
 
-UnitType ::=    Timestamp | Timedelta | Wei_value | Wei | CustomUnitType
-CustomUnitType ::= (int128|uint256) '(' Expression ')'
+UnitType ::= Timestamp | Timedelta | Wei_value | CustomUnitType
+CustomUnitType ::= (int128|uint256) &INDNONE '(' Expression ')'
 private Timestamp ::= 'timestamp'
 private Timedelta ::= 'timedelta'
 private Wei_value ::= 'wei_value'
-private Wei ::= 'wei'
 
 ValueType ::= int128 | uint256| bytes32 | address
-             | bytes32 '[' (DecimalNumber | Identifier) ']' | fixed | bool |
-                string   '[' (DecimalNumber | Identifier) ']'
+             | bytes32 &INDNONE '[' (DecimalNumber | Identifier) ']' | fixed | bool |
+                string   &INDNONE '[' (DecimalNumber | Identifier) ']'
 
 private ReferenceType ::= ListType  | MapType
 
-ListType ::= (UnitType| ValueType|StructType) '[' (DecimalNumber | Identifier) ']'
-                    ('[' (DecimalNumber | Identifier) ']')*
+ListType ::= (UnitType| ValueType|StructType) &INDNONE '[' (DecimalNumber | Identifier) ']'
+                    (&INDNONE '[' (DecimalNumber | Identifier) ']')*
 StructType ::= Identifier
 
-MapType ::= map  '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')' {
+MapType ::= map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')' {
 pin=1
 }
 
-// LITERALS seems works
+
 private BooleanLiteral ::= booleanLiteral
 
 
