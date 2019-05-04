@@ -19,7 +19,7 @@ class VyperConfigurablePanel {
     private lateinit var password: JTextField
 
 
-    // generate stubs
+    // createStubInGenSourceFolder stubs
     private lateinit var generateStubsPanel: JPanel
     private lateinit var generateStubs: JCheckBox
     private lateinit var genOutputPath: JTextField
@@ -107,8 +107,5 @@ class VyperConfigurablePanel {
 
                     generateStubs.isSelected != settings.generateStubs ||
                     genOutputPath.text != settings.genarateOutputPath.trim()
-
-
-    //private lateinit var warningLabel: JLabel
 
 }

@@ -1,8 +1,6 @@
 package com.vyperplugin.actions
 
-import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.vfs.VirtualFile
 import com.vyperplugin.docker.SmartCheckDocker
 import com.vyperplugin.gui.smartcheck.AnalysisInformationDialogue
@@ -14,7 +12,7 @@ import java.beans.PropertyChangeListener
 import kotlin.concurrent.thread
 
 
-class SmartCheckAnalyzeAction(private val vyExtensionRegExp: Regex = Regex(".+\\.vy$")) : AnAction() {
+class SmartCheckAnalyzeAction : VyperAction() {
 
     private val smartCheckDocker = SmartCheckDocker()
 
@@ -26,7 +24,6 @@ class SmartCheckAnalyzeAction(private val vyExtensionRegExp: Regex = Regex(".+\\
         if (files == null || files.isEmpty()) {
             return NoFilesWithVyperAreSelectedDialogue().display()
         }
-
         //show dialog with progress bar
         val startAnalysisDialog = AnalysisWaitDialogue()
         val analysisListener = SmartCheckAnalysisListener(startAnalysisDialog)
@@ -39,10 +36,6 @@ class SmartCheckAnalyzeAction(private val vyExtensionRegExp: Regex = Regex(".+\\
         startAnalysisDialog.display()
 
     }
-
-
-    private fun getClickedFiles(e: AnActionEvent): Array<VirtualFile>? =
-            PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext)
 
 
     private fun startAnalyze(filenames: Array<VirtualFile>, propertyChangeListener: SmartCheckAnalysisListener) {

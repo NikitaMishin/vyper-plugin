@@ -1,4 +1,5 @@
 # Blind Auction # Adapted to Vyper from [Solidity by Example](https://github.com/ethereum/solidity/blob/develop/docs/solidity-by-example.rst#blind-auction-1)
+import f.ff.fff as FF
 
 struct Bid:
   blindedBid: bytes32

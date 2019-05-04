@@ -37,5 +37,43 @@
                 text="Smart_Check_Analyze" description="Analyze vyper code with smartcheck">
             <add-to-group group-id="AnalyzeActions" anchor="first"/>
         </action>
+
+
+
+
+
+
+        <!-- VyperActions -->
+        <group id="VyperActions">
+        </group>
+
+
+        <group id="VyperMenu" text="_Vyper" popup="true">
+            <separator/>
+            <reference ref="VyperActions"/>
+            <add-to-group group-id="MainMenu" anchor="after" relative-to-action="WindowMenu"/>
+        </group>
+
+
+        <group id="VyperGroup" text="Vyper actions">
+            <action id="Vyper.Compile" text="Compile" class="com.vyperplugin.actions.compile.CompileVyperFile"/>
+            <action id="Vyper.BuildProject"
+                    class="com.vyperplugin.actions.compile.CompileVyperFile"
+                    text="Build project" description="Compile all Vyper files">
+                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl V"/>
+            </action>
+
+            <reference ref="vyper.smartcheckanalyze"/>
+
+            <add-to-group group-id="VyperMenu" anchor="first"/>
+        </group>
+
+
+        <reference ref="VyperMenu">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorPopupMenu1"/>
+        </reference>
+
+
+
     </actions>>
 </idea-plugin>

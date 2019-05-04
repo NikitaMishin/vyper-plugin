@@ -31,7 +31,7 @@ class SmartCheckDocker : IToolDocker() {
         val logs: String
         val stream = pluginDockerClient.dockerClient.attachContainer(id,
                 DockerClient.AttachParameter.LOGS, DockerClient.AttachParameter.STDOUT,
-                // DockerClient.AttachParameter.STDERR, ignore antlr
+                // DockerClient.AttachParameter.STDERR, ignore antlr errors
                 DockerClient.AttachParameter.STREAM)
 
         pluginDockerClient.dockerClient.startContainer(id)
