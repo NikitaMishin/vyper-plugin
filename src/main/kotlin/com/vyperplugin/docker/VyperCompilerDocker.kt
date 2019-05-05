@@ -20,7 +20,7 @@ enum class VyperCodeStatus {
  * Result of file compilation
  * see vyper status codes
  */
-class VyperCompilerResult(val status: VyperCodeStatus, val stdout: String, val stderr: String)
+class VyperCompilerResult(val status: VyperCodeStatus, val stdout: String, val stderr: String, val filename: String)
 
 
 /**
@@ -59,16 +59,18 @@ class VyperCompilerDocker : IToolDocker() {
         val logSTDOUT = streamSTDOUT.readFully()
         val logSTDERR = streamSTDERR.readFully()
 
+
+        //pluginDockerClient.dockerClient.stopContainer(id,15)
         pluginDockerClient.dockerClient.removeContainer(id)
 
         if (logSTDERR.isBlank() && logSTDOUT.isNotBlank()) {
-            return VyperCompilerResult(VyperCodeStatus.SUCCESS, logSTDOUT, "")
+            return VyperCompilerResult(VyperCodeStatus.SUCCESS, logSTDOUT, "", filename)
         }
         if (logSTDERR.isBlank() && logSTDOUT.isBlank()) {
-            return VyperCompilerResult(VyperCodeStatus.EMPTY_OUTPUT, "", "")
+            return VyperCompilerResult(VyperCodeStatus.EMPTY_OUTPUT, "", "", filename)
         }
         if (logSTDERR.isNotBlank()) {
-            return VyperCompilerResult(VyperCodeStatus.FAILED, "", logSTDERR)
+            return VyperCompilerResult(VyperCodeStatus.FAILED, "", logSTDERR, filename)
         }
 
         // check

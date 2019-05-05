@@ -23,7 +23,13 @@ class VyperConfigurablePanel {
     private lateinit var generateStubsPanel: JPanel
     private lateinit var generateStubs: JCheckBox
     private lateinit var genOutputPath: JTextField
+    //
 
+
+    private lateinit var compilerPanel: JPanel
+    // compiler
+    private lateinit var compilerParams: JTextField
+//    private lateinit var fileExtension: JTextField
 
     init {
         deployToNetwork.addActionListener {
@@ -65,6 +71,11 @@ class VyperConfigurablePanel {
         settings.generateStubs = generateStubs.isSelected
         settings.genarateOutputPath = genOutputPath.text
 
+        compilerParams.text = compilerParams.text.replace("\\s+".toRegex()," ")
+                .dropWhile { it==' '}.dropLastWhile { it==' '}
+
+        settings.compilerParams = compilerParams.text
+
         ApplicationManager.getApplication().messageBus.syncPublisher(VyperConfigurationListener.TOPIC).settingsConfigChanged()
     }
 
@@ -76,6 +87,7 @@ class VyperConfigurablePanel {
         username.text = settings.username
         password.text = settings.password
         network.text = settings.network
+        compilerParams.text = settings.compilerParams
         updateDeployStatus()
         updateGenerateStubsStatus()
     }
@@ -104,6 +116,8 @@ class VyperConfigurablePanel {
             username.text != settings.username ||
                     password.text != settings.password ||
                     network.text != settings.network ||
+
+                    compilerParams.text != settings.compilerParams ||
 
                     generateStubs.isSelected != settings.generateStubs ||
                     genOutputPath.text != settings.genarateOutputPath.trim()

@@ -17,12 +17,21 @@ import javax.swing.JComponent
 class VyperSettings : PersistentStateComponent<VyperSettings> {
 
     var generateStubs: Boolean = false
-    var genarateOutputPath: String = "src-gen-vyper"
+    var genarateOutputPath: String = "srcGenVyper"
+    var fileExtension: String = ".txt" // right now would be just .txt
 
     var deployToNetwork: Boolean = false
     var network: String = "" //>>? Ethereum main net?
     var username: String = ""
     var password: String = ""
+
+
+    var compilerParams: String = " "
+    fun getCompilerParamsArray(): Array<String> {
+        if (compilerParams == " " || compilerParams == "") return arrayOf<String>()
+        return compilerParams.split(" ").toTypedArray()
+
+    }
 
 
     override fun getState(): VyperSettings? = this
