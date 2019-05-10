@@ -15,5 +15,6 @@ class createVyperFileAction : CreateFileFromTemplateAction(name, description, Vy
     override fun getActionName(directory: PsiDirectory?, newName: String?, templateName: String?): String = name
     override fun buildDialog(project: Project?, directory: PsiDirectory?, builder: CreateFileFromTemplateDialog.Builder) {
         builder.setTitle(name).addKind("Empty file", VyperIcons.FILE, "Vyper File")
+
     }
 }
