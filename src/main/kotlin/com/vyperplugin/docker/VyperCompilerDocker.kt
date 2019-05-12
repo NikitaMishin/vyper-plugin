@@ -7,43 +7,38 @@ import com.spotify.docker.client.messages.HostConfig
 
 
 /**
- * Code status of vyper compulation  in docker container
- */
-enum class VyperCodeStatus {
-    EMPTY_OUTPUT,
-    SUCCESS,
-    FAILED,
-    TIME_LIMIT
-}
-
-/**
- * Result of file compilation
- * see vyper status codes
- */
-class VyperCompilerResult(val status: VyperCodeStatus, val stdout: String, val stderr: String, val filename: String)
-
-
-/**
  * Vyper compiler that runs inside docker container
  */
-class VyperCompilerDocker : IToolDocker() {
-    override var IMAGE = "ethereum/vyper"
+class VyperCompilerDocker(var bindDir: String, var fullPathToFile: String,
+                          var args: Array<String> = arrayOf()) : IToolDocker() {
+    override var IMAGE = "murmulla/vyper_and_vyper_run:version1"
+    private val toolName = "vyper"
+
+    override fun exec(): ToolResult {
+
+        val filename = fullPathToFile.split('/').last()
+        return compileFile(bindDir, filename, args)
+    }
+
 
     //TODO add timelimit
     //TODO swap to long running containers
     @Throws(DockerException::class, InterruptedException::class)
-    fun compileFile(bindDir: String, filename: String, args: Array<String> = arrayOf()): VyperCompilerResult {
+    fun compileFile(bindDir: String, filename: String, args: Array<String> = arrayOf()): ToolResult {
 
         val hostConfig = HostConfig.builder()
                 .binds("$bindDir/:$dockerBindDir")
                 .build()
 
-        val completeCommand = args + (filename)
+        val completeCommand: Array<String> = (args + filename)
+        if (!isImageExistLocally()) downloadImage()
+
         val containerConfig = ContainerConfig.builder()
                 .image(IMAGE)
                 .hostConfig(hostConfig)
                 .workingDir(dockerBindDir)
                 .cmd(*completeCommand)
+                .entrypoint(toolName)
                 .build()
 
         val creation = pluginDockerClient.dockerClient.createContainer(containerConfig)
@@ -60,17 +55,16 @@ class VyperCompilerDocker : IToolDocker() {
         val logSTDERR = streamSTDERR.readFully()
 
 
-        //pluginDockerClient.dockerClient.stopContainer(id,15)
         pluginDockerClient.dockerClient.removeContainer(id)
 
         if (logSTDERR.isBlank() && logSTDOUT.isNotBlank()) {
-            return VyperCompilerResult(VyperCodeStatus.SUCCESS, logSTDOUT, "", filename)
+            return ToolResult(logSTDOUT, "", fullPathToFile, StatusCode.SUCCESS)
         }
         if (logSTDERR.isBlank() && logSTDOUT.isBlank()) {
-            return VyperCompilerResult(VyperCodeStatus.EMPTY_OUTPUT, "", "", filename)
+            return ToolResult("", "", fullPathToFile, StatusCode.EMPTY_OUTPUT)
         }
         if (logSTDERR.isNotBlank()) {
-            return VyperCompilerResult(VyperCodeStatus.FAILED, "", logSTDERR, filename)
+            return ToolResult("", logSTDERR, fullPathToFile, StatusCode.FAILED)
         }
 
         // check

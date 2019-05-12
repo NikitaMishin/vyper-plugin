@@ -14,11 +14,10 @@ import kotlin.concurrent.thread
 
 class SmartCheckAnalyzeAction : VyperAction() {
 
-    private val smartCheckDocker = SmartCheckDocker()
-
     override fun actionPerformed(e: AnActionEvent) = this.performAction(e)
 
     private fun performAction(e: AnActionEvent) {
+
         val files: Array<VirtualFile>? = getClickedFiles(e)?.filter { it.path.contains(vyExtensionRegExp) }?.toTypedArray()
 
         if (files == null || files.isEmpty()) {
@@ -61,8 +60,8 @@ class SmartCheckAnalyzeAction : VyperAction() {
 
     }
 
-    private fun analyzeVyperFile(file: VirtualFile): List<String> = smartCheckDocker
-            .analyzeFileinBindDir(file.parent.path, file.path.split("/").last())
+    private fun analyzeVyperFile(file: VirtualFile): List<String> =
+            SmartCheckDocker(file.parent.path, file.path).exec().stdout.lines()
 
     private fun translateAnalysisInfoToString(information: List<String>): String {
         return "<html>${information.reduce { acc, elem -> acc.plus("<p>" + elem + "</p>") }}<p>Completed</p></html>"

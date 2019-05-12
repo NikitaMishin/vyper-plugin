@@ -1,4 +1,4 @@
-package com.vyperplugin.compile
+package com.vyperplugin
 
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
@@ -16,13 +16,15 @@ import java.io.File
 
 object VyperStubGenerator {
 
-    fun createStubInGenSourceFolder(data: String, module: Module, project: Project, filename: String, extension: String) {
+    fun createStubInGenSourceFolder(data: String, module: Module, project: Project,
+                                    fullPathToFile: String, extension: String) {
         generateFolder(module, project)
         VirtualFileManager.getInstance().asyncRefresh {
             WriteCommandAction.runWriteCommandAction(project) {
 
                 val parent = getGeneratedSourceRoot(module)
                         ?: throw NullPointerException("No generated source folder is found")
+                val filename = fullPathToFile.split("/").last()
 
                 val filePath = parent.path + "/" + filename + extension
                 var file = File(filePath)

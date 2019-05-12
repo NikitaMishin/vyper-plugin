@@ -15,7 +15,7 @@ import javax.swing.text.DefaultCaret
  * Window Tool for compiler and run output
  *
  */
-object VyperRunAndCompilerWindow {
+object VyperWindow {
 
     val ID_COMPILER_RUN_WINDOW = "Vyper_Tools" // also dispay name name
     val ID_COMPILER_TAB = "Compiler_output"
