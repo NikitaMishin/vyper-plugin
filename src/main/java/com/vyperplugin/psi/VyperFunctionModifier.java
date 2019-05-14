@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperFunctionModifier extends PsiElement {
+public interface VyperFunctionModifier extends VyperElement {
 
   @Nullable
   VyperUniqueKey getUniqueKey();

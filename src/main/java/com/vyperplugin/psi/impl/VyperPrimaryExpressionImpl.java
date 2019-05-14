@@ -39,8 +39,8 @@ public class VyperPrimaryExpressionImpl extends VyperExpressionImpl implements V
 
   @Override
   @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
+  public VyperVarLiteral getVarLiteral() {
+    return findChildByClass(VyperVarLiteral.class);
   }
 
   @Override

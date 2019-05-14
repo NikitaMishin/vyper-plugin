@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperFunctionCallArguments extends PsiElement {
+public interface VyperFunctionCallArguments extends VyperElement {
 
   @NotNull
   List<VyperExpression> getExpressionList();

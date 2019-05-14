@@ -5,10 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperSelfFuntionCall extends PsiElement {
-
-  @Nullable
-  VyperFunctionCallArguments getFunctionCallArguments();
+public interface VyperVarLiteral extends VyperReferenceElement {
 
   @NotNull
   PsiElement getIdentifier();

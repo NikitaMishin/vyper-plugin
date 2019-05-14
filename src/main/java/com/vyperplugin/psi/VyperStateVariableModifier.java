@@ -5,12 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperSelfFunctionCall extends PsiElement {
-
-  @Nullable
-  VyperFunctionArgs getFunctionArgs();
-
-  @NotNull
-  PsiElement getIdentifier();
+public interface VyperStateVariableModifier extends VyperElement {
 
 }

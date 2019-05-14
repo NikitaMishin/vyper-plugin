@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperFunctionDefinition extends PsiElement {
+public interface VyperFunctionDefinition extends VyperElement {
 
   @Nullable
   VyperFunctionArgs getFunctionArgs();

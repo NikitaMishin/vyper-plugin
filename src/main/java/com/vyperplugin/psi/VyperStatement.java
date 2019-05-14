@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperStatement extends PsiElement {
+public interface VyperStatement extends VyperElement {
 
   @Nullable
   VyperBadStatement getBadStatement();

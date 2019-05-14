@@ -69,13 +69,13 @@ class ParserUtil: GeneratedParserUtilBase() {
 
         private val parserStateKey: Key<ParserState> = Key("parser-state")
 
-        private fun getParserState(builder_: PsiBuilder) = builder_.getUserData(parserStateKey)
+        fun getParserState(builder_: PsiBuilder) = builder_.getUserData(parserStateKey)
 
         @JvmStatic
         fun indented(builder_: PsiBuilder, level: Int, parser: Parser): Boolean {
-            val state = getParserState(builder_)
-//            log null error
-            val tokenIndent = state!!.getTokenIndent()
+            val state = getParserState(builder_)!!
+
+            val tokenIndent = state.getTokenIndent()
             if (tokenIndent > state.currentIndent) {
                 val prevIndent = state.currentIndent
                 state.currentIndent = tokenIndent
@@ -88,8 +88,8 @@ class ParserUtil: GeneratedParserUtilBase() {
 
         @JvmStatic
         fun indEq(builder_: PsiBuilder, level:Int):Boolean {
-            val state = getParserState(builder_)
-            return state!!.getTokenIndent() == state.currentIndent
+            val state = getParserState(builder_)!!
+            return state.getTokenIndent() == state.currentIndent
         }
 
         @JvmStatic
@@ -101,27 +101,27 @@ class ParserUtil: GeneratedParserUtilBase() {
 
         @JvmStatic
         fun indGt(builder_: PsiBuilder, level: Int): Boolean {
-            val state = getParserState(builder_)
-            return state!!.getTokenIndent() > state.currentIndent
+            val state = getParserState(builder_)!!
+            return state.getTokenIndent() > state.currentIndent
         }
 
         @JvmStatic
         fun indLt(builder_: PsiBuilder, level: Int): Boolean {
-            val state = getParserState(builder_)
-            val tokenIndent = state!!.getTokenIndent()
+            val state = getParserState(builder_)!!
+            val tokenIndent = state.getTokenIndent()
             return tokenIndent >= 0 && tokenIndent < state.currentIndent
         }
 
         @JvmStatic
         fun indNone(builder_: PsiBuilder, level: Int): Boolean {
-            val state = getParserState(builder_)
-            return state!!.getTokenIndent() == - 1
+            val state = getParserState(builder_)!!
+            return state.getTokenIndent() == - 1
         }
 
         @JvmStatic
         fun indOpt(builder_: PsiBuilder, level: Int): Boolean {
-            val state = getParserState(builder_)
-            val tokenInd = state!!.getTokenIndent()
+            val state = getParserState(builder_)!!
+            val tokenInd = state.getTokenIndent()
             return tokenInd == - 1 || tokenInd > state.currentIndent
         }
 

@@ -52,6 +52,7 @@ public interface VyperTypes {
   IElementType SELF_ACCESS_EXPRESSION = new VyperElementType("SELF_ACCESS_EXPRESSION");
   IElementType STATEMENT = new VyperElementType("STATEMENT");
   IElementType STATE_VARIABLE_DECLARATION = new VyperElementType("STATE_VARIABLE_DECLARATION");
+  IElementType STATE_VARIABLE_MODIFIER = new VyperElementType("STATE_VARIABLE_MODIFIER");
   IElementType STRUCT_DEFINITION = new VyperElementType("STRUCT_DEFINITION");
   IElementType STRUCT_TYPE = new VyperElementType("STRUCT_TYPE");
   IElementType TYPE = new VyperElementType("TYPE");
@@ -61,6 +62,7 @@ public interface VyperTypes {
   IElementType UNIT_TYPE = new VyperElementType("UNIT_TYPE");
   IElementType USER_DEFINED_CONSTANTS_EXPRESSION = new VyperElementType("USER_DEFINED_CONSTANTS_EXPRESSION");
   IElementType VALUE_TYPE = new VyperElementType("VALUE_TYPE");
+  IElementType VAR_LITERAL = new VyperElementType("VAR_LITERAL");
 
   IElementType ADDRESS = new VyperTokenType("address");
   IElementType AND = new VyperTokenType("and");
@@ -292,6 +294,9 @@ public interface VyperTypes {
       else if (type == STATE_VARIABLE_DECLARATION) {
         return new VyperStateVariableDeclarationImpl(node);
       }
+      else if (type == STATE_VARIABLE_MODIFIER) {
+        return new VyperStateVariableModifierImpl(node);
+      }
       else if (type == STRUCT_DEFINITION) {
         return new VyperStructDefinitionImpl(node);
       }
@@ -318,6 +323,9 @@ public interface VyperTypes {
       }
       else if (type == VALUE_TYPE) {
         return new VyperValueTypeImpl(node);
+      }
+      else if (type == VAR_LITERAL) {
+        return new VyperVarLiteralImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

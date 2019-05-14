@@ -14,7 +14,7 @@ public interface VyperPrimaryExpression extends VyperExpression {
   VyperType getType();
 
   @Nullable
-  PsiElement getIdentifier();
+  VyperVarLiteral getVarLiteral();
 
   @Nullable
   PsiElement getBooleanLiteral();

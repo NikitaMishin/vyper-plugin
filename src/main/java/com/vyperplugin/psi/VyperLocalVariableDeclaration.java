@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperLocalVariableDeclaration extends PsiElement {
+public interface VyperLocalVariableDeclaration extends VyperElement {
 
   @NotNull
   VyperType getType();

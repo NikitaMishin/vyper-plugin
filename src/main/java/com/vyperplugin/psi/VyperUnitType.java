@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperUnitType extends PsiElement {
+public interface VyperUnitType extends VyperElement {
 
   @Nullable
   VyperCustomUnitType getCustomUnitType();

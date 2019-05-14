@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperUnitsDefinition extends PsiElement {
+public interface VyperUnitsDefinition extends VyperElement {
 
   @NotNull
   List<VyperMultiLineString> getMultiLineStringList();

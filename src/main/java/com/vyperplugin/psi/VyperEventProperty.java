@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperEventProperty extends PsiElement {
+public interface VyperEventProperty extends VyperElement {
 
   @NotNull
   List<VyperIndexedData> getIndexedDataList();

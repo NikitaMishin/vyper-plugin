@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface VyperSelfAccessExpression extends VyperExpression {
 
   @NotNull
-  PsiElement getIdentifier();
+  VyperVarLiteral getVarLiteral();
 
 }

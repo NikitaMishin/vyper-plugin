@@ -5,6 +5,8 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import static com.vyperplugin.psi.VyperTypes.*;
 import static com.vyperplugin.parser.ParserUtil.*;
+
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
@@ -16,6 +18,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   public ASTNode parse(IElementType t, PsiBuilder b) {
     parseLight(t, b);
+//    ASTNode root = b.getTreeBuilt();
+//    root.putUserData(new Key("Indents"),Companion.getParserState(b));
     return b.getTreeBuilt();
   }
 
@@ -92,6 +96,9 @@ public class VyperParser implements PsiParser, LightPsiParser {
     else if (t == STATE_VARIABLE_DECLARATION) {
       r = StateVariableDeclaration(b, 0);
     }
+    else if (t == STATE_VARIABLE_MODIFIER) {
+      r = StateVariableModifier(b, 0);
+    }
     else if (t == STATEMENT) {
       r = Statement(b, 0);
     }
@@ -118,6 +125,9 @@ public class VyperParser implements PsiParser, LightPsiParser {
     }
     else if (t == VALUE_TYPE) {
       r = ValueType(b, 0);
+    }
+    else if (t == VAR_LITERAL) {
+      r = VarLiteral(b, 0);
     }
     else {
       r = parse_root_(t, b, 0);
@@ -162,13 +172,13 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Identifier | BAD_CHARACTER
+  // Identifier | StringLiteral |BAD_CHARACTER
   public static boolean BadStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "BadStatement")) return false;
-    if (!nextTokenIs(b, "<bad statement>", BAD_CHARACTER, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, BAD_STATEMENT, "<bad statement>");
     r = consumeToken(b, IDENTIFIER);
+    if (!r) r = StringLiteral(b, l + 1);
     if (!r) r = consumeToken(b, BAD_CHARACTER);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -2566,8 +2576,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // public
-  static boolean StateVariableModifier(PsiBuilder b, int l) {
-    return consumeToken(b, PUBLIC);
+  public static boolean StateVariableModifier(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "StateVariableModifier")) return false;
+    if (!nextTokenIs(b, PUBLIC)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, PUBLIC);
+    exit_section_(b, m, STATE_VARIABLE_MODIFIER, r);
+    return r;
   }
 
   /* ********************************************************** */
@@ -2688,7 +2704,6 @@ public class VyperParser implements PsiParser, LightPsiParser {
   // StructLocalVariableDefinition (&INDEQ StructLocalVariableDefinition )*
   static boolean StructMultipleDef(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StructMultipleDef")) return false;
-    if (!nextTokenIs(b, "", BAD_CHARACTER, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = StructLocalVariableDefinition(b, l + 1);
@@ -3099,6 +3114,18 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     r = DecimalNumber(b, l + 1);
     if (!r) r = consumeToken(b, IDENTIFIER);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // Identifier
+  public static boolean VarLiteral(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VarLiteral")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, IDENTIFIER);
+    exit_section_(b, m, VAR_LITERAL, r);
     return r;
   }
 
@@ -4011,7 +4038,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // self (&INDNONE '.') (&INDNONE Identifier)
+  // self (&INDNONE '.') (&INDNONE VarLiteral)
   public static boolean SelfAccessExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SelfAccessExpression")) return false;
     if (!nextTokenIsSmart(b, SELF)) return false;
@@ -4045,13 +4072,13 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // &INDNONE Identifier
+  // &INDNONE VarLiteral
   private static boolean SelfAccessExpression_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SelfAccessExpression_2")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = SelfAccessExpression_2_0(b, l + 1);
-    r = r && consumeTokenSmart(b, IDENTIFIER);
+    r = r && VarLiteral(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -4168,7 +4195,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // Identifier
+  // VarLiteral
   //                   |BooleanLiteral
   //                   | NumberLiteral
   //                   | HexLiteral
@@ -4180,7 +4207,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "PrimaryExpression")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, PRIMARY_EXPRESSION, "<primary expression>");
-    r = consumeTokenSmart(b, IDENTIFIER);
+    r = VarLiteral(b, l + 1);
     if (!r) r = BooleanLiteral(b, l + 1);
     if (!r) r = NumberLiteral(b, l + 1);
     if (!r) r = HexLiteral(b, l + 1);

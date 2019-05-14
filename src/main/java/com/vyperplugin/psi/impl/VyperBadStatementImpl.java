@@ -28,8 +28,38 @@ public class VyperBadStatementImpl extends ASTWrapperPsiElement implements Vyper
 
   @Override
   @Nullable
+  public VyperMultiLineString getMultiLineString() {
+    return findChildByClass(VyperMultiLineString.class);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getIdentifier() {
     return findChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteralDouble() {
+    return findChildByType(STRINGLITERALDOUBLE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteralDoubleB() {
+    return findChildByType(STRINGLITERALDOUBLEB);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteralSingle() {
+    return findChildByType(STRINGLITERALSINGLE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteralSingleB() {
+    return findChildByType(STRINGLITERALSINGLEB);
   }
 
 }
