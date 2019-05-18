@@ -58,13 +58,13 @@ class VyperCompilerDocker(var bindDir: String, var fullPathToFile: String,
         pluginDockerClient.dockerClient.removeContainer(id)
 
         if (logSTDERR.isBlank() && logSTDOUT.isNotBlank()) {
-            return ToolResult(logSTDOUT, "", fullPathToFile, StatusCode.SUCCESS)
+            return ToolResult(logSTDOUT, "", fullPathToFile, StatusDocker.SUCCESS)
         }
         if (logSTDERR.isBlank() && logSTDOUT.isBlank()) {
-            return ToolResult("", "", fullPathToFile, StatusCode.EMPTY_OUTPUT)
+            return ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
         }
         if (logSTDERR.isNotBlank()) {
-            return ToolResult("", logSTDERR, fullPathToFile, StatusCode.FAILED)
+            return ToolResult("", logSTDERR, fullPathToFile, StatusDocker.FAILED)
         }
 
         // check

@@ -24,6 +24,8 @@
 
         <!--      <configurationType implementation=""/> -->>
 
+        <codeInsight.lineMarkerProvider language="Vyper" implementationClass="com.vyperplugin.run.VyperRunMethodLineMarkerProvider"/>
+
     </extensions>
 
     <actions>
@@ -62,6 +64,8 @@
                     text="Build project" description="Compile all Vyper files">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl V"/>
             </action>
+            <action id="Vyper.Run" text="Run methods" class="com.vyperplugin.actions.compile.CompileVyperFile" >
+            </action>>
 
             <reference ref="vyper.smartcheckanalyze"/>
 

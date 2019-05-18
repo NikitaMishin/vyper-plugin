@@ -16,10 +16,8 @@ class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSe
     override var IMAGE: String = "murmulla/vyper_and_vyper_run:version1"
     private val toolName = "vyper-run"
     private val initCommand = "-i"
-
-
-    override fun exec(): ToolResult{
-        if(!isImageExistLocally()) downloadImage()
+    override fun exec(): ToolResult {
+        if (!isImageExistLocally()) downloadImage()
         return testRun()
     }
 
@@ -28,7 +26,14 @@ class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSe
         return if (init.contentEquals(arrayOf())) {
             arrayOf(fullPathToFile.split("/").last(), filteredSeq)
         } else {
-            arrayOf(fullPathToFile.split("/").last(), filteredSeq, initCommand, *init)
+            var initArgs = mutableListOf<String>()
+            for (i in init) {
+                initArgs.add(i)
+                initArgs.add(",")
+            }
+
+            arrayOf(fullPathToFile.split("/").last(), filteredSeq, initCommand,(initArgs.dropLast(1).joinToString("")))
+                    //*(initArgs.toTypedArray()))
         }
     }
 
@@ -39,21 +44,23 @@ class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSe
                 .binds("$bindDir/:$dockerBindDir")
                 .build()
 
+        val t = getInput()
         val containerConfig = ContainerConfig.builder()
                 .image(IMAGE)
                 .hostConfig(hostConfig)
                 .workingDir(dockerBindDir)
-                .cmd(*getInput())
+                .cmd(*t)
                 .entrypoint(toolName)
                 .build()
 
         val creation = pluginDockerClient.dockerClient.createContainer(containerConfig)
         val id = creation.id()!!
 
-        val streamSTDOUT = pluginDockerClient.dockerClient.attachContainer(id,
+        val streamSTDOUT = pluginDockerClient.dockerClient.attachContainer(id, DockerClient.AttachParameter.STDIN,
                 DockerClient.AttachParameter.STDOUT, DockerClient.AttachParameter.STREAM)
-        val streamSTDERR = pluginDockerClient.dockerClient.attachContainer(id,
+        val streamSTDERR = pluginDockerClient.dockerClient.attachContainer(id, DockerClient.AttachParameter.STDIN,
                 DockerClient.AttachParameter.STDERR, DockerClient.AttachParameter.STREAM)
+
 
         pluginDockerClient.dockerClient.startContainer(id)
         val logSTDOUT = streamSTDOUT.readFully()
@@ -62,11 +69,11 @@ class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSe
 
         when {
             logSTDERR.isBlank() && logSTDOUT.isNotBlank() ->
-                return ToolResult(logSTDOUT, "", fullPathToFile, StatusCode.SUCCESS)
+                return ToolResult(logSTDOUT, "", fullPathToFile, StatusDocker.SUCCESS)
             logSTDERR.isBlank() && logSTDOUT.isBlank() ->
-                return ToolResult("", "", fullPathToFile, StatusCode.EMPTY_OUTPUT)
+                return ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
             logSTDERR.isNotBlank() ->
-                return ToolResult("", logSTDERR, fullPathToFile, StatusCode.FAILED)
+                return ToolResult("", logSTDERR, fullPathToFile, StatusDocker.FAILED)
 
         }
         // will be removed when added TIME limiti branch

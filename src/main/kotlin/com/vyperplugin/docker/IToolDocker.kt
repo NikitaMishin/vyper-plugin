@@ -6,20 +6,21 @@ import com.spotify.docker.client.DockerClient
 /**
  * status code of execution
  */
-enum class StatusCode {
+enum class StatusDocker {
     EMPTY_OUTPUT,
     SUCCESS,
     FAILED,
-    TIME_LIMIT
+    TIME_LIMIT,
+    INTERNAL_ERROR
 }
 
 /**
- *  represent results of execution
+ *  represents results of execution
  */
-data class ToolResult(val stdout: String, val stderr: String, val filename: String, val statusCode: StatusCode)
+data class ToolResult(val stdout: String, val stderr: String, val filename: String, val statusDocker: StatusDocker)
 
 /**
- * represent abstract tool that runs inside a container
+ * represents abstract tool that runs inside a container
  *
  */
 abstract class IToolDocker {
@@ -44,5 +45,7 @@ abstract class IToolDocker {
     protected fun downloadImage() {
         pluginDockerClient.dockerClient.pull(IMAGE)
     }
+
+
 
 }

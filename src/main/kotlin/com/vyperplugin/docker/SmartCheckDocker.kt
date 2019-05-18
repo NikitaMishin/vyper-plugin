@@ -20,9 +20,9 @@ class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : IToolD
         val filename = fullPathToFile.split("/").last()
         val logs = analyzeFileInBindDir(filename)
         if (logs.isEmpty()) {
-            return ToolResult("", "", fullPathToFile, StatusCode.EMPTY_OUTPUT)
+            return ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
         } else {
-            return ToolResult(logs, "", fullPathToFile, StatusCode.SUCCESS)
+            return ToolResult(logs, "", fullPathToFile, StatusDocker.SUCCESS)
         }
     }
 
