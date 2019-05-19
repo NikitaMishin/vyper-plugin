@@ -1,18 +1,33 @@
 package com.vyperplugin.docker
 
 import com.spotify.docker.client.DockerClient
+import com.spotify.docker.client.LogStream
 import com.spotify.docker.client.exceptions.DockerException
 import com.spotify.docker.client.messages.ContainerConfig
 import com.spotify.docker.client.messages.HostConfig
 
 
-class SmartCheckDocker : IToolDocker() {
+class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : AbstractToolDocker() {
+
+    override var IMAGE = "murmulla/smartcheck:version1"
+
     private val toolName = "smartcheck.jar"
-    override var IMAGE = "smartcheck_image"
     private var incompleteCommand = arrayOf("sh", "-c")
 
+    override fun exec(): ToolResult {
+
+        val filename = fullPathToFile.split("/").last()
+        val logs = analyzeFileInBindDir(filename)
+        return if (logs.isEmpty()) {
+            ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
+        } else {
+            ToolResult(logs, "", fullPathToFile, StatusDocker.SUCCESS)
+        }
+    }
+
+
     @Throws(DockerException::class, InterruptedException::class)
-    fun analyzeFileinBindDir(bindDir: String, filename: String): List<String> {
+    fun analyzeFileInBindDir(filename: String): String {
 
         val hostConfig = HostConfig.builder()
                 .binds("$bindDir:$dockerBindDir")
@@ -29,20 +44,17 @@ class SmartCheckDocker : IToolDocker() {
         val id = creation.id()!!
 
         val logs: String
-        val stream = pluginDockerClient.dockerClient.attachContainer(id,
+        val stream: LogStream = pluginDockerClient.dockerClient.attachContainer(id,
                 DockerClient.AttachParameter.LOGS, DockerClient.AttachParameter.STDOUT,
-                // DockerClient.AttachParameter.STDERR, ignore antlr
+                // DockerClient.AttachParameter.STDERR, ignore antlr errors
                 DockerClient.AttachParameter.STREAM)
 
         pluginDockerClient.dockerClient.startContainer(id)
 
         logs = stream.readFully()
         pluginDockerClient.dockerClient.removeContainer(id)
-        return logs.lines()
+        return logs
     }
 
-    companion object {
-        //is _image exists
-    }
 
 }
