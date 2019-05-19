@@ -50,10 +50,10 @@ class VyperHighlighter : SyntaxHighlighterBase() {
 
 
         private fun keywords() = setOf<IElementType>(
-                IMPORT, AS, FROM,
-                CONTRACT, IMPLEMENTS, STRUCT, DEF, UNITS,
+                IMPORT, FROM, AS, CONTRACT, IMPLEMENTS,
+                STRUCT, DEF, UNITS,
                 IF, ELSE, FOR, BREAK, CONTINUE, RAISE, RETURN,
-                MAP, ELIF, EVENT, PASS, SELF, ASSERT, CLEAR
+                MAP, ELIF, EVENT, PASS, ASSERT, CLEAR, RANGE
         )
 
         private fun boolLiteral() = setOf<IElementType>(BOOLEANLITERAL)
