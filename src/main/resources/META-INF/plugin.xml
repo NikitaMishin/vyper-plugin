@@ -34,6 +34,13 @@
 
     </extensions>
 
+    <project-components>
+        <component>
+            <interface-class>com.vyperplugin.psi.VyperInternalTypeFactory</interface-class>
+            <implementation-class>com.vyperplugin.psi.VyperInternalTypeFactory</implementation-class>
+        </component>
+    </project-components>
+
     <actions>
     <action id="Vyper.NewVyperFile"
             class="com.vyperplugin.actions.CreateVyperFileAction"
@@ -97,12 +104,6 @@
 
     </actions>>
         <!-- Add your actions here -->
-    </actions>
-    <project-components>
-        <component>
-            <interface-class>com.vyperplugin.psi.VyperInternalTypeFactory</interface-class>
-            <implementation-class>com.vyperplugin.psi.VyperInternalTypeFactory</implementation-class>
-        </component>
-    </project-components>
+
 
 </idea-plugin>
