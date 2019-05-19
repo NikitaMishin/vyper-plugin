@@ -2,6 +2,7 @@ buildscript {
     
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -23,15 +24,35 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
 }
+
+
+compileKotlin {
+    kotlinOptions.jvmTarget = 1.8
+}
+
+
+
+
+
+
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+  //  compile group: 'net.sf.saxon', name: 'Saxon-HE', version: '9.5.1-8'
+    compile group: 'com.spotify', name: 'docker-client', version: '8.15.2'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
+configurations {
+    // turn of when test docker withoud deplyoingg plugin
+    compile.exclude  module: "slf4j-api"
+}
 intellij {
     version '2018.3.5'
 }
+
+
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>
