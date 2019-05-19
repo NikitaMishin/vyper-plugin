@@ -7,12 +7,13 @@ import com.spotify.docker.client.messages.HostConfig
 /**
  * vyper-run contract_name.vy "call1(params1,parems2,parems3);call2()" -i 1,2," "
  * i.e callSequence is "call1(params1,parems2,parems3);call2()"
+ * if params is a list then \"[[args] ...] \"
  * init is ArrayOf("-i",1, ",", 2, " \" \" ")
  */
 class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSequence: String,
                      var init: Array<String> = arrayOf()) : AbstractToolDocker() {
 
-    override var IMAGE: String = "murmulla/vyper_and_vyper_run:version1"
+    override var IMAGE: String = "murmulla/vyper_and_vyper_run:version2"
     private val toolName = "vyper-run"
     private val initCommand = "-i"
     override fun exec(): ToolResult = testRun()
