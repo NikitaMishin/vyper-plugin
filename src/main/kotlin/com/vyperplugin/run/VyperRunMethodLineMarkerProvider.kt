@@ -29,7 +29,6 @@ class VyperMethodRunHandler(private val funcName: String) : GutterIconNavigation
         val file = elt.containingFile.virtualFile!!
 
 
-
         val frame = VyperRunMenuSingle(
                 elt.project, ModuleManager.getInstance(elt.project).modules.first(), file)
         val funcArgs = getArgsFromSignature(elt as VyperFunctionDefinition)
@@ -42,7 +41,7 @@ class VyperMethodRunHandler(private val funcName: String) : GutterIconNavigation
                         FileDocumentManager.getInstance().saveAllDocuments()
                         ProgressManager.getInstance().run(object : Task.Backgroundable(elt.project, "running contract...") {
                             override fun run(indicator: ProgressIndicator) {
-                                            VyperRun.testContractSingleMethod(event.newValue as VyperTestParameters)
+                                VyperRun.testContractSingleMethod(event.newValue as VyperTestParameters)
                             }
                         })
                     }

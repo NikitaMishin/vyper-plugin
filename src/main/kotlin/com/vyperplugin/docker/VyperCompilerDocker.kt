@@ -10,7 +10,7 @@ import com.spotify.docker.client.messages.HostConfig
  * Vyper compiler that runs inside docker container
  */
 class VyperCompilerDocker(var bindDir: String, var fullPathToFile: String,
-                          var args: Array<String> = arrayOf()) : IToolDocker() {
+                          var args: Array<String> = arrayOf()) : AbstractToolDocker() {
     override var IMAGE = "murmulla/vyper_and_vyper_run:version1"
     private val toolName = "vyper"
 
@@ -31,7 +31,6 @@ class VyperCompilerDocker(var bindDir: String, var fullPathToFile: String,
                 .build()
 
         val completeCommand: Array<String> = (args + filename)
-        if (!isImageExistLocally()) downloadImage()
 
         val containerConfig = ContainerConfig.builder()
                 .image(IMAGE)

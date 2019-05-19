@@ -1,7 +1,6 @@
 package com.vyperplugin.docker
 
 import com.spotify.docker.client.DockerClient
-import com.spotify.docker.client.exceptions.DockerException
 import com.spotify.docker.client.messages.ContainerConfig
 import com.spotify.docker.client.messages.HostConfig
 
@@ -11,22 +10,19 @@ import com.spotify.docker.client.messages.HostConfig
  * init is ArrayOf("-i",1, ",", 2, " \" \" ")
  */
 class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSequence: String,
-                     var init: Array<String> = arrayOf()) : IToolDocker() {
+                     var init: Array<String> = arrayOf()) : AbstractToolDocker() {
 
     override var IMAGE: String = "murmulla/vyper_and_vyper_run:version1"
     private val toolName = "vyper-run"
     private val initCommand = "-i"
-    override fun exec(): ToolResult {
-        if (!isImageExistLocally()) downloadImage()
-        return testRun()
-    }
+    override fun exec(): ToolResult = testRun()
 
     private fun getInput(): Array<String> {
         val filteredSeq = callSequence.dropLastWhile { it == ';' }
         return if (init.contentEquals(arrayOf())) {
             arrayOf(fullPathToFile.split("/").last(), filteredSeq)
         } else {
-            var initArgs = mutableListOf<String>()
+            val initArgs = mutableListOf<String>()
             for (i in init) {
                 initArgs.add(i)
                 initArgs.add(",")
@@ -37,7 +33,6 @@ class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSe
         }
     }
 
-    @Throws(DockerException::class, InterruptedException::class)
     private fun testRun(): ToolResult {
 
         val hostConfig = HostConfig.builder()
@@ -76,7 +71,7 @@ class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSe
                 return ToolResult("", logSTDERR, fullPathToFile, StatusDocker.FAILED)
 
         }
-        // will be removed when added TIME limiti branch
+        // just for
         throw IllegalStateException()
     }
 

@@ -30,13 +30,16 @@
 
     <actions>
     <action id="Vyper.NewVyperFile"
-            class="com.vyperplugin.actions.createVyperFileAction"
+            class="com.vyperplugin.actions.CreateVyperFileAction"
             text="Vyper File"
             description="Create new Vyper file">
         <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
     </action>
-        <action id="vyper.smartcheckanalyze" class="com.vyperplugin.actions.SmartCheckAnalyzeAction"
-                text="Smart_Check_Analyze" description="Analyze vyper code with smartcheck">
+        <action id="vyper.smartcheckanalyze"
+                class="com.vyperplugin.actions.SmartCheckAnalyzeAction"
+                text="Smart_Check_Analyze"
+                description="Analyze vyper code with smartcheck">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl G"/>
             <add-to-group group-id="AnalyzeActions" anchor="first"/>
         </action>
 
@@ -58,13 +61,21 @@
 
 
         <group id="VyperGroup" text="Vyper actions">
-            <action id="Vyper.Compile" text="Compile" class="com.vyperplugin.actions.compile.CompileVyperFile"/>
-            <action id="Vyper.BuildProject"
-                    class="com.vyperplugin.actions.compile.CompileVyperFile"
+            <action id="Vyper.Compile" text="Compile"
+                    description="Compile vyper file"
+                    class="com.vyperplugin.actions.CompileVyperFileAction">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl S"/>
+            </action>
+     <!--       <action id="Vyper.BuildProject"
+                    class="com.vyperplugin.actions.CompileVyperFileAction"
                     text="Build project" description="Compile all Vyper files">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl V"/>
             </action>
-            <action id="Vyper.Run" text="Run methods" class="com.vyperplugin.actions.compile.CompileVyperFile" >
+       -->
+            <action id="Vyper.Run"
+                    text="Run methods" description="Test contract"
+                    class="com.vyperplugin.actions.VyperRunAction">
+                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl R" />
             </action>>
 
             <reference ref="vyper.smartcheckanalyze"/>
@@ -76,7 +87,6 @@
         <reference ref="VyperMenu">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorPopupMenu1"/>
         </reference>
-
 
 
     </actions>>

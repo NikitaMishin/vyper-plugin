@@ -14,8 +14,8 @@ import java.beans.PropertyChangeSupport
 import javax.swing.*
 
 object VyperRunContractCase {
-    val SINGLE = "SINGLE"
-    val MULTIPLE = "MULTIPLE"
+    const val SINGLE = "SINGLE"
+    const val MULTIPLE = "MULTIPLE"
 }
 
 

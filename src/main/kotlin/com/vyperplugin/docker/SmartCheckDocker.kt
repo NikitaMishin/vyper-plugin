@@ -7,7 +7,7 @@ import com.spotify.docker.client.messages.ContainerConfig
 import com.spotify.docker.client.messages.HostConfig
 
 
-class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : IToolDocker() {
+class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : AbstractToolDocker() {
 
     override var IMAGE = "murmulla/smartcheck:version1"
 
@@ -15,14 +15,13 @@ class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : IToolD
     private var incompleteCommand = arrayOf("sh", "-c")
 
     override fun exec(): ToolResult {
-        if (!isImageExistLocally()) downloadImage()
 
         val filename = fullPathToFile.split("/").last()
         val logs = analyzeFileInBindDir(filename)
-        if (logs.isEmpty()) {
-            return ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
+        return if (logs.isEmpty()) {
+            ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
         } else {
-            return ToolResult(logs, "", fullPathToFile, StatusDocker.SUCCESS)
+            ToolResult(logs, "", fullPathToFile, StatusDocker.SUCCESS)
         }
     }
 
@@ -54,7 +53,6 @@ class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : IToolD
 
         logs = stream.readFully()
         pluginDockerClient.dockerClient.removeContainer(id)
-        //return logs.lines()
         return logs
     }
 
