@@ -18,3 +18,11 @@ interface VyperReferenceElement : VyperNamedElement {
 
     override fun getReference(): VyperReference?
 }
+
+interface VyperFunctionDefElement : VyperReferenceElement {
+    val modifiers: List<PsiElement>
+    val parameters: VyperFunctionArgs?
+    val parameterTypes: List<VyperType>
+    val returns: VyperType?
+    val isConstructor: Boolean
+}

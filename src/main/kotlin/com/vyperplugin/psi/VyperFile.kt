@@ -12,7 +12,7 @@ import javax.swing.Icon
 class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, VyperLanguage) {
 
     override fun getFileType(): FileType {
-        return VyperFileType.INSTANCE
+        return VyperFileType
     }
 
     override fun toString(): String {

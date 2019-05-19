@@ -1,10 +1,13 @@
 package com.vyperplugin.references
 
 import com.intellij.psi.PsiElement
+import com.intellij.util.containers.toMutableSmartList
 import com.vyperplugin.psi.*
+import com.vyperplugin.psi.VyperTypes.*
+
 
 object VyperResolver {
-    fun resolveVarLiteral(element: VyperNamedElement): List<VyperNamedElement> {
+    fun resolveVarLiteral(element: VyperNamedElement): List<PsiElement> {
         val resolveResultList = lexicalDeclarations(element).filter { it.name == element.name }.toList()
         return resolveResultList
     }
@@ -19,18 +22,10 @@ object VyperResolver {
                 .drop(1) // current element might not be a VyperElement
                 .toList()
 
-        val elements =  parents.takeWhile { it is VyperElement && !stop(it) }
+        val elements =  parents
+                .takeWhile { it is VyperElement && !stop(it) }.filter{it is VyperFunctionDefinition}
                 .flatMap { lexicalDeclarations(it, place) }
 
-        if (place.parent is VyperSelfAccessExpression) {
-            val file = if (place.file is VyperFile) place.file else null
-
-            if (file != null) {
-                val statements = ((file as VyperFile)
-                        .getStatements()).flatMap { VyperResolver.lexicalDeclarations(it, place) }
-                return listOf(elements, statements).flatten()
-            }
-        }
         return elements
 
 
@@ -94,9 +89,27 @@ object VyperResolver {
             }
 
             else -> emptySequence()*/
-            is VyperStateVariableDeclaration -> listOf(scope)
-            else -> emptyList()
+            is VyperFunctionDefinition -> { scope.parameters?.paramDefList ?: emptyList()
+
+            }
+//            is VyperStateVariableDeclaration -> listOf(scope)
+                else -> emptyList()
+            }
         }
+
+
+    fun resolveFunction(element: VyperCallExpression, skipThis: Boolean = false): Collection<FunctionResolveResult> {
+        return resolveFunRec(element,skipThis).filter { it.name == element.referenceName }.map{FunctionResolveResult(it)}
+    }
+
+    private fun resolveFunRec(element: VyperCallExpression, skipThis: Boolean = false): List<VyperFunctionDefinition> {
+        val ref = element.expressionList.firstOrNull()
+        val res = mutableListOf<VyperFunctionDefinition>()
+
+        if(ref is VyperSelfAccessExpression) res.addAll((element.file as VyperFile)
+                                                .getStatements().filter { it is VyperFunctionDefinition}.map{it as VyperFunctionDefinition})
+
+        return res
     }
 
     private fun <T> Sequence<T>.takeWhileInclusive(pred: (T) -> Boolean): Sequence<T> {
@@ -107,4 +120,19 @@ object VyperResolver {
             result
         }
     }
+
+    //now only for self.var
+    //typechecking to be implemented
+    fun resolveSelfAccessVarLiteral(element: VyperSelfAccessExpression, id: VyperVarLiteral): Collection<PsiElement> {
+
+        return resolveSelfAccessVarLiteralRec(element)
+                .filter {it.name == id.name}
+
+    }
+
+    fun resolveSelfAccessVarLiteralRec(element: VyperSelfAccessExpression): Collection<VyperNamedElement>{
+        return (element.file as VyperFile).getStatements().filter { it is VyperStateVariableDeclaration }.map{it as VyperStateVariableDeclaration}
+    }
 }
+
+data class FunctionResolveResult(val psiElement: PsiElement, val usingLibrary: Boolean = false)

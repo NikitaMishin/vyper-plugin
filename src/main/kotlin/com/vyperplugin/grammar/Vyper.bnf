@@ -176,8 +176,12 @@ private ExternalInterfaceBody ::= ( def &INDNONE Identifier &INDNONE '('
 private ExternalFunStatus ::= modifying | constant
 
 
-FunctionArgs ::= Identifier ':' TYPE ('=' Expression)?  (',' Identifier ':' TYPE ('=' Expression)? )*
+FunctionArgs ::= ParamDef  (',' ParamDef )*
 
+ParamDef ::= Identifier ':' TYPE ('=' Expression)? {
+            mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+            implements = "com.vyperplugin.psi.VyperNamedElement"
+}
 // could be default assignment
 StructDefinition ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
 pin = 1
@@ -249,7 +253,9 @@ FunctionDefinition ::=
 //    FunBody
     FunDef
     FunBody
-   {pin=1}
+   {pin=1
+   implements = "com.vyperplugin.psi.VyperFunctionDefElement"
+   mixin = "com.vyperplugin.psi.VyperFunctionDefMixin"}
 
 
 //FunctionModifier ::= (&INDEQ FunctionModifierOptional)* (&INDEQ FunctionModifierMandatory) (&INDEQ FunctionModifierOptional)*
@@ -354,6 +360,7 @@ RangeExpression ::= range &INDNONE '(' RangeInterval ')'
 
 SelfAccessExpression ::= self (&INDNONE '.') (&INDNONE VarLiteral)
 
+
 //SelfFunctionCall ::= self &INDNONE '.' Identifier &INDNONE '(' (FunctionArgs)? ')'
 
 NewExpression ::= Identifier (&INDNONE'(') '{' (  ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression)
@@ -366,6 +373,11 @@ AssignmentExpression ::=
 CallExpression ::= Expression
                  ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression ']' ) )*
                   &INDNONE '(' FunctionCallArguments? ')' (&INDNONE '(' FunctionCallArguments? ')')*
+                  {
+                  implements = "com.vyperplugin.psi.VyperReferenceElement"
+                  mixin = "com.vyperplugin.psi.VyperCallElement"
+
+                  }
 
 //??
 FunctionCallExpression ::= (Identifier &INDNONE '(' FunctionCallArguments? ')') |
@@ -379,7 +391,7 @@ FunctionCallExpression ::= (Identifier &INDNONE '(' FunctionCallArguments? ')') 
 //left recursion?
 MemberAccessExpression ::= Expression &INDNONE DotAccess
 MemberIndexAccess ::=  Expression &INDNONE '.' Expression &INDNONE '[' Expression']' {extends=Expression}
-private DotAccess ::= '.' (&INDNONE Identifier)
+private DotAccess ::= '.' (&INDNONE VarLiteral)
 //recover?
 IndexAccessExpression ::= Expression &INDNONE '[' Expression']'
 //recover?

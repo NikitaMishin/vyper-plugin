@@ -5,9 +5,15 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperFunctionArgs extends VyperElement {
+public interface VyperParamDef extends VyperNamedElement {
+
+  @Nullable
+  VyperExpression getExpression();
 
   @NotNull
-  List<VyperParamDef> getParamDefList();
+  VyperType getType();
+
+  @NotNull
+  PsiElement getIdentifier();
 
 }

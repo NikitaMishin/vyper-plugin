@@ -24,6 +24,7 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitCallExpression(@NotNull VyperCallExpression o) {
     visitExpression(o);
+    // visitReferenceElement(o);
   }
 
   public void visitClearExpression(@NotNull VyperClearExpression o) {
@@ -83,7 +84,7 @@ public class VyperVisitor extends PsiElementVisitor {
   }
 
   public void visitFunctionDefinition(@NotNull VyperFunctionDefinition o) {
-    visitElement(o);
+    visitFunctionDefElement(o);
   }
 
   public void visitFunctionModifier(@NotNull VyperFunctionModifier o) {
@@ -152,6 +153,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitOrExpression(@NotNull VyperOrExpression o) {
     visitExpression(o);
+  }
+
+  public void visitParamDef(@NotNull VyperParamDef o) {
+    visitNamedElement(o);
   }
 
   public void visitParenthesiziedExpression(@NotNull VyperParenthesiziedExpression o) {
@@ -224,6 +229,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitVarLiteral(@NotNull VyperVarLiteral o) {
     visitReferenceElement(o);
+  }
+
+  public void visitFunctionDefElement(@NotNull VyperFunctionDefElement o) {
+    visitElement(o);
   }
 
   public void visitNamedElement(@NotNull VyperNamedElement o) {

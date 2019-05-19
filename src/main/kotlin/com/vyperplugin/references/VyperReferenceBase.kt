@@ -9,6 +9,7 @@ import com.vyperplugin.psi.VyperTypes.IDENTIFIER
 
 abstract class VyperReferenceBase<T: VyperReferenceElement>(element: T) : PsiPolyVariantReferenceBase<T>(element), VyperReference {
 
+    //highlights the element which is referenced
     override fun calculateDefaultRangeInElement() = TextRange(0, element.textRange.length)
 
     override fun getVariants(): Array<out Any> = emptyArray()

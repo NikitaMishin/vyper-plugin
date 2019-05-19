@@ -45,6 +45,7 @@ public interface VyperTypes {
   IElementType MULT_DIV_EXPRESSION = new VyperElementType("MULT_DIV_EXPRESSION");
   IElementType NEW_EXPRESSION = new VyperElementType("NEW_EXPRESSION");
   IElementType OR_EXPRESSION = new VyperElementType("OR_EXPRESSION");
+  IElementType PARAM_DEF = new VyperElementType("PARAM_DEF");
   IElementType PARENTHESIZIED_EXPRESSION = new VyperElementType("PARENTHESIZIED_EXPRESSION");
   IElementType PLUS_MIN_EXPRESSION = new VyperElementType("PLUS_MIN_EXPRESSION");
   IElementType PRIMARY_EXPRESSION = new VyperElementType("PRIMARY_EXPRESSION");
@@ -272,6 +273,9 @@ public interface VyperTypes {
       }
       else if (type == OR_EXPRESSION) {
         return new VyperOrExpressionImpl(node);
+      }
+      else if (type == PARAM_DEF) {
+        return new VyperParamDefImpl(node);
       }
       else if (type == PARENTHESIZIED_EXPRESSION) {
         return new VyperParenthesiziedExpressionImpl(node);

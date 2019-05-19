@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.vyperplugin.psi.VyperNamedElementImpl;
 import com.vyperplugin.psi.*;
 
-public class VyperFunctionArgsImpl extends ASTWrapperPsiElement implements VyperFunctionArgs {
+public class VyperParamDefImpl extends VyperNamedElementImpl implements VyperParamDef {
 
-  public VyperFunctionArgsImpl(@NotNull ASTNode node) {
+  public VyperParamDefImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitFunctionArgs(this);
+    visitor.visitParamDef(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -27,9 +27,21 @@ public class VyperFunctionArgsImpl extends ASTWrapperPsiElement implements Vyper
   }
 
   @Override
+  @Nullable
+  public VyperExpression getExpression() {
+    return findChildByClass(VyperExpression.class);
+  }
+
+  @Override
   @NotNull
-  public List<VyperParamDef> getParamDefList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperParamDef.class);
+  public VyperType getType() {
+    return findNotNullChildByClass(VyperType.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getIdentifier() {
+    return findNotNullChildByType(IDENTIFIER);
   }
 
 }

@@ -8,9 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
+import com.vyperplugin.psi.VyperCallElement;
 import com.vyperplugin.psi.*;
 
-public class VyperCallExpressionImpl extends VyperExpressionImpl implements VyperCallExpression {
+public class VyperCallExpressionImpl extends VyperCallElement implements VyperCallExpression {
 
   public VyperCallExpressionImpl(@NotNull ASTNode node) {
     super(node);
