@@ -23,7 +23,6 @@ import static com.vyperplugin.psi.VyperTypes.*;
 %unicode
 
 EOL=\R
-//WHITE_SPACE=\s+
 
 COMMENT=(#.*)
 HEXLITERAL=hex\"([0-9a-fA-F]+)\"
@@ -37,8 +36,7 @@ FIXEDNUMBER=(([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*)*\.([0-9][_0-9]*))
 BOOLEANLITERAL=True|False
 SCIENTIFICNUMBER=((([0-9][_0-9]*)+|([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*|[0-9])*\.[_0-9]+)[Ee][+-]?[_0-9]+)
 HEXNUMBER=(0[xX][_0-9a-fA-F]+)
-//NEWLINE=(\n|(\r\n))
-WHITE_SPACE=[\s\t\n\x0B\f\r]+
+WHITE_SPACE=[ \s\t\n\x0B\f\r]+
 IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
 
 %%
@@ -93,7 +91,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "modifying"                 { return MODIFYING; }
   "event"                     { return EVENT; }
   "range"                     { return RANGE; }
-  //"BAD_CHARACTER"             { return BAD_CHARACTER; }
+  "BAD_CHARACTER"             { return BAD_CHARACTER; }
   "units"                     { return UNITS; }
   "as"                        { return AS; }
   "implements"                { return IMPLEMENTS; }
@@ -110,7 +108,6 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "return"                    { return RETURN; }
   "raise"                     { return RAISE; }
   "pass"                      { return PASS; }
-  "self"                      { return SELF; }
   "TypeName"                  { return TYPENAME; }
   "clear"                     { return CLEAR; }
   "assert"                    { return ASSERT; }

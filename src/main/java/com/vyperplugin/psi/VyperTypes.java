@@ -50,7 +50,6 @@ public interface VyperTypes {
   IElementType PLUS_MIN_EXPRESSION = new VyperElementType("PLUS_MIN_EXPRESSION");
   IElementType PRIMARY_EXPRESSION = new VyperElementType("PRIMARY_EXPRESSION");
   IElementType RANGE_EXPRESSION = new VyperElementType("RANGE_EXPRESSION");
-  IElementType SELF_ACCESS_EXPRESSION = new VyperElementType("SELF_ACCESS_EXPRESSION");
   IElementType STATEMENT = new VyperElementType("STATEMENT");
   IElementType STATE_VARIABLE_DECLARATION = new VyperElementType("STATE_VARIABLE_DECLARATION");
   IElementType STATE_VARIABLE_MODIFIER = new VyperElementType("STATE_VARIABLE_MODIFIER");
@@ -148,7 +147,6 @@ public interface VyperTypes {
   IElementType RPAREN = new VyperTokenType(")");
   IElementType RSHIFT = new VyperTokenType(">>");
   IElementType SCIENTIFICNUMBER = new VyperTokenType("scientificNumber");
-  IElementType SELF = new VyperTokenType("self");
   IElementType SEMICOLON = new VyperTokenType(";");
   IElementType STRING = new VyperTokenType("string");
   IElementType STRINGLITERALDOUBLE = new VyperTokenType("stringLiteralDouble");
@@ -288,9 +286,6 @@ public interface VyperTypes {
       }
       else if (type == RANGE_EXPRESSION) {
         return new VyperRangeExpressionImpl(node);
-      }
-      else if (type == SELF_ACCESS_EXPRESSION) {
-        return new VyperSelfAccessExpressionImpl(node);
       }
       else if (type == STATEMENT) {
         return new VyperStatementImpl(node);

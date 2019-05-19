@@ -21,6 +21,8 @@
                            implementationClass="com.vyperplugin.editorActions.PairedBraceMatcherVyper"/>
 <!--        <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.SelfAccessUnresolvedReferenceAnnotator"/>-->
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperDeclarationsOrderAnnotator"/>
+        <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperColorAnnotator"/>
+
 
 
     </extensions>
@@ -28,4 +30,11 @@
     <actions>
         <!-- Add your actions here -->
     </actions>
+    <project-components>
+        <component>
+            <interface-class>com.vyperplugin.psi.VyperInternalTypeFactory</interface-class>
+            <implementation-class>com.vyperplugin.psi.VyperInternalTypeFactory</implementation-class>
+        </component>
+    </project-components>
+
 </idea-plugin>

@@ -106,10 +106,19 @@ object VyperResolver {
         val ref = element.expressionList.firstOrNull()
         val res = mutableListOf<VyperFunctionDefinition>()
 
-        if(ref is VyperSelfAccessExpression) res.addAll((element.file as VyperFile)
-                                                .getStatements().filter { it is VyperFunctionDefinition}.map{it as VyperFunctionDefinition})
+//        if(ref is VyperSelfAccessExpression) res.addAll((element.file as VyperFile)
+//                                                .getStatements().filter { it is VyperFunctionDefinition}.map{it as VyperFunctionDefinition})
 
         return res
+    }
+
+    fun resolveMemberAccess(element: VyperMemberAccessExpression): List<VyperNamedElement> {
+        if( element.firstChild.firstChild is VyperVarLiteral
+                && (element.firstChild.firstChild as VyperVarLiteral).name == "msg") {
+            val msg = VyperInternalTypeFactory.of(element.project).msg
+           return  msg.children.filter { it is VyperLocalVariableDefinition }.map{it as VyperLocalVariableDefinition}.map{it.localVariableDeclaration}
+        }
+            return emptyList()
     }
 
     private fun <T> Sequence<T>.takeWhileInclusive(pred: (T) -> Boolean): Sequence<T> {
@@ -123,16 +132,16 @@ object VyperResolver {
 
     //now only for self.var
     //typechecking to be implemented
-    fun resolveSelfAccessVarLiteral(element: VyperSelfAccessExpression, id: VyperVarLiteral): Collection<PsiElement> {
+//    fun resolveSelfAccessVarLiteral(element: VyperSelfAccessExpression, id: VyperVarLiteral): Collection<PsiElement> {
+//
+//        return resolveSelfAccessVarLiteralRec(element)
+//                .filter {it.name == id.name}
+//
+//    }
 
-        return resolveSelfAccessVarLiteralRec(element)
-                .filter {it.name == id.name}
-
-    }
-
-    fun resolveSelfAccessVarLiteralRec(element: VyperSelfAccessExpression): Collection<VyperNamedElement>{
-        return (element.file as VyperFile).getStatements().filter { it is VyperStateVariableDeclaration }.map{it as VyperStateVariableDeclaration}
-    }
+//    fun resolveSelfAccessVarLiteralRec(element: VyperSelfAccessExpression): Collection<VyperNamedElement>{
+//        return (element.file as VyperFile).getStatements().filter { it is VyperStateVariableDeclaration }.map{it as VyperStateVariableDeclaration}
+//    }
 }
 
 data class FunctionResolveResult(val psiElement: PsiElement, val usingLibrary: Boolean = false)

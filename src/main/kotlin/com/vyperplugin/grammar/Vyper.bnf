@@ -234,7 +234,12 @@ StateVariableModifier ::= public
 LocalVariableDefinition ::=  ( LocalVariableDeclaration (&INDNONE '=') (&INDNONE Expression) ) |
                            LocalVariableDeclaration
 
-LocalVariableDeclaration ::= Identifier &INDNONE ':' &INDNONE TYPE
+LocalVariableDeclaration ::= Identifier &INDNONE ':' &INDNONE TYPE {
+
+mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+implements = "com.vyperplugin.psi.VyperNamedElement"
+
+}
 
 //Colon ::= (&INDNONE ':')
 //Type ::=  (&INDNONE TYPE)
@@ -340,7 +345,7 @@ Expression ::=
   | UnaryExpression
   | ClearExpression
   | IndexAccessExpression
-  | SelfAccessExpression
+//  | SelfAccessExpression
 //  | SelfFunctionCall
   | MemberAccessExpression
   | MemberIndexAccess
@@ -358,7 +363,7 @@ private RangeInterval ::= PrimaryExpression ',' PrimaryExpression ',' PrimaryExp
 RangeExpression ::= range &INDNONE '(' RangeInterval ')'
 
 
-SelfAccessExpression ::= self (&INDNONE '.') (&INDNONE VarLiteral)
+//SelfAccessExpression ::= self (&INDNONE '.') (&INDNONE Expression)
 
 
 //SelfFunctionCall ::= self &INDNONE '.' Identifier &INDNONE '(' (FunctionArgs)? ')'
@@ -389,9 +394,8 @@ FunctionCallExpression ::= (Identifier &INDNONE '(' FunctionCallArguments? ')') 
 
 
 //left recursion?
-MemberAccessExpression ::= Expression &INDNONE DotAccess
+MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral)
 MemberIndexAccess ::=  Expression &INDNONE '.' Expression &INDNONE '[' Expression']' {extends=Expression}
-private DotAccess ::= '.' (&INDNONE VarLiteral)
 //recover?
 IndexAccessExpression ::= Expression &INDNONE '[' Expression']'
 //recover?

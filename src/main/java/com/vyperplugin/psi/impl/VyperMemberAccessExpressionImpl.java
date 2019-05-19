@@ -33,8 +33,8 @@ public class VyperMemberAccessExpressionImpl extends VyperExpressionImpl impleme
 
   @Override
   @NotNull
-  public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+  public VyperVarLiteral getVarLiteral() {
+    return findNotNullChildByClass(VyperVarLiteral.class);
   }
 
 }

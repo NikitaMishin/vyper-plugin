@@ -11,8 +11,7 @@ import com.vyperplugin.psi.*
 
 class VyperDeclarationsOrderAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        val vyperStateVariableDeclarations = mutableListOf<VyperElement>()
-        val vyperFunctionDefinitions = mutableListOf<VyperElement>()
+
         if (element is VyperStateVariableDeclaration) {
 
             val declarations = (element.file as VyperFile).getStatements().takeWhile { it != element }

@@ -120,7 +120,7 @@ public class VyperVisitor extends PsiElementVisitor {
   }
 
   public void visitLocalVariableDeclaration(@NotNull VyperLocalVariableDeclaration o) {
-    visitElement(o);
+    visitNamedElement(o);
   }
 
   public void visitLocalVariableDefinition(@NotNull VyperLocalVariableDefinition o) {
@@ -172,10 +172,6 @@ public class VyperVisitor extends PsiElementVisitor {
   }
 
   public void visitRangeExpression(@NotNull VyperRangeExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitSelfAccessExpression(@NotNull VyperSelfAccessExpression o) {
     visitExpression(o);
   }
 

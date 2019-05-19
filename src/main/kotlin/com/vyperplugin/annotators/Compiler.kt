@@ -6,9 +6,10 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory
 import com.intellij.tasks.*
 import com.intellij.openapi.compiler.CompilationStatusListener
 import com.intellij.codeInsight.completion.InsertHandler
+import com.intellij.openapi.components.ProjectComponent
 
 import com.intellij.openapi.editor.Document
 
-//class VyperCompilerListener : ProjectTaskListener {
-//
-//}
+class VyperCompilerListener : ProjectComponent {
+//TODO
+}

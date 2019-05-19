@@ -18,15 +18,26 @@ class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<Vy
     }
 }
 
-class VyperMemberAccessReference(element: VyperVarLiteral, var self : VyperSelfAccessExpression) : VyperReferenceBase<VyperVarLiteral>(element) ,VyperReference {
+//class VyperSelfAccessReference(element: VyperVarLiteral, var self : VyperSelfAccessExpression) : VyperReferenceBase<VyperVarLiteral>(element) ,VyperReference {
+//
+//    override fun multiResolve(): Collection<PsiElement> {
+//        return VyperResolver.resolveSelfAccessVarLiteral(self,element)
+//    }
+//
+//    override fun getVariants(): Array<out Any> {
+//        return VyperCompleter.completeSelfAccess(self)
+//    }
+//}
 
+class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemberAccessExpression): VyperReferenceBase<VyperVarLiteral>(element) ,VyperReference {
     override fun multiResolve(): Collection<PsiElement> {
-        return VyperResolver.resolveSelfAccessVarLiteral(self,element)
+        return super.multiResolve()
     }
 
     override fun getVariants(): Array<out Any> {
-        return VyperCompleter.completeSelfAccess(self)
+        return VyperCompleter.completeMemberAccess(member)
     }
+
 }
 
 class VyperCallReference(element: VyperCallElement) : VyperReferenceBase<VyperCallElement>(element), VyperReference {

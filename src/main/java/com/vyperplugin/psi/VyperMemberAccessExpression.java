@@ -11,6 +11,6 @@ public interface VyperMemberAccessExpression extends VyperExpression {
   VyperExpression getExpression();
 
   @NotNull
-  PsiElement getIdentifier();
+  VyperVarLiteral getVarLiteral();
 
 }

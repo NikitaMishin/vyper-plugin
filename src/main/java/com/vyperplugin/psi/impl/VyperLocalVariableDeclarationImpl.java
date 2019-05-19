@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.vyperplugin.psi.VyperNamedElementImpl;
 import com.vyperplugin.psi.*;
 
-public class VyperLocalVariableDeclarationImpl extends ASTWrapperPsiElement implements VyperLocalVariableDeclaration {
+public class VyperLocalVariableDeclarationImpl extends VyperNamedElementImpl implements VyperLocalVariableDeclaration {
 
   public VyperLocalVariableDeclarationImpl(@NotNull ASTNode node) {
     super(node);

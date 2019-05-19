@@ -8,10 +8,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.tree.IElementType
 import com.vyperplugin.psi.VyperTypes.*
-import com.vyperplugin.references.VyperCallReference
-import com.vyperplugin.references.VyperMemberAccessReference
-import com.vyperplugin.references.VyperReference
-import com.vyperplugin.references.VyperVarLiteralReference
+import com.vyperplugin.references.*
 
 abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperVarLiteral {
 
@@ -27,7 +24,8 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
         if (parent is VyperCallElement) return VyperCallReference(parent)
         if (grandparent is VyperCallElement) return VyperCallReference(grandparent)
         //member access
-        if (parent is VyperSelfAccessExpression) return VyperMemberAccessReference(this,parent)
+//        if (parent is VyperSelfAccessExpression) return VyperSelfAccessReference(this,parent)
+        if (parent is VyperMemberAccessExpression && parent.varLiteral == node.psi) return VyperMemberAccessReference(this,parent)
         return VyperVarLiteralReference(this)
 
     }
