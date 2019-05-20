@@ -83,14 +83,14 @@ public class _VyperLexer implements FlexLexer {
     "\11\4\1\63\3\4\1\64\2\4\1\65\7\4\1\66"+
     "\1\67\1\4\1\70\6\4\1\0\1\71\1\72\1\4"+
     "\1\0\1\4\1\73\1\4\1\74\21\4\1\75\1\4"+
-    "\1\76\11\4\1\0\1\77\1\0\1\100\3\4\1\101"+
-    "\1\102\1\4\1\103\14\4\1\104\1\4\1\105\12\4"+
-    "\1\106\1\107\2\4\1\110\1\4\1\111\1\4\1\112"+
-    "\1\113\2\4\1\114\1\115\2\4\1\116\14\4\1\117"+
-    "\1\4\1\120\1\121\3\4\1\122\1\123\13\4\1\124"+
-    "\4\4\1\125\1\126\1\127\11\4\1\130\11\4\1\131"+
-    "\4\4\1\132\2\4\1\133\4\4\1\134\1\135\1\136"+
-    "\1\4\1\137\1\4\1\140\1\141\1\1";
+    "\1\76\11\4\1\0\1\77\1\0\1\100\1\101\2\4"+
+    "\1\102\1\103\1\4\1\104\14\4\1\105\1\4\1\106"+
+    "\12\4\1\107\1\110\2\4\1\111\1\4\1\112\1\4"+
+    "\1\113\1\114\2\4\1\115\1\116\2\4\1\117\14\4"+
+    "\1\120\1\4\1\121\1\122\3\4\1\123\1\124\13\4"+
+    "\1\125\4\4\1\126\1\127\1\130\11\4\1\131\11\4"+
+    "\1\132\4\4\1\133\2\4\1\134\4\4\1\135\1\136"+
+    "\1\137\1\4\1\140\1\4\1\141\1\142\1\1";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[337];
@@ -1232,487 +1232,492 @@ public class _VyperLexer implements FlexLexer {
             { return BAD_CHARACTER;
             } 
             // fall through
-          case 98: break;
+          case 99: break;
           case 2: 
             { return WHITE_SPACE;
             } 
             // fall through
-          case 99: break;
+          case 100: break;
           case 3: 
             { return COMMENT;
             } 
             // fall through
-          case 100: break;
+          case 101: break;
           case 4: 
             { return IDENTIFIER;
             } 
             // fall through
-          case 101: break;
+          case 102: break;
           case 5: 
             { return DECIMALNUMBER;
             } 
             // fall through
-          case 102: break;
+          case 103: break;
           case 6: 
             { return DOT;
             } 
             // fall through
-          case 103: break;
+          case 104: break;
           case 7: 
             { return MINUS;
             } 
             // fall through
-          case 104: break;
+          case 105: break;
           case 8: 
             { return DECORATOR;
             } 
             // fall through
-          case 105: break;
+          case 106: break;
           case 9: 
             { return SEMICOLON;
             } 
             // fall through
-          case 106: break;
+          case 107: break;
           case 10: 
             { return COMMA;
             } 
             // fall through
-          case 107: break;
+          case 108: break;
           case 11: 
             { return COLON;
             } 
             // fall through
-          case 108: break;
+          case 109: break;
           case 12: 
             { return LBRACKET;
             } 
             // fall through
-          case 109: break;
+          case 110: break;
           case 13: 
             { return RBRACKET;
             } 
             // fall through
-          case 110: break;
+          case 111: break;
           case 14: 
             { return LBRACE;
             } 
             // fall through
-          case 111: break;
+          case 112: break;
           case 15: 
             { return RBRACE;
             } 
             // fall through
-          case 112: break;
+          case 113: break;
           case 16: 
             { return LPAREN;
             } 
             // fall through
-          case 113: break;
+          case 114: break;
           case 17: 
             { return RPAREN;
             } 
             // fall through
-          case 114: break;
+          case 115: break;
           case 18: 
             { return PLUS;
             } 
             // fall through
-          case 115: break;
+          case 116: break;
           case 19: 
             { return MULT;
             } 
             // fall through
-          case 116: break;
+          case 117: break;
           case 20: 
             { return DIV;
             } 
             // fall through
-          case 117: break;
+          case 118: break;
           case 21: 
             { return ASSIGN;
             } 
             // fall through
-          case 118: break;
+          case 119: break;
           case 22: 
             { return MORE;
             } 
             // fall through
-          case 119: break;
+          case 120: break;
           case 23: 
             { return PERCENT;
             } 
             // fall through
-          case 120: break;
+          case 121: break;
           case 24: 
             { return LESS;
             } 
             // fall through
-          case 121: break;
+          case 122: break;
           case 25: 
             { return CARET;
             } 
             // fall through
-          case 122: break;
+          case 123: break;
           case 26: 
             { return QUESTION;
             } 
             // fall through
-          case 123: break;
+          case 124: break;
           case 27: 
             { return TILDE;
             } 
             // fall through
-          case 124: break;
+          case 125: break;
           case 28: 
             { return STRINGLITERALDOUBLE;
             } 
             // fall through
-          case 125: break;
+          case 126: break;
           case 29: 
             { return STRINGLITERALSINGLE;
             } 
             // fall through
-          case 126: break;
+          case 127: break;
           case 30: 
             { return FIXEDNUMBER;
             } 
             // fall through
-          case 127: break;
+          case 128: break;
           case 31: 
             { return AS;
             } 
             // fall through
-          case 128: break;
+          case 129: break;
           case 32: 
             { return MINUS_ASSIGN;
             } 
             // fall through
-          case 129: break;
+          case 130: break;
           case 33: 
             { return IF;
             } 
             // fall through
-          case 130: break;
+          case 131: break;
           case 34: 
             { return IN;
             } 
             // fall through
-          case 131: break;
+          case 132: break;
           case 35: 
             { return OR;
             } 
             // fall through
-          case 132: break;
+          case 133: break;
           case 36: 
             { return PLUS_ASSIGN;
             } 
             // fall through
-          case 133: break;
+          case 134: break;
           case 37: 
             { return EXPONENT;
             } 
             // fall through
-          case 134: break;
+          case 135: break;
           case 38: 
             { return MULT_ASSIGN;
             } 
             // fall through
-          case 135: break;
+          case 136: break;
           case 39: 
             { return DIV_ASSIGN;
             } 
             // fall through
-          case 136: break;
+          case 137: break;
           case 40: 
             { return EQ;
             } 
             // fall through
-          case 137: break;
+          case 138: break;
           case 41: 
             { return TO;
             } 
             // fall through
-          case 138: break;
+          case 139: break;
           case 42: 
             { return MOREEQ;
             } 
             // fall through
-          case 139: break;
+          case 140: break;
           case 43: 
             { return RSHIFT;
             } 
             // fall through
-          case 140: break;
+          case 141: break;
           case 44: 
             { return NEQ;
             } 
             // fall through
-          case 141: break;
+          case 142: break;
           case 45: 
             { return PERCENT_ASSIGN;
             } 
             // fall through
-          case 142: break;
+          case 143: break;
           case 46: 
             { return LESSEQ;
             } 
             // fall through
-          case 143: break;
+          case 144: break;
           case 47: 
             { return LSHIFT;
             } 
             // fall through
-          case 144: break;
+          case 145: break;
           case 48: 
             { return STRINGLITERALDOUBLEB;
             } 
             // fall through
-          case 145: break;
+          case 146: break;
           case 49: 
             { return STRINGLITERALSINGLEB;
             } 
             // fall through
-          case 146: break;
+          case 147: break;
           case 50: 
             { return SCIENTIFICNUMBER;
             } 
             // fall through
-          case 147: break;
+          case 148: break;
           case 51: 
             { return AND;
             } 
             // fall through
-          case 148: break;
+          case 149: break;
           case 52: 
             { return HEXNUMBER;
             } 
             // fall through
-          case 149: break;
+          case 150: break;
           case 53: 
             { return MAP;
             } 
             // fall through
-          case 150: break;
+          case 151: break;
           case 54: 
             { return FOR;
             } 
             // fall through
-          case 151: break;
+          case 152: break;
           case 55: 
             { return NOT;
             } 
             // fall through
-          case 152: break;
+          case 153: break;
           case 56: 
             { return DEF;
             } 
             // fall through
-          case 153: break;
+          case 154: break;
           case 57: 
             { return ELSE;
             } 
             // fall through
-          case 154: break;
+          case 155: break;
           case 58: 
             { return ELIF;
             } 
             // fall through
-          case 155: break;
+          case 156: break;
           case 59: 
             { return BOOL;
             } 
             // fall through
-          case 156: break;
+          case 157: break;
           case 60: 
             { return BOOLEANLITERAL;
             } 
             // fall through
-          case 157: break;
+          case 158: break;
           case 61: 
             { return PASS;
             } 
             // fall through
-          case 158: break;
+          case 159: break;
           case 62: 
             { return FROM;
             } 
             // fall through
-          case 159: break;
+          case 160: break;
           case 63: 
             { return EVENT;
             } 
             // fall through
-          case 160: break;
+          case 161: break;
           case 64: 
             { return BREAK;
             } 
             // fall through
-          case 161: break;
-          case 65: 
-            { return RAISE;
-            } 
-            // fall through
           case 162: break;
-          case 66: 
-            { return RANGE;
+          case 65: 
+            { return BYTES;
             } 
             // fall through
           case 163: break;
-          case 67: 
-            { return UNITS;
+          case 66: 
+            { return RAISE;
             } 
             // fall through
           case 164: break;
-          case 68: 
-            { return FIXED;
+          case 67: 
+            { return RANGE;
             } 
             // fall through
           case 165: break;
-          case 69: 
-            { return CLEAR;
+          case 68: 
+            { return UNITS;
             } 
             // fall through
           case 166: break;
-          case 70: 
-            { return HEXLITERAL;
+          case 69: 
+            { return FIXED;
             } 
             // fall through
           case 167: break;
-          case 71: 
-            { return MULTILINESTRINGTOKEN;
+          case 70: 
+            { return CLEAR;
             } 
             // fall through
           case 168: break;
-          case 72: 
-            { return RETURN;
+          case 71: 
+            { return HEXLITERAL;
             } 
             // fall through
           case 169: break;
-          case 73: 
-            { return ASSERT;
+          case 72: 
+            { return MULTILINESTRINGTOKEN;
             } 
             // fall through
           case 170: break;
-          case 74: 
-            { return STRUCT;
+          case 73: 
+            { return RETURN;
             } 
             // fall through
           case 171: break;
-          case 75: 
-            { return STRING;
+          case 74: 
+            { return ASSERT;
             } 
             // fall through
           case 172: break;
-          case 76: 
-            { return IMPORT;
+          case 75: 
+            { return STRUCT;
             } 
             // fall through
           case 173: break;
-          case 77: 
-            { return INT128;
+          case 76: 
+            { return STRING;
             } 
             // fall through
           case 174: break;
-          case 78: 
-            { return PUBLIC;
+          case 77: 
+            { return IMPORT;
             } 
             // fall through
           case 175: break;
-          case 79: 
-            { return BYTES32;
+          case 78: 
+            { return INT128;
             } 
             // fall through
           case 176: break;
-          case 80: 
-            { return UINT256;
+          case 79: 
+            { return PUBLIC;
             } 
             // fall through
           case 177: break;
-          case 81: 
-            { return ADDRESS;
+          case 80: 
+            { return BYTES32;
             } 
             // fall through
           case 178: break;
-          case 82: 
-            { return PRIVATE;
+          case 81: 
+            { return UINT256;
             } 
             // fall through
           case 179: break;
-          case 83: 
-            { return PAYABLE;
+          case 82: 
+            { return ADDRESS;
             } 
             // fall through
           case 180: break;
-          case 84: 
-            { return TYPENAME;
+          case 83: 
+            { return PRIVATE;
             } 
             // fall through
           case 181: break;
-          case 85: 
-            { return CONSTANT;
+          case 84: 
+            { return PAYABLE;
             } 
             // fall through
           case 182: break;
-          case 86: 
-            { return CONTRACT;
+          case 85: 
+            { return TYPENAME;
             } 
             // fall through
           case 183: break;
-          case 87: 
-            { return CONTINUE;
+          case 86: 
+            { return CONSTANT;
             } 
             // fall through
           case 184: break;
-          case 88: 
-            { return MODIFYING;
+          case 87: 
+            { return CONTRACT;
             } 
             // fall through
           case 185: break;
-          case 89: 
-            { return IMPLEMENTS;
+          case 88: 
+            { return CONTINUE;
             } 
             // fall through
           case 186: break;
-          case 90: 
-            { return MAX_INT128;
+          case 89: 
+            { return MODIFYING;
             } 
             // fall through
           case 187: break;
-          case 91: 
-            { return MIN_INT128;
+          case 90: 
+            { return IMPLEMENTS;
             } 
             // fall through
           case 188: break;
-          case 92: 
-            { return MAX_DECIMAL;
+          case 91: 
+            { return MAX_INT128;
             } 
             // fall through
           case 189: break;
-          case 93: 
-            { return MAX_UINT256;
+          case 92: 
+            { return MIN_INT128;
             } 
             // fall through
           case 190: break;
-          case 94: 
-            { return MIN_DECIMAL;
+          case 93: 
+            { return MAX_DECIMAL;
             } 
             // fall through
           case 191: break;
-          case 95: 
-            { return NONREENTRANT;
+          case 94: 
+            { return MAX_UINT256;
             } 
             // fall through
           case 192: break;
-          case 96: 
-            { return ZERO_ADDRESS;
+          case 95: 
+            { return MIN_DECIMAL;
             } 
             // fall through
           case 193: break;
-          case 97: 
-            { return EMPTY_BYTES32;
+          case 96: 
+            { return NONREENTRANT;
             } 
             // fall through
           case 194: break;
+          case 97: 
+            { return ZERO_ADDRESS;
+            } 
+            // fall through
+          case 195: break;
+          case 98: 
+            { return EMPTY_BYTES32;
+            } 
+            // fall through
+          case 196: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

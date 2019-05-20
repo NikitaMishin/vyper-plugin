@@ -452,7 +452,7 @@ private Timedelta ::= 'timedelta'
 private Wei_value ::= 'wei_value'
 
 ValueType ::= int128 | uint256| bytes32 | address
-             | bytes32 &INDNONE '[' (DecimalNumber | Identifier) ']' | fixed | bool |
+             | (bytes32 | bytes) &INDNONE '[' (DecimalNumber | Identifier) ']' | fixed | bool |
                 string   &INDNONE '[' (DecimalNumber | Identifier) ']'
 
 private ReferenceType ::= ListType  | MapType

@@ -2992,7 +2992,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // int128 | uint256| bytes32 | address
-  //              | bytes32 &INDNONE '[' (DecimalNumber | Identifier) ']' | fixed | bool |
+  //              | (bytes32 | bytes) &INDNONE '[' (DecimalNumber | Identifier) ']' | fixed | bool |
   //                 string   &INDNONE '[' (DecimalNumber | Identifier) ']'
   public static boolean ValueType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ValueType")) return false;
@@ -3010,17 +3010,26 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // bytes32 &INDNONE '[' (DecimalNumber | Identifier) ']'
+  // (bytes32 | bytes) &INDNONE '[' (DecimalNumber | Identifier) ']'
   private static boolean ValueType_4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ValueType_4")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, BYTES32);
+    r = ValueType_4_0(b, l + 1);
     r = r && ValueType_4_1(b, l + 1);
     r = r && consumeToken(b, LBRACKET);
     r = r && ValueType_4_3(b, l + 1);
     r = r && consumeToken(b, RBRACKET);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // bytes32 | bytes
+  private static boolean ValueType_4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ValueType_4_0")) return false;
+    boolean r;
+    r = consumeToken(b, BYTES32);
+    if (!r) r = consumeToken(b, BYTES);
     return r;
   }
 

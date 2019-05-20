@@ -73,6 +73,7 @@ public interface VyperTypes {
   IElementType BOOL = new VyperTokenType("bool");
   IElementType BOOLEANLITERAL = new VyperTokenType("booleanLiteral");
   IElementType BREAK = new VyperTokenType("break");
+  IElementType BYTES = new VyperTokenType("bytes");
   IElementType BYTES32 = new VyperTokenType("bytes32");
   IElementType CARET = new VyperTokenType("^");
   IElementType CLEAR = new VyperTokenType("clear");

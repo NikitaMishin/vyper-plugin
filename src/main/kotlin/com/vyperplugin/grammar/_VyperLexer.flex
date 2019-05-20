@@ -115,6 +115,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "uint256"                   { return UINT256; }
   "bytes32"                   { return BYTES32; }
   "address"                   { return ADDRESS; }
+  "bytes"                     { return BYTES; }
   "fixed"                     { return FIXED; }
   "bool"                      { return BOOL; }
   "string"                    { return STRING; }
