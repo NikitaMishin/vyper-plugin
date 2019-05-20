@@ -23,6 +23,9 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
         val grandparent = parent.parent
         return when {
             parent is VyperMemberAccessExpression && parent.varLiteral == node.psi -> VyperMemberAccessReference(this, parent)
+            //Call expr - > MemberAccess -> VarLitral
+            //Call expr -> PrimaryExpr -> VarLiteral
+            grandparent is VyperCallElement -> VyperCallReference(grandparent)
             else -> VyperVarLiteralReference(this)
         }
 //        if (parent is VyperCallElement) return VyperCallReference(parent)
@@ -39,16 +42,32 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
 abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), VyperCallExpression {
 
     override val referenceNameElement: PsiElement
-        // TODO: get name
+
         get() = {
             val sibl = node.findChildByType(LPAREN)?.treePrev
-            findLastChildByType(VAR_LITERAL, sibl!!)?.lastChildNode?.psi ?: firstChild
+             when{
+                sibl!!.psi is VyperPrimaryExpression -> findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi ?: firstChild
+                 //else selfAccess
+                else ->  findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi ?: firstChild
+            }
         }()
     override val referenceName: String
         get() = referenceNameElement.text
 
     override fun getReference() = VyperCallReference(this)
 
+}
+
+abstract class VyperStructTypeMixin(node : ASTNode) : VyperNamedElementImpl(node), VyperStructType {
+    override val referenceNameElement: PsiElement
+        get() = findChildByType(IDENTIFIER)!!
+
+    override val referenceName: String
+        get() = referenceNameElement.text
+
+    override fun getReference(): VyperReference? {
+        return VyperStructTypeReference(this)
+    }
 }
 
 abstract class VyperFunctionDefMixin(node : ASTNode) : VyperNamedElementImpl(node), VyperFunctionDefinition {

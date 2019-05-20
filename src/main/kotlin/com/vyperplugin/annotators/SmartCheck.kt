@@ -30,46 +30,48 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.io.File
 
-class VyperCompilerListener(val project: Project) : PropertyChangeListener {
+class VyperSmartCheckListener(val project: Project) : PropertyChangeListener {
     override fun propertyChange(evt: PropertyChangeEvent?) {
 
         val data = evt!!.newValue as VyperAnalyzer.SmartCheckData
         //TODO : compiler and implement this for all messages
         ApplicationManager.getApplication().runReadAction {
-            val virtFile = VfsUtil.findFile(File("/home/gerwant/IdeaProjects/test/src/com/company/test.vy").toPath(), true)
-            val psiFile = PsiManager.getInstance(project).findFile(virtFile!!)
+//            val virtFile = VfsUtil.findFile(File("/home/gerwant/IdeaProjects/test/src/com/company/test.vy").toPath(), true)
+            val psiFile = PsiManager.getInstance(project).findFile(data.file)
             //what if user picks another file?
             val dm = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)
-            val start = dm!!.getLineStartOffset(data.smartCheckData[0].line - 1)
-            val end = dm.getLineEndOffset(data.smartCheckData[0].line - 1)
-            val message = data.smartCheckData[0].ruleId
-            CompilerOutput.messages.add(CompilerMessage(TextRange(start,end),message))
+            for(report in data.smartCheckData) {
+                val start = dm!!.getLineStartOffset(report.line - 1)
+                val end = dm.getLineEndOffset(report.line - 1)
+                val message = report.ruleId
+                SmartCheckOutput.messages.add(SmartCheckMessage(TextRange(start, end), message))
+            }
             DaemonCodeAnalyzer.getInstance(project).restart()
-//            CompilerOutput.messages = mutableListOf()
+
 
         }
     }
 
 
-    fun listenAnalyssis() {
+    fun listenAnalysis() {
         VyperAnalyzer.addListener(this)
     }
 
 }
 
-class CompilerAnnotator : Annotator {
+class SmartCheckAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         if (element is VyperFile) {
-            for (message in CompilerOutput.messages) {
-                holder.createErrorAnnotation(message.range, message.message)
+            for (message in SmartCheckOutput.messages) {
+                holder.createWarningAnnotation(message.range, message.message)
             }
-            CompilerOutput.messages = mutableListOf()
         }
+        SmartCheckOutput.messages = mutableListOf()
     }
 }
 
-object CompilerOutput {
-    var messages : MutableList<CompilerMessage> = mutableListOf()
+object SmartCheckOutput {
+    var messages : MutableList<SmartCheckMessage> = mutableListOf()
 }
 
-data class CompilerMessage(val range: TextRange, val message : String )
+data class SmartCheckMessage(val range: TextRange, val message : String )

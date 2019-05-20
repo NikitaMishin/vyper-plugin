@@ -13,7 +13,7 @@ object VyperResolver {
     }
 
     fun lexicalDeclarations(place: PsiElement, stop: (PsiElement) -> Boolean = { false }): List<VyperNamedElement> {
-//        val globalType = SolInternalTypeFactory.of(place.project).globalType
+
         return lexicalDeclRec(place, stop).distinct()
     }
 
@@ -103,13 +103,24 @@ object VyperResolver {
     }
 
     private fun resolveFunRec(element: VyperCallExpression, skipThis: Boolean = false): List<VyperFunctionDefinition> {
-        val ref = element.expressionList.firstOrNull()
         val res = mutableListOf<VyperFunctionDefinition>()
+        var ref : VyperElement = element
+        return when {
+            ref.firstChild is VyperPrimaryExpression -> emptyList()
+            ref.firstChild is VyperMemberAccessExpression
+                    && (ref.firstChild.firstChild.firstChild as VyperVarLiteral).name == "self" -> {
+                res.addAll((element.file as VyperFile)
+                        .getStatements()
+                        .filter { it is VyperFunctionDefinition }
+                        .map { it as VyperFunctionDefinition })
+                res
+            }
+            else -> emptyList()
+        }
 
-//        if(ref is VyperSelfAccessExpression) res.addAll((element.file as VyperFile)
+//        if(ref is VyperMemberAccessExpression) res.addAll((element.file as VyperFile)
 //                                                .getStatements().filter { it is VyperFunctionDefinition}.map{it as VyperFunctionDefinition})
 
-        return res
     }
 
     fun resolveMemberAccess(element: VyperMemberAccessExpression): List<VyperNamedElement> {

@@ -417,7 +417,7 @@ MultDivExpression ::= Expression ('*' | '/' | '%') Expression
 ExponentExpression ::= Expression '**' Expression
 
 //multistring??
-AssertExpression ::= assert &INDNONE Expression &INDNONE AssertMessage? {pin = 1}
+AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {pin = 1}
 private AssertMessage ::= ',' (stringLiteralDouble| stringLiteralSingle | MultiLineString)
 
 FunctionCallArguments ::= Expression? ( &INDNONE ',' Expression )*
@@ -459,7 +459,8 @@ private ReferenceType ::= ListType  | MapType
 
 ListType ::= (UnitType| ValueType|StructType) &INDNONE '[' (DecimalNumber | Identifier) ']'
                     (&INDNONE '[' (DecimalNumber | Identifier) ']')*
-StructType ::= Identifier
+StructType ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
+                                                     mixin = "com.vyperplugin.psi.VyperStructTypeMixin"}
 
 MapType ::= map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')' {
 pin=1

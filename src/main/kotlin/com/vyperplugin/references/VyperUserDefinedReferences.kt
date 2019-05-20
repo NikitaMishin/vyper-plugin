@@ -14,7 +14,7 @@ class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<Vy
     }
 
     override fun getVariants(): Array<out Any> {
-        return arrayOf("Huy", "sdsd", "sdqwr")
+        return arrayOf()
     }
 }
 
@@ -42,10 +42,6 @@ class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemb
 
 class VyperCallReference(element: VyperCallElement) : VyperReferenceBase<VyperCallElement>(element), VyperReference {
 
-//    override fun calculateDefaultRangeInElement(): TextRange {
-//        return element.referenceNameElement.textRange
-//    }
-
     fun resolveFunctionCall(): Collection<FunctionResolveResult> {
         val ref = element.expressionList.firstOrNull()
         return VyperResolver.resolveFunction(element)
@@ -53,5 +49,11 @@ class VyperCallReference(element: VyperCallElement) : VyperReferenceBase<VyperCa
 
     override fun multiResolve(): Collection<PsiElement> {
         return resolveFunctionCall().map { it.psiElement }
+    }
+}
+
+class VyperStructTypeReference(element: VyperStructType) : VyperReferenceBase<VyperStructType>(element), VyperReference {
+    override fun getVariants(): Array<out Any> {
+        return VyperCompleter.completeTypes()
     }
 }
