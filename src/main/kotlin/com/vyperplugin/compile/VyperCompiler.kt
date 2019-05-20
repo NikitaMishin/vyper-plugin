@@ -3,12 +3,10 @@ package com.vyperplugin.compile
 import com.intellij.notification.NotificationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VirtualFileManager
 import com.vyperplugin.VyperMessageProcessor
 import com.vyperplugin.VyperStubGenerator
 import com.vyperplugin.docker.StatusDocker
@@ -28,7 +26,8 @@ data class VyperParameters(
 )
 
 object VyperCompiler {
-    data class CompilerMessage(val file: VirtualFile, val output: String)
+    data class CompilerError(val msg: String, val line: Int)
+    data class CompilerMessage(val file: VirtualFile, val error: List<CompilerError>)
 
     private val propertyChangeSupport = PropertyChangeSupport(this)
 
@@ -70,15 +69,20 @@ object VyperCompiler {
                 }
                 params.generateStub && result.statusDocker == StatusDocker.FAILED -> {
                     displayOutputOnToolWindow(params.project, file.path, result.stderr)
-                    addMessage(CompilerMessage(file, result.stderr))
+
+                    addMessage(CompilerMessage(file, parseCompilerOutput(result.stderr)))
+
                     notify(params.project, file, COMPILATION_FAILED,
                             compilationNavigateHtml,
                             VyperMessageProcessor.NotificationStatusVyper.ERROR)
                 }
 
                 !params.generateStub && result.statusDocker == StatusDocker.FAILED -> {
+
                     displayOutputOnToolWindow(params.project, file.path, result.stderr)
-                    addMessage(CompilerMessage(file, result.stderr))
+
+                    addMessage(CompilerMessage(file, parseCompilerOutput(result.stderr)))
+
                     notify(params.project, file, COMPILATION_FAILED,
                             compilationNavigateHtml,
                             VyperMessageProcessor.NotificationStatusVyper.ERROR)
@@ -117,8 +121,22 @@ object VyperCompiler {
         )
     }
 
-    private fun parseCompilerOutput() {
-        TODO()
+    val regBaseError =
+            Regex("""vyper\.exceptions\.\w+Exception:\s+(?:line\s+(\d+)).*$""",
+                    setOf(RegexOption.MULTILINE))
+    val regError =
+            Regex("""File.+,\s+line\s+(\d+)\s[^\>]*""", setOf(RegexOption.MULTILINE))
+
+
+    private fun parseCompilerOutput(stderr: String): List<CompilerError> {
+        val arrRegBase = regBaseError.findAll(stderr).toMutableList().map {
+            CompilerError(it.groups[0]!!.value, it.groups[1]!!.value.toInt())
+        }.toMutableList()
+        val arrRegError = regError.findAll(stderr).toList().map {
+            CompilerError(it.groups[0]!!.value, it.groups[1]!!.value.toInt())
+        }
+        arrRegBase.addAll(arrRegError)
+        return arrRegBase
     }
 
     private fun addMessage(message: CompilerMessage) {
