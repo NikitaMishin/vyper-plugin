@@ -226,8 +226,8 @@ StateVariableDeclaration ::= Identifier &INDNONE ':' (  (&INDNONE StateVariableM
 mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
 implements = "com.vyperplugin.psi.VyperNamedElement"
 }
-// StateVariableModifier if omitted then it's private
-StateVariableModifier ::= public
+// StateVariableModifier if omitted then it's private. () to not shadow private
+StateVariableModifier ::= public | (private)
 
 
 // semantic : map could not be inside functions
@@ -376,7 +376,8 @@ AssignmentExpression ::=
     Expression { rightAssociative=true  }
 //??
 CallExpression ::= Expression
-                 ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression ']' ) )*
+//&INDNONE '.' Identifier ) |
+                 (   &INDNONE '[' Expression ']'  )*
                   &INDNONE '(' FunctionCallArguments? ')' (&INDNONE '(' FunctionCallArguments? ')')*
                   {
                   implements = "com.vyperplugin.psi.VyperReferenceElement"

@@ -69,7 +69,7 @@ object VyperAnalyzer {
                 StatusDocker.SUCCESS -> {
                     val p = it.path
                     val arr = mutableListOf<SmartCheckSinglePattern>()
-                    pattern.findAll(res.stdout).map {
+                    pattern.findAll(res.stdout).toList().map {
                         val data = SmartCheckSinglePattern(
                                 it.groups[1]!!.value,
                                 it.groups[2]!!.value,

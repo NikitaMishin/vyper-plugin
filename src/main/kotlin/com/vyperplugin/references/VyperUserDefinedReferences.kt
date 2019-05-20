@@ -31,7 +31,7 @@ class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<Vy
 
 class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemberAccessExpression): VyperReferenceBase<VyperVarLiteral>(element) ,VyperReference {
     override fun multiResolve(): Collection<PsiElement> {
-        return super.multiResolve()
+        return VyperResolver.resolveMemberAccess(member)
     }
 
     override fun getVariants(): Array<out Any> {

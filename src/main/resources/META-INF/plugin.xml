@@ -22,6 +22,7 @@
 <!--        <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.SelfAccessUnresolvedReferenceAnnotator"/>-->
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperColorAnnotator"/>
+        <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.CompilerAnnotator"/>
 
 
         <applicationService serviceInterface="com.vyperplugin.settings.VyperSettings" serviceImplementation="com.vyperplugin.settings.VyperSettings"/>

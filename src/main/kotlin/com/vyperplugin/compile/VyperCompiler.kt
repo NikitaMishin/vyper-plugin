@@ -3,10 +3,12 @@ package com.vyperplugin.compile
 import com.intellij.notification.NotificationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.vyperplugin.VyperMessageProcessor
 import com.vyperplugin.VyperStubGenerator
 import com.vyperplugin.docker.StatusDocker

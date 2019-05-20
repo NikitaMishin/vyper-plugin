@@ -21,12 +21,15 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
     override fun getReference(): VyperReference {
         val parent = node.psi.parent
         val grandparent = parent.parent
-        if (parent is VyperCallElement) return VyperCallReference(parent)
-        if (grandparent is VyperCallElement) return VyperCallReference(grandparent)
+        return when {
+            parent is VyperMemberAccessExpression && parent.varLiteral == node.psi -> VyperMemberAccessReference(this, parent)
+            else -> VyperVarLiteralReference(this)
+        }
+//        if (parent is VyperCallElement) return VyperCallReference(parent)
+//        if (grandparent is VyperCallElement) return VyperCallReference(grandparent)
         //member access
 //        if (parent is VyperSelfAccessExpression) return VyperSelfAccessReference(this,parent)
-        if (parent is VyperMemberAccessExpression && parent.varLiteral == node.psi) return VyperMemberAccessReference(this,parent)
-        return VyperVarLiteralReference(this)
+//        if (parent is VyperMemberAccessExpression && parent.varLiteral == node.psi) return VyperMemberAccessReference(this,parent)
 
     }
 }
@@ -45,15 +48,6 @@ abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), Vy
         get() = referenceNameElement.text
 
     override fun getReference() = VyperCallReference(this)
-    private fun  findLastChildByType(type: IElementType, node : ASTNode):ASTNode? {
-        var child = node.lastChildNode
-        while (child != null) {
-            var node_ = child
-            if (node_ != null && node_.elementType == type) return child
-            child = child.treePrev
-        }
-        return null
-    }
 
 }
 

@@ -2533,14 +2533,15 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // public
+  // public | (private)
   public static boolean StateVariableModifier(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StateVariableModifier")) return false;
-    if (!nextTokenIs(b, PUBLIC)) return false;
+    if (!nextTokenIs(b, "<state variable modifier>", PRIVATE, PUBLIC)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _NONE_, STATE_VARIABLE_MODIFIER, "<state variable modifier>");
     r = consumeToken(b, PUBLIC);
-    exit_section_(b, m, STATE_VARIABLE_MODIFIER, r);
+    if (!r) r = consumeToken(b, PRIVATE);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -3504,7 +3505,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression ']' ) )* &INDNONE '(' FunctionCallArguments? ')' (&INDNONE '(' FunctionCallArguments? ')')*
+  // (   &INDNONE '[' Expression ']'  )* &INDNONE '(' FunctionCallArguments? ')' (&INDNONE '(' FunctionCallArguments? ')')*
   private static boolean CallExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CallExpression_0")) return false;
     boolean r;
@@ -3519,7 +3520,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression ']' ) )*
+  // (   &INDNONE '[' Expression ']'  )*
   private static boolean CallExpression_0_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CallExpression_0_0")) return false;
     while (true) {
@@ -3530,44 +3531,12 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression ']' )
+  // &INDNONE '[' Expression ']'
   private static boolean CallExpression_0_0_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CallExpression_0_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = CallExpression_0_0_0_0(b, l + 1);
-    if (!r) r = CallExpression_0_0_0_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // &INDNONE '.' Identifier
-  private static boolean CallExpression_0_0_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CallExpression_0_0_0_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = CallExpression_0_0_0_0_0(b, l + 1);
-    r = r && consumeTokensSmart(b, 0, DOT, IDENTIFIER);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // &INDNONE
-  private static boolean CallExpression_0_0_0_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CallExpression_0_0_0_0_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // &INDNONE '[' Expression ']'
-  private static boolean CallExpression_0_0_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CallExpression_0_0_0_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = CallExpression_0_0_0_1_0(b, l + 1);
     r = r && consumeTokenSmart(b, LBRACKET);
     r = r && Expression(b, l + 1, -1);
     r = r && consumeToken(b, RBRACKET);
@@ -3576,8 +3545,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE
-  private static boolean CallExpression_0_0_0_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CallExpression_0_0_0_1_0")) return false;
+  private static boolean CallExpression_0_0_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "CallExpression_0_0_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
