@@ -10,14 +10,15 @@ import com.vyperplugin.toolWindow.VyperWindow
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 
 object MythXAnalyzer {
+
     private val api = APIMythX()
 
     // token alive for ten minutes
     fun analyze(bytecode: String, deployedBytecode: String, fileName: String, project: Project) {
-
         val settings = VyperSettings.INSTANCE
         val (address, pass) = if (settings.usesCustomAccount) {
             Pair(settings.address, settings.password)
@@ -65,8 +66,8 @@ object MythXAnalyzer {
                         VyperMessageProcessor.NotificationStatusVyper.ERROR)
             }
         }
-    }
 
+    }
 
     private fun processResult(detectedIssues: List<DetectedIssue>, fileName: String, project: Project) {
 

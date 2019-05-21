@@ -32,7 +32,8 @@
         <applicationService serviceInterface="com.vyperplugin.settings.VyperSettings" serviceImplementation="com.vyperplugin.settings.VyperSettings"/>
         <applicationConfigurable groupId="language" displayName="Vyper" id="preferences.Vyper" instance="com.vyperplugin.settings.VyperSettingsConfigurable"/>
 
-
+<!--TODO lang formatter -->
+<!--        <lang.formatter language="Vyper" implementationClass="com.vyperplugin.formating.VyperFormattingModelBuilder"/>-->
         <!--      <configurationType implementation=""/> -->>
 
         <codeInsight.lineMarkerProvider language="Vyper" implementationClass="com.vyperplugin.run.VyperRunMethodLineMarkerProvider"/>
