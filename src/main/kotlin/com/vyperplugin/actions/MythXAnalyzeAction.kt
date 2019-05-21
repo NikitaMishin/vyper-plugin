@@ -39,6 +39,7 @@ class MythXAnalyzeAction : VyperAction() {
         //task for analyzer
         ProgressManager.getInstance().run(object : Task.Backgroundable(project, "analyzing with MythX, response may take some time...") {
             override fun run(indicator: ProgressIndicator) {
+
                 val res = VyperCompilerDocker(
                         file.parent.path, file.path,
                         arrayOf("-f", "bytecode,bytecode_runtime")).execWrapper(project)
@@ -51,7 +52,7 @@ class MythXAnalyzeAction : VyperAction() {
                         VyperMessageProcessor.notificateInBalloon(
                                 VyperMessageProcessor.VyperNotification(
                                         null,
-                                        "MythX", "File ${file.path} contains errors",
+                                        "MythX", "File ${file.name} contains errors",
                                         VyperMessageProcessor.NotificationStatusVyper.ERROR,
                                         VyperMessageProcessor.NotificationGroupVyper.COMMON,
                                         project
