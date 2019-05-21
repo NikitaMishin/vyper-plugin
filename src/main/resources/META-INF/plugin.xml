@@ -90,6 +90,13 @@
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl V"/>
             </action>
        -->
+            <action id="Vyper.MythX" text="Analyze_with_MythX"
+                    description="Analyze bytecode of contract with MythX"
+                    class="com.vyperplugin.actions.MythXAnalyzeAction">
+                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl L"/>
+            </action>
+
+
             <action id="Vyper.Run"
                     text="Run methods" description="Test contract"
                     class="com.vyperplugin.actions.VyperRunAction">

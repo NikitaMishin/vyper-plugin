@@ -24,6 +24,9 @@ class VyperSettings : PersistentStateComponent<VyperSettings> {
     var password: String = ""
 
 
+    val defaultAddress = "0xae6f8a4948487ed4f4d9d319c6c7b135fe19a419"
+    val defaultPassword = "Qwertyqwerty!1"
+
     var compilerParams: String = " "
     fun getCompilerParamsArray(): Array<String> {
         if (compilerParams == " " || compilerParams == "") return arrayOf<String>()

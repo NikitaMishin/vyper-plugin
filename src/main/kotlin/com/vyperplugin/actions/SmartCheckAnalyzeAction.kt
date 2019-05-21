@@ -8,7 +8,7 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.vfs.VirtualFile
-import com.vyperplugin.analyze.VyperAnalyzer
+import com.vyperplugin.analyze.SmartCheckAnalyzer
 import com.vyperplugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
 
 
@@ -32,7 +32,7 @@ class SmartCheckAnalyzeAction : VyperAction() {
         //task for analyzer
         ProgressManager.getInstance().run(object : Task.Backgroundable(project, "analyzing with smartCheck...") {
             override fun run(indicator: ProgressIndicator) {
-                VyperAnalyzer.smartCheckAnalyze(files, project, ModuleManager.getInstance(project).modules.first())
+                SmartCheckAnalyzer.smartCheckAnalyze(files, project, ModuleManager.getInstance(project).modules.first())
             }
         })
 

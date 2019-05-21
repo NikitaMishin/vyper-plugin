@@ -10,7 +10,7 @@ import com.vyperplugin.toolWindow.VyperWindow
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
 
-object VyperAnalyzer {
+object SmartCheckAnalyzer {
 
     data class SmartCheckData(
             val smartCheckData: Array<SmartCheckSinglePattern>,

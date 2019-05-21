@@ -7,21 +7,18 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
-import com.intellij.openapi.vfs.VfsUtil
-import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import com.vyperplugin.analyze.VyperAnalyzer
+import com.vyperplugin.analyze.SmartCheckAnalyzer
 import com.vyperplugin.psi.VyperFile
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import java.io.File
 
 class VyperSmartCheckListener(val project: Project) : PropertyChangeListener {
     override fun propertyChange(evt: PropertyChangeEvent?) {
 
-        val data = evt!!.newValue as VyperAnalyzer.SmartCheckData
+        val data = evt!!.newValue as SmartCheckAnalyzer.SmartCheckData
         //TODO : compiler and implement this for all messages
         ApplicationManager.getApplication().runReadAction {
 //            val virtFile = VfsUtil.findFile(File("/home/gerwant/IdeaProjects/test/src/com/company/test.vy").toPath(), true)
@@ -42,7 +39,7 @@ class VyperSmartCheckListener(val project: Project) : PropertyChangeListener {
 
 
     fun listenAnalysis() {
-        VyperAnalyzer.addListener(this)
+        SmartCheckAnalyzer.addListener(this)
     }
 
 }
