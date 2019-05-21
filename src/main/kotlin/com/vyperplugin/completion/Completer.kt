@@ -9,19 +9,21 @@ import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
 import com.vyperplugin.VyperIcons
 import com.vyperplugin.psi.*
+import com.vyperplugin.references.VyperResolver
 import com.vyperplugin.references.VyperResolver.resolveMemberAccess
 import com.vyperplugin.references.VyperResolver.resolveSelfAccessVarLiteralRec
 import javax.swing.Icon
 
 object VyperCompleter {
-//    fun completeSelfAccess(element: VyperSelfAccessExpression) : Array<out LookupElement>{
-//
-//        val stateVars = resolveSelfAccessVarLiteralRec(element)
-//        val funDefs = mutableListOf<VyperNamedElement>()
-//        funDefs.addAll((element.file as VyperFile)
-//                .getStatements().filter { it is VyperFunctionDefinition }.map{it as VyperFunctionDefinition })
-//        return (stateVars + funDefs).createVarLookups()
-//    }
+
+    fun completeVarLiteral(element: VyperVarLiteral) : Array<out LookupElement> {
+        return VyperResolver.lexicalDeclarations(element)
+                .map { createVarLookup(it) }
+                .toTypedArray()
+                .map {
+            PrioritizedLookupElement.withPriority(it, 15.0) }
+                .toTypedArray()
+    }
 
     fun completeTypes(): Array<out LookupElement> {
         return listOf("int128","uint256","bytes32","bytes[]","address", "fixed","bool","map()", "timestamp","string[]").map{
@@ -48,6 +50,18 @@ object VyperCompleter {
         return resolveMemberAccess(element).map{it as VyperLocalVariableDeclaration}.createLocalVarLookups(VyperIcons.FILE)
     }
 
+    private fun createVarLookup(elem : VyperNamedElement) : LookupElement{
+        when(elem) {
+            is VyperUserDefinedConstantsExpression -> return LookupElementBuilder.create(elem, elem.name ?: "")
+                    .withIcon(VyperIcons.FILE).withTypeText("constant( ${ elem.type?.text?: ""} )")
+
+            is VyperLocalVariableDeclaration -> return LookupElementBuilder.create(elem, elem.name ?: "")
+                    .withIcon(VyperIcons.FILE).withTypeText(elem.type.text?: "")
+            is VyperParamDef -> return LookupElementBuilder.create(elem, elem.name ?: "")
+                    .withIcon(VyperIcons.FILE).withTypeText(elem.type.text?: "")
+        }
+        return LookupElementBuilder.create(elem)
+    }
     private fun Collection<VyperNamedElement>.createVarLookups(): Array<LookupElement> = createVarLookups(VyperIcons.FILE)
 
     private fun Collection<VyperNamedElement>.createVarLookups(icon: Icon): Array<LookupElement> {

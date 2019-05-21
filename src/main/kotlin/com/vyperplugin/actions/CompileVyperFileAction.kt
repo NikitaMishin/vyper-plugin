@@ -30,7 +30,7 @@ class CompileVyperFileAction : VyperAction() {
         }
 
 
-        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Compiling vyper") {
+        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Compiling Vyper") {
             override fun run(indicator: ProgressIndicator) {
                 VyperCompiler.compile(VyperParameters(
                         ModuleManager.getInstance(project).modules.first(), project, files,

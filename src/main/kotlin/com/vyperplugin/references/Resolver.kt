@@ -23,7 +23,7 @@ object VyperResolver {
                 .toList()
 
         val elements =  parents
-                .takeWhile { it is VyperElement && !stop(it) }.filter{it is VyperFunctionDefinition}
+                .takeWhile { (it is VyperElement || it is VyperFile) && !stop(it) }
                 .flatMap { lexicalDeclarations(it, place) }
 
         return elements
@@ -33,66 +33,27 @@ object VyperResolver {
 
     private fun lexicalDeclarations(scope: PsiElement, place: PsiElement): List<VyperNamedElement> {
         return when (scope) {
-            /*is SolVariableDeclaration -> {
-                scope.declarationList?.declarationItemList?.filterIsInstance<SolNamedElement>()?.asSequence()
-                        ?: scope.typedDeclarationList?.typedDeclarationItemList?.filterIsInstance<SolNamedElement>()?.asSequence()
-                        ?: sequenceOf(scope)
-            }
-            is SolVariableDefinition -> lexicalDeclarations(scope.firstChild, place)
 
-            is SolStateVariableDeclaration -> sequenceOf(scope)
-            is SolContractDefinition -> {
-                val childrenScope = sequenceOf(
-                        scope.stateVariableDeclarationList,
-                        scope.enumDefinitionList,
-                        scope.structDefinitionList).flatten()
-                        .map { lexicalDeclarations(it, place) }
-                        .flatten()
-                val extendsScope = scope.supers.asSequence()
-                        .map { resolveTypeName(it).firstOrNull() }
-                        .filterNotNull()
-                        .map { lexicalDeclarations(it, place) }
-                        .flatten()
-                childrenScope + extendsScope
-            }
-            is SolFunctionDefinition -> {
-                scope.parameters.asSequence() +
-                        (scope.returns?.parameterDefList?.asSequence() ?: emptySequence())
-            }
-            is SolConstructorDefinition -> {
-                scope.parameterList?.parameterDefList?.asSequence() ?: emptySequence()
-            }
-            is SolEnumDefinition -> sequenceOf(scope)
+            is VyperLocalVariableDeclaration -> listOf(scope)
 
-            is SolStatement -> {
-                scope.children.asSequence()
-                        .map { lexicalDeclarations(it, place) }
-                        .flatten()
-            }
+            is VyperStatement -> lexicalDeclarations(scope.firstChild,place)
 
-            is SolBlock -> {
-                scope.statementList.asSequence()
-                        .map { lexicalDeclarations(it, place) }
-                        .flatten()
-            }
+            is VyperFile -> scope.getStatements().filter{it !is VyperFunctionDefinition}.flatMap { VyperResolver.lexicalDeclarations(it,place)}
 
-            is SolTupleStatement -> {
-                scope.variableDeclaration?.let {
-                    val declarationList = it.declarationList
-                    val typedDeclarationList = it.typedDeclarationList
-                    when {
-                        declarationList != null -> declarationList.declarationItemList.asSequence()
-                        typedDeclarationList != null -> typedDeclarationList.typedDeclarationItemList.asSequence()
-                        else -> emptySequence()
-                    }
-                } ?: emptySequence()
-            }
+            is VyperUserDefinedConstantsExpression -> listOf(scope)
 
-            else -> emptySequence()*/
-            is VyperFunctionDefinition -> { scope.parameters?.paramDefList ?: emptyList()
+            is VyperLocalVariableDefinition -> lexicalDeclarations(scope.localVariableDeclaration,place)
+
+            is VyperFunctionDefinition -> {
+                val params = scope.parameters?.paramDefList?.toTypedArray() ?: emptyArray()
+                val statements : MutableList<VyperNamedElement> = scope.statement
+                        ?.siblings
+                        ?.toMutableList()
+                        ?.flatMap { VyperResolver.lexicalDeclarations(it,place) }?.toMutableSmartList() ?: mutableListOf()
+                statements.addAll(params)
+                statements
 
             }
-//            is VyperStateVariableDeclaration -> listOf(scope)
                 else -> emptyList()
             }
         }
@@ -104,7 +65,7 @@ object VyperResolver {
 
     private fun resolveFunRec(element: VyperCallExpression, skipThis: Boolean = false): List<VyperFunctionDefinition> {
         val res = mutableListOf<VyperFunctionDefinition>()
-        var ref : VyperElement = element
+        val ref : VyperElement = element
         return when {
             ref.firstChild is VyperPrimaryExpression -> emptyList()
             ref.firstChild is VyperMemberAccessExpression

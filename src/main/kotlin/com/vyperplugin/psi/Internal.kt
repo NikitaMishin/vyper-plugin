@@ -3,6 +3,7 @@ package com.vyperplugin.psi
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.AbstractProjectComponent
 import com.intellij.openapi.project.Project
+import com.vyperplugin.annotators.VyperCompilerListener
 import com.vyperplugin.annotators.VyperSmartCheckListener
 
 @SuppressWarnings("Deprecated")
@@ -20,6 +21,8 @@ class VyperInternalTypeFactory(project : Project) : AbstractProjectComponent(pro
         |   gas : uint256
     """.trimMargin())
         }
+
+        VyperCompilerListener(project).listenAnalysis()
         VyperSmartCheckListener(project).listenAnalysis()
     }
 

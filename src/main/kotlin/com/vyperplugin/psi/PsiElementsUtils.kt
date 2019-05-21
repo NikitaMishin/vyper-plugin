@@ -8,6 +8,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 
 val PsiElement.ancestors: Sequence<PsiElement> get() = generateSequence(this) { it.parent }
+val PsiElement.siblings: Sequence<PsiElement> get() = generateSequence(this) { it.nextSibling }
 
 val PsiElement.file get() = this.containingFile
 

@@ -151,6 +151,9 @@ private unitsRecover::=!('}')
 
 UserDefinedConstantsExpression ::= Identifier &INDNONE ':' &INDNONE constant &INDNONE'(' TYPE ')' &INDNONE'=' &INDNONE Expression  {
  pin=5
+
+ mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+ implements = "com.vyperplugin.psi.VyperNamedElement"
 }
 
 private ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )

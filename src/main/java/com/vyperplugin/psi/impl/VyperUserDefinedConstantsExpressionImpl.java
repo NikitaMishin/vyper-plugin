@@ -8,9 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
+import com.vyperplugin.psi.VyperNamedElementImpl;
 import com.vyperplugin.psi.*;
 
-public class VyperUserDefinedConstantsExpressionImpl extends VyperExpressionImpl implements VyperUserDefinedConstantsExpression {
+public class VyperUserDefinedConstantsExpressionImpl extends VyperNamedElementImpl implements VyperUserDefinedConstantsExpression {
 
   public VyperUserDefinedConstantsExpressionImpl(@NotNull ASTNode node) {
     super(node);

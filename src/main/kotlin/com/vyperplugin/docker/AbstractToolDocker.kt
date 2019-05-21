@@ -56,8 +56,8 @@ abstract class AbstractToolDocker {
                 VyperMessageProcessor.notificateInBalloon(
                         VyperMessageProcessor.VyperNotification(
                                 null, "Docker",
-                                "<html>Image not found locally." +
-                                        "Could take some time for download it." +
+                                "<html>Image is not found in your system. " +
+                                        "It may take a while to download it. " +
                                         "Please wait</html>",
                                 VyperMessageProcessor.NotificationStatusVyper.INFO,
                                 VyperMessageProcessor.NotificationGroupVyper.COMMON,

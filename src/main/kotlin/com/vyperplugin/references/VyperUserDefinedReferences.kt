@@ -1,11 +1,8 @@
 package com.vyperplugin.references
 
-import com.intellij.lang.ASTNode
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.vyperplugin.completion.VyperCompleter
 import com.vyperplugin.psi.*
-import com.vyperplugin.psi.VyperTypes.IDENTIFIER
 
 class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
 
@@ -14,20 +11,9 @@ class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<Vy
     }
 
     override fun getVariants(): Array<out Any> {
-        return arrayOf()
+        return VyperCompleter.completeVarLiteral(element)
     }
 }
-
-//class VyperSelfAccessReference(element: VyperVarLiteral, var self : VyperSelfAccessExpression) : VyperReferenceBase<VyperVarLiteral>(element) ,VyperReference {
-//
-//    override fun multiResolve(): Collection<PsiElement> {
-//        return VyperResolver.resolveSelfAccessVarLiteral(self,element)
-//    }
-//
-//    override fun getVariants(): Array<out Any> {
-//        return VyperCompleter.completeSelfAccess(self)
-//    }
-//}
 
 class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemberAccessExpression): VyperReferenceBase<VyperVarLiteral>(element) ,VyperReference {
     override fun multiResolve(): Collection<PsiElement> {
