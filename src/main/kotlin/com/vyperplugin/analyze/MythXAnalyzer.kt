@@ -93,7 +93,7 @@ object MythXAnalyzer {
                         """.trimIndent()
                 )
                 it.locations?.forEachIndexed { index, item ->
-                    buildOutput = buildOutput.append("$index) $item \n")
+                    buildOutput = buildOutput.append("\n${index + 1}) sourceMap:${item.sourceMap} \n")
                 }
             }
         }

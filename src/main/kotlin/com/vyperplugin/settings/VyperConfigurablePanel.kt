@@ -113,6 +113,8 @@ class VyperConfigurablePanel {
 
 
     fun isModified(settings: VyperSettings): Boolean =
+            usesCustomAccount.isSelected != settings.usesCustomAccount ||
+
             address.text != settings.address ||
                     password.text != settings.password ||
                     network.text != settings.network ||
