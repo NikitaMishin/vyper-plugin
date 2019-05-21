@@ -1,13 +1,18 @@
 # Blind Auction # Adapted to Vyper from [Solidity by Example](https://github.com/ethereum/solidity/blob/develop/docs/solidity-by-example.rst#blind-auction-1)
 import f.ff.fff as FF
 
+
 struct Bid:
   blindedBid: bytes32
   deposit: wei_value
 
+
+contract C:
+    def dfd():constant
 # Note: because Vyper does not allow for dynamic arrays, we have limited the
 # number of bids that can be placed by one address to 128 in this example
 MAX_BIDS: constant(int128) = 128
+
 
 # Event for logging that auction has ended
 AuctionEnded: event({_highestBidder: address, _highestBid: wei_value})
@@ -44,7 +49,7 @@ def __init__(_beneficiary: address, _biddingTime: timedelta, _revealTime: timede
 
 # Place a blinded bid with:
 #
-# _blindedBid = sha3(concat(
+# _blindedBid = sha(concat(
 #       convert(value, bytes32),
 #       convert(fake, bytes32),
 #       secret)
@@ -68,7 +73,8 @@ def bid(_blindedBid: bytes32):
     # Add bid to mapping of all bids
     self.bids[msg.sender][numBids] = Bid({
         blindedBid: _blindedBid,
-        deposit: msg.value
+        deposit: msg.value,
+
         })
     self.bidCounts[msg.sender] += 1
 
@@ -106,7 +112,7 @@ def reveal(_numBids: int128, _values: wei_value[128], _fakes: bool[128], _secret
 
     # Calculate refund for sender
     refund: wei_value
-    for i in range(MAX_BIDS):
+    for i in range(self.biddingEnd):
         # Note that loop may break sooner than 128 iterations if i >= _numBids
         if (i >= _numBids):
             break
@@ -129,6 +135,8 @@ def reveal(_numBids: int128, _values: wei_value[128], _fakes: bool[128], _secret
         if (blindedBid != bidToCheck.blindedBid):
             assert 1 == 0
             continue
+        else:
+             pass
 
         # Add deposit to refund if bid was indeed revealed
         refund += bidToCheck.deposit

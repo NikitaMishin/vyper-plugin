@@ -12,8 +12,8 @@ class VyperConfigurablePanel {
     internal lateinit var mainPanel: JPanel
     // deployment panel
     private lateinit var deployPanel: JPanel
-    private lateinit var deployToNetwork: JCheckBox
-    private lateinit var username: JTextField
+    private lateinit var usesCustomAccount: JCheckBox
+    private lateinit var address: JTextField
     private lateinit var network: JTextField
     //private lateinit var password: JPasswordField
     private lateinit var password: JTextField
@@ -32,7 +32,7 @@ class VyperConfigurablePanel {
 //    private lateinit var fileExtension: JTextField
 
     init {
-        deployToNetwork.addActionListener {
+        usesCustomAccount.addActionListener {
             updateDeployStatus()
         }
         generateStubs.addActionListener() {
@@ -41,8 +41,8 @@ class VyperConfigurablePanel {
     }
 
     private fun updateDeployStatus() {
-        val enabled = deployToNetwork.isSelected
-        deployPanel.setAll({ it.isEnabled = enabled }, deployToNetwork)
+        val enabled = usesCustomAccount.isSelected
+        deployPanel.setAll({ it.isEnabled = enabled }, usesCustomAccount)
     }
 
     private fun updateGenerateStubsStatus() {
@@ -63,8 +63,8 @@ class VyperConfigurablePanel {
     fun apply(settings: VyperSettings) {
         validateFields()
 
-        settings.deployToNetwork = deployToNetwork.isSelected
-        settings.username = username.text
+        settings.usesCustomAccount = usesCustomAccount.isSelected
+        settings.address = address.text
         settings.password = password.text
         settings.network = network.text
 
@@ -81,10 +81,10 @@ class VyperConfigurablePanel {
 
 
     fun reset(settings: VyperSettings) {
-        deployToNetwork.isSelected = settings.deployToNetwork
+        usesCustomAccount.isSelected = settings.usesCustomAccount
         generateStubs.isSelected = settings.generateStubs
         genOutputPath.text = FileUtil.toSystemDependentName(settings.genarateOutputPath)
-        username.text = settings.username
+        address.text = settings.address
         password.text = settings.password
         network.text = settings.network
         compilerParams.text = settings.compilerParams
@@ -93,9 +93,9 @@ class VyperConfigurablePanel {
     }
 
     private fun validateFields() {
-        if (deployToNetwork.isSelected) {
-            if (username.text.isBlank()) {
-                throw  ConfigurationException("No username is provided")
+        if (usesCustomAccount.isSelected) {
+            if (address.text.isBlank()) {
+                throw  ConfigurationException("No address is provided")
             }
             if (password.text.isBlank()) {
                 throw  ConfigurationException("No password is provided")
@@ -113,7 +113,7 @@ class VyperConfigurablePanel {
 
 
     fun isModified(settings: VyperSettings): Boolean =
-            username.text != settings.username ||
+            address.text != settings.address ||
                     password.text != settings.password ||
                     network.text != settings.network ||
 

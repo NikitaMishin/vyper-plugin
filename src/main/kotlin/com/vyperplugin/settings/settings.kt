@@ -7,8 +7,6 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.options.SearchableConfigurable
-import com.intellij.openapi.options.ShowSettingsUtil
-import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
@@ -20,16 +18,23 @@ class VyperSettings : PersistentStateComponent<VyperSettings> {
     var genarateOutputPath: String = "srcGenVyper"
     var fileExtension: String = ".txt" // right now would be just .txt
 
-    var deployToNetwork: Boolean = false
+    var usesCustomAccount: Boolean = false
     var network: String = "" //>>? Ethereum main net?
-    var username: String = ""
+    var address: String = ""
     var password: String = ""
 
 
     var compilerParams: String = " "
     fun getCompilerParamsArray(): Array<String> {
         if (compilerParams == " " || compilerParams == "") return arrayOf<String>()
-        return compilerParams.split(" ").toTypedArray()
+        val ls = mutableListOf<String>()
+
+        for (el in compilerParams.split(" ")) {
+            //ls.addAll(el.split(","))
+            ls.add(el)
+        }
+
+        return ls.toTypedArray()
 
     }
 
@@ -76,6 +81,6 @@ class VyperSettingsConfigurable(private val _settings: VyperSettings) : Searchab
 
     override fun getId(): String = helpTopic
 
-    fun getQuickFix(project: Project): Runnable =
-            Runnable { ShowSettingsUtil.getInstance().editConfigurable(project, this) }
+//    fun getQuickFix(project: Project): Runnable =
+//            Runnable { ShowSettingsUtil.getInstance().editConfigurable(project, this) }
 }
