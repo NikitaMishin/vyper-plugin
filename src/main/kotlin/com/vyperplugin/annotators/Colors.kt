@@ -17,6 +17,6 @@ enum class VyperColor(humanName: String, val default: TextAttributesKey) {
     KEYWORD("Keyword", DefaultLanguageHighlighterColors.KEYWORD),
     ;
 
-    val textAttributesKey = TextAttributesKey.createTextAttributesKey("me.serce.solidity.$name", default)
+    val textAttributesKey = TextAttributesKey.createTextAttributesKey("com.vyperplugin.vyper.$name", default)
     val attributesDescriptor = AttributesDescriptor(humanName, textAttributesKey)
 }

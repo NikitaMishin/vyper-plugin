@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperUserDefinedConstantsExpression extends VyperExpression {
+public interface VyperUserDefinedConstantsExpression extends VyperExpression, VyperNamedElement {
 
   @Nullable
   VyperExpression getExpression();

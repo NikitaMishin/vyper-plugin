@@ -4,9 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.vyperplugin.vyper-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.vyperplugin.vyper-plugin.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.vyperplugin.vyper-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.vyperplugin.vyper-plugin.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/vyper-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/vyper-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/vyper-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/vyper-plugin.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/vyper-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/vyper-plugin.test.iml" />
     </modules>
   </component>
 </project>

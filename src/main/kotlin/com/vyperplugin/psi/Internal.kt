@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.AbstractProjectComponent
 import com.intellij.openapi.project.Project
 import com.vyperplugin.annotators.VyperCompilerListener
+import com.vyperplugin.annotators.VyperSmartCheckListener
 
 @SuppressWarnings("Deprecated")
 class VyperInternalTypeFactory(project : Project) : AbstractProjectComponent(project) {
@@ -16,11 +17,13 @@ class VyperInternalTypeFactory(project : Project) : AbstractProjectComponent(pro
         ApplicationManager.getApplication().runReadAction{
         msg = psiFactory.createStruct("""struct Msg:
         |   sender : address
-        |   value : wei
+        |   value : wei_value
         |   gas : uint256
     """.trimMargin())
         }
-        VyperCompilerListener(project).listenAnalyssis()
+
+        VyperCompilerListener(project).listenAnalysis()
+        VyperSmartCheckListener(project).listenAnalysis()
     }
 
     companion object {

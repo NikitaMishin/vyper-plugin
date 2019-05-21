@@ -3790,7 +3790,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // assert &INDNONE Expression &INDNONE AssertMessage?
+  // assert &INDNONE Expression (&INDNONE AssertMessage)?
   public static boolean AssertExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AssertExpression")) return false;
     if (!nextTokenIsSmart(b, ASSERT)) return false;
@@ -3800,8 +3800,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     p = r; // pin = 1
     r = r && report_error_(b, AssertExpression_1(b, l + 1));
     r = p && report_error_(b, Expression(b, l + 1, -1)) && r;
-    r = p && report_error_(b, AssertExpression_3(b, l + 1)) && r;
-    r = p && AssertExpression_4(b, l + 1) && r;
+    r = p && AssertExpression_3(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -3816,21 +3815,32 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // &INDNONE
+  // (&INDNONE AssertMessage)?
   private static boolean AssertExpression_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AssertExpression_3")) return false;
+    AssertExpression_3_0(b, l + 1);
+    return true;
+  }
+
+  // &INDNONE AssertMessage
+  private static boolean AssertExpression_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssertExpression_3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = AssertExpression_3_0_0(b, l + 1);
+    r = r && AssertMessage(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean AssertExpression_3_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssertExpression_3_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
-  }
-
-  // AssertMessage?
-  private static boolean AssertExpression_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "AssertExpression_4")) return false;
-    AssertMessage(b, l + 1);
-    return true;
   }
 
   // '==' | '!='

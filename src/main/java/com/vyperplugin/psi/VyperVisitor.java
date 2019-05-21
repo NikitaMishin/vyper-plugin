@@ -192,7 +192,7 @@ public class VyperVisitor extends PsiElementVisitor {
   }
 
   public void visitStructType(@NotNull VyperStructType o) {
-    visitElement(o);
+    visitReferenceElement(o);
   }
 
   public void visitType(@NotNull VyperType o) {
@@ -217,6 +217,7 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitUserDefinedConstantsExpression(@NotNull VyperUserDefinedConstantsExpression o) {
     visitExpression(o);
+    // visitNamedElement(o);
   }
 
   public void visitValueType(@NotNull VyperValueType o) {
