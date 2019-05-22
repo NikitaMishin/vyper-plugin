@@ -10,6 +10,11 @@ Features:
 * nevertheless pre-alpha.
 -----------
 
+**Demo**
+------------
+
+see demo on [youtube](https://www.youtube.com/watch?v=M6f6xgcP4Xo&feature=youtu.be).
+
 **Build:**
 ------------
  to build the plugin you should have IntelliJ IDEA. Clone the project and run gradle build task.
@@ -17,3 +22,4 @@ Features:
 **Test** 
 ------------
 to test the plugin without installation you might run runIde task in gradle, which will execute IDEA instance with the plugin installed.
+
