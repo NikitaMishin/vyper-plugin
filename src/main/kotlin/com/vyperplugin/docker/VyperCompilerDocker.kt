@@ -1,18 +1,31 @@
 package com.vyperplugin.docker
 
-import com.spotify.docker.client.DockerClient
-import com.spotify.docker.client.exceptions.DockerException
-import com.spotify.docker.client.messages.ContainerConfig
-import com.spotify.docker.client.messages.HostConfig
+import com.github.dockerjava.api.async.ResultCallback
+import com.github.dockerjava.api.model.Bind
+import com.github.dockerjava.api.model.Frame
+import com.github.dockerjava.api.model.HostConfig
+import com.github.dockerjava.api.model.Volume
 
 
 /**
  * Vyper compiler that runs inside docker container
  */
-class VyperCompilerDocker(var bindDir: String, var fullPathToFile: String,
-                          var args: Array<String> = arrayOf()) : AbstractToolDocker() {
-    override var IMAGE = "murmulla/vyper_and_vyper_run:version2"
+
+class VyperCompilerDocker(
+    var bindDir: String, var fullPathToFile: String,
+    var args: Array<String> = arrayOf()
+) : AbstractToolDocker() {
+    override var IMAGE = "murmulla/vyper_and_vyper_run"
+    override var IMAGE_TAG = "version2"
     private val toolName = "vyper"
+
+    inner class VyperAdapterLogs : ResultCallback.Adapter<Frame>() {
+        override fun onNext(item: Frame) {
+            logs.add(item.toString())
+        }
+    }
+
+    private val logs = mutableListOf<String>()
 
     override fun exec(): ToolResult {
 
@@ -20,54 +33,50 @@ class VyperCompilerDocker(var bindDir: String, var fullPathToFile: String,
         return compileFile(bindDir, filename, args)
     }
 
-
     //TODO add timelimit
     //TODO swap to long running containers
-    @Throws(DockerException::class, InterruptedException::class)
     fun compileFile(bindDir: String, filename: String, args: Array<String> = arrayOf()): ToolResult {
-
-        val hostConfig = HostConfig.builder()
-                .binds("$bindDir/:$dockerBindDir")
-                .build()
 
         val completeCommand: Array<String> = (args + filename)
 
-        val containerConfig = ContainerConfig.builder()
-                .image(IMAGE)
-                .hostConfig(hostConfig)
-                .workingDir(dockerBindDir)
-                .cmd(*completeCommand)
-                .entrypoint(toolName)
-                .build()
+        val hostConfig = HostConfig()
+            .withBinds(Bind(bindDir, Volume(dockerBindDir)))
 
-        val creation = pluginDockerClient.dockerClient.createContainer(containerConfig)
-        val id = creation.id()!!
+        val creation = pluginDockerClient
+            .createContainerCmd("$IMAGE:$IMAGE_TAG")
+            .withHostConfig(hostConfig)
+            .withCmd(*completeCommand)
+            .withEntrypoint(toolName)
+            .withWorkingDir(dockerBindDir)
+            .exec()
 
-        val streamSTDOUT = pluginDockerClient.dockerClient.attachContainer(id,
-                DockerClient.AttachParameter.STDOUT, DockerClient.AttachParameter.STREAM)
-        val streamSTDERR = pluginDockerClient.dockerClient.attachContainer(id,
-                DockerClient.AttachParameter.STDERR, DockerClient.AttachParameter.STREAM)
+        val id = creation.id
 
+        pluginDockerClient.startContainerCmd(id).exec()
 
-        pluginDockerClient.dockerClient.startContainer(id)
-        val logSTDOUT = streamSTDOUT.readFully()
-        val logSTDERR = streamSTDERR.readFully()
+        pluginDockerClient
+            .logContainerCmd(id)
+            .withStdErr(true)
+            .withStdOut(true)
+            .withFollowStream(true)
+            .exec(VyperAdapterLogs())
+            .awaitCompletion()
 
+        val logsError = logs.filter { it.contains("stderr", true) }.map { it.removePrefix("STDERR: ") }
+        val logsOut = logs.filter { it.contains("stdout", true) }.map { it.removePrefix("STDOUT: ") }
+        pluginDockerClient
+            .removeContainerCmd(id)
+            .exec()
 
-        pluginDockerClient.dockerClient.removeContainer(id)
-
-        if (logSTDERR.isBlank() && logSTDOUT.isNotBlank()) {
-            return ToolResult(logSTDOUT, "", fullPathToFile, StatusDocker.SUCCESS)
+        return when {
+            logsError.isEmpty() && logsOut.isNotEmpty() -> ToolResult(
+                logsOut.joinToString(separator = "\n"),
+                "",
+                fullPathToFile,
+                StatusDocker.SUCCESS
+            )
+            logsError.isEmpty() && logsOut.isEmpty() -> ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
+            else -> ToolResult("", logsError.joinToString(separator = "\n"), fullPathToFile, StatusDocker.FAILED)
         }
-        if (logSTDERR.isBlank() && logSTDOUT.isBlank()) {
-            return ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
-        }
-        if (logSTDERR.isNotBlank()) {
-            return ToolResult("", logSTDERR, fullPathToFile, StatusDocker.FAILED)
-        }
-
-        // check
-        throw IllegalAccessError()
     }
-
 }

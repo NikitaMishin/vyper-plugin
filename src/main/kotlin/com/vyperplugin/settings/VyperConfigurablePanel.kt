@@ -3,62 +3,55 @@ package com.vyperplugin.settings
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.util.io.FileUtil
-import java.awt.Component
 import javax.swing.JCheckBox
 import javax.swing.JPanel
 import javax.swing.JTextField
 
 class VyperConfigurablePanel {
+
     internal lateinit var mainPanel: JPanel
+
     // deployment panel
-    private lateinit var deployPanel: JPanel
+    internal lateinit var deployPanel: JPanel
     private lateinit var usesCustomAccount: JCheckBox
     private lateinit var address: JTextField
     private lateinit var network: JTextField
+
     //private lateinit var password: JPasswordField
     private lateinit var password: JTextField
 
 
     // createStubInGenSourceFolder stubs
-    private lateinit var generateStubsPanel: JPanel
+    internal lateinit var generateStubsPanel: JPanel
     private lateinit var generateStubs: JCheckBox
     private lateinit var genOutputPath: JTextField
     //
 
 
-    private lateinit var compilerPanel: JPanel
+    internal lateinit var compilerPanel: JPanel
+
     // compiler
     private lateinit var compilerParams: JTextField
-//    private lateinit var fileExtension: JTextField
 
     init {
         usesCustomAccount.addActionListener {
             updateDeployStatus()
         }
-        generateStubs.addActionListener() {
+        generateStubs.addActionListener {
             updateGenerateStubsStatus()
         }
     }
 
     private fun updateDeployStatus() {
         val enabled = usesCustomAccount.isSelected
-        deployPanel.setAll({ it.isEnabled = enabled }, usesCustomAccount)
+        password.isEditable = enabled
+        address.isEditable = enabled
     }
 
     private fun updateGenerateStubsStatus() {
         val enabled = generateStubs.isSelected
-        generateStubsPanel.setAll({ it.isEnabled = enabled }, generateStubs)
+        genOutputPath.isEditable = enabled
     }
-
-    private fun JPanel.setAll(action: (Component) -> Unit, vararg except: Component) {
-        this.components.asSequence()
-                .filterNot { except.contains(it) }
-                .forEach {
-                    (it as? JPanel)?.setAll(action, *except)
-                    action(it)
-                }
-    }
-
 
     fun apply(settings: VyperSettings) {
         validateFields()
@@ -71,12 +64,13 @@ class VyperConfigurablePanel {
         settings.generateStubs = generateStubs.isSelected
         settings.genarateOutputPath = genOutputPath.text
 
-        compilerParams.text = compilerParams.text.replace("\\s+".toRegex()," ")
-                .dropWhile { it==' '}.dropLastWhile { it==' '}
+        compilerParams.text = compilerParams.text.replace("\\s+".toRegex(), " ")
+            .dropWhile { it == ' ' }.dropLastWhile { it == ' ' }
 
         settings.compilerParams = compilerParams.text
 
-        ApplicationManager.getApplication().messageBus.syncPublisher(VyperConfigurationListener.TOPIC).settingsConfigChanged()
+        ApplicationManager.getApplication().messageBus.syncPublisher(VyperConfigurationListener.TOPIC)
+            .settingsConfigChanged()
     }
 
 
@@ -113,15 +107,15 @@ class VyperConfigurablePanel {
 
 
     fun isModified(settings: VyperSettings): Boolean =
-            usesCustomAccount.isSelected != settings.usesCustomAccount ||
+        usesCustomAccount.isSelected != settings.usesCustomAccount ||
 
-            address.text != settings.address ||
-                    password.text != settings.password ||
-                    network.text != settings.network ||
+                address.text != settings.address ||
+                password.text != settings.password ||
+                network.text != settings.network ||
 
-                    compilerParams.text != settings.compilerParams ||
+                compilerParams.text != settings.compilerParams ||
 
-                    generateStubs.isSelected != settings.generateStubs ||
-                    genOutputPath.text != settings.genarateOutputPath.trim()
+                generateStubs.isSelected != settings.generateStubs ||
+                genOutputPath.text != settings.genarateOutputPath.trim()
 
 }

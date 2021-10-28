@@ -73,7 +73,7 @@ def bid(_blindedBid: bytes32):
     # Add bid to mapping of all bids
     self.bids[msg.sender][numBids] = Bid({
         blindedBid: _blindedBid,
-        deposit: msg.value,
+        deposit: msg.value
 
         })
     self.bidCounts[msg.sender] += 1

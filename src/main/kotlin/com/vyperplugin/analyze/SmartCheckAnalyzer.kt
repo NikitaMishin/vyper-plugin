@@ -13,8 +13,8 @@ import java.beans.PropertyChangeSupport
 object SmartCheckAnalyzer {
 
     data class SmartCheckData(
-            val smartCheckData: Array<SmartCheckSinglePattern>,
-            val file: VirtualFile
+        val smartCheckData: Array<SmartCheckSinglePattern>,
+        val file: VirtualFile
     ) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -36,11 +36,11 @@ object SmartCheckAnalyzer {
     }
 
     data class SmartCheckSinglePattern(
-            val ruleId: String,
-            val patternId: String,
-            val severity: String,
-            val line: Int,
-            val column: Int
+        val ruleId: String,
+        val patternId: String,
+        val severity: String,
+        val line: Int,
+        val column: Int
     )
 
 
@@ -60,7 +60,8 @@ object SmartCheckAnalyzer {
     }
 
     private val pattern = Regex(
-            "ruleId: (\\w+)\npatternId: (\\w+)\nseverity: (\\w+)\nline: (\\d+)\ncolumn: (\\d+)")
+        "ruleId: (\\w+)\npatternId: (\\w+)\nseverity: (\\w+)\nline: (\\d+)\ncolumn: (\\d+)"
+    )
 
     fun smartCheckAnalyze(files: Array<VirtualFile>, project: Project, module: Module) {
         files.map {
@@ -71,16 +72,18 @@ object SmartCheckAnalyzer {
                     val arr = mutableListOf<SmartCheckSinglePattern>()
                     pattern.findAll(res.stdout).toList().map {
                         val data = SmartCheckSinglePattern(
-                                it.groups[1]!!.value,
-                                it.groups[2]!!.value,
-                                it.groups[3]!!.value,
-                                it.groups[4]!!.value.toInt(),
-                                it.groups[5]!!.value.toInt()
+                            it.groups[1]!!.value,
+                            it.groups[2]!!.value,
+                            it.groups[3]!!.value,
+                            it.groups[4]!!.value.toInt(),
+                            it.groups[5]!!.value.toInt()
                         )
                         arr.add(data)
                     }
-                    VyperWindow.appendTextToTabsWindow(project, VyperWindow.VyperWindowTab.ANALYZE_TAB,
-                            "$p:\n" + res.stdout.drop(1) + '\n')
+                    VyperWindow.replaceTextInTabsWindow(
+                        project, VyperWindow.VyperWindowTab.ANALYZE_TAB,
+                        "$p:\n" + res.stdout.drop(1) + '\n'
+                    )
                     addMessage(SmartCheckData(arr.toTypedArray(), it))
                 }
                 else -> {
@@ -90,13 +93,13 @@ object SmartCheckAnalyzer {
         }
 
         VyperMessageProcessor.notificateInBalloon(
-                VyperMessageProcessor.VyperNotification(
-                        null, "SmartCheck",
-                        "<html>analyzed of files finished. See detail in tool window</html>",
-                        VyperMessageProcessor.NotificationStatusVyper.INFO,
-                        VyperMessageProcessor.NotificationGroupVyper.ANALYZE,
-                        project
-                )
+            VyperMessageProcessor.VyperNotification(
+                null, "SmartCheck",
+                "<html>analyzed of files finished. See detail in tool window</html>",
+                VyperMessageProcessor.NotificationStatusVyper.INFO,
+                VyperMessageProcessor.NotificationGroupVyper.ANALYZE,
+                project
+            )
         )
     }
 }

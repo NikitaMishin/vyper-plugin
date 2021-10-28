@@ -25,7 +25,8 @@ class MythXAnalyzeAction : VyperAction() {
             FileDocumentManager.getInstance().saveAllDocuments()
         }
 
-        val files: Array<VirtualFile>? = getClickedFiles(e)?.filter { it.path.contains(vyExtensionRegExp) }?.toTypedArray()
+        val files: Array<VirtualFile>? =
+            getClickedFiles(e)?.filter { it.path.contains(vyExtensionRegExp) }?.toTypedArray()
 
         if (files == null || files.isEmpty()) {
             return NoFilesWithVyperAreSelectedDialogue().display()
@@ -37,33 +38,35 @@ class MythXAnalyzeAction : VyperAction() {
         val file = files.first()
 
         //task for analyzer
-        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "analyzing with MythX, response may take some time...") {
-            override fun run(indicator: ProgressIndicator) {
+        ProgressManager.getInstance()
+            .run(object : Task.Backgroundable(project, "analyzing with MythX, response may take some time...") {
+                override fun run(indicator: ProgressIndicator) {
 
-                val res = VyperCompilerDocker(
+                    val res = VyperCompilerDocker(
                         file.parent.path, file.path,
-                        arrayOf("-f", "bytecode,bytecode_runtime")).execWrapper(project)
-                when (res.statusDocker) {
-                    StatusDocker.SUCCESS -> {
-                        val (bytecode, bytecode_runtime) = res.stdout.lines()
-                        MythXAnalyzer.analyze(bytecode, bytecode_runtime, file.path, project)
-                    }
-                    else -> {
-                        VyperMessageProcessor.notificateInBalloon(
+                        arrayOf("-f", "bytecode,bytecode_runtime")
+                    ).execWrapper(project)
+                    when (res.statusDocker) {
+                        StatusDocker.SUCCESS -> {
+                            val (bytecode, bytecode_runtime) = res.stdout.lines()
+                            MythXAnalyzer.analyze(bytecode, bytecode_runtime, file.path, project)
+                        }
+                        else -> {
+                            VyperMessageProcessor.notificateInBalloon(
                                 VyperMessageProcessor.VyperNotification(
-                                        null,
-                                        "MythX", "File ${file.name} contains errors",
-                                        VyperMessageProcessor.NotificationStatusVyper.ERROR,
-                                        VyperMessageProcessor.NotificationGroupVyper.COMMON,
-                                        project
+                                    null,
+                                    "MythX", "File ${file.name} contains errors",
+                                    VyperMessageProcessor.NotificationStatusVyper.ERROR,
+                                    VyperMessageProcessor.NotificationGroupVyper.COMMON,
+                                    project
                                 )
-                        )
+                            )
 
+                        }
                     }
-                }
 
-            }
-        })
+                }
+            })
 
     }
 }

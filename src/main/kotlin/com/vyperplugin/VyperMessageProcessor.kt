@@ -1,8 +1,8 @@
 package com.vyperplugin
 
-import com.intellij.notification.NotificationDisplayType
-import com.intellij.notification.NotificationGroup
+import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationListener
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.popup.Balloon
@@ -16,10 +16,10 @@ import javax.swing.event.HyperlinkListener
  */
 object VyperMessageProcessor {
 
-    private const val NOTIFICATION_ID_COMPILER = "Vyper Compiler"
-    private const val NOTIFICATION_ID_TEST = "Vyper-run"
-    private const val NOTIFICATION_ID_ANALYZER = "Vyper Aalyzers"
-    private const val NOTIFICATION_ID_COMMON = "Vyper Common"
+    private const val NOTIFICATION_ID_COMPILER = "COMPILER"
+    private const val NOTIFICATION_ID_TEST = "RUN"
+    private const val NOTIFICATION_ID_ANALYZER = "ANALYZE"
+    private const val NOTIFICATION_ID_COMMON = "COMMON"
 
     enum class NotificationStatusVyper {
         INFO,
@@ -27,8 +27,13 @@ object VyperMessageProcessor {
         WARNING,
         LOGGING
     }
-
-    private fun NotificationStatusVyper.convert() = when (this) {
+    private fun NotificationStatusVyper.convertNotify() = when (this) {
+        NotificationStatusVyper.INFO -> NotificationType.INFORMATION
+        NotificationStatusVyper.ERROR -> NotificationType.ERROR
+        NotificationStatusVyper.WARNING -> NotificationType.WARNING
+        NotificationStatusVyper.LOGGING -> NotificationType.INFORMATION
+    }
+    private fun NotificationStatusVyper.convertMessage() = when (this) {
         NotificationStatusVyper.INFO -> MessageType.INFO
         NotificationStatusVyper.ERROR -> MessageType.ERROR
         NotificationStatusVyper.WARNING -> MessageType.WARNING
@@ -42,23 +47,24 @@ object VyperMessageProcessor {
         COMMON,
     }
 
-    private fun NotificationGroupVyper.convert() = when (this) {
-        VyperMessageProcessor.NotificationGroupVyper.COMPILER -> NOTIFICATION_ID_COMPILER
-        VyperMessageProcessor.NotificationGroupVyper.RUN -> NOTIFICATION_ID_TEST
-        VyperMessageProcessor.NotificationGroupVyper.ANALYZE -> NOTIFICATION_ID_ANALYZER
-        VyperMessageProcessor.NotificationGroupVyper.COMMON -> NOTIFICATION_ID_COMMON
+    private fun NotificationGroupVyper.convertNotification() = when (this) {
+        NotificationGroupVyper.COMPILER -> NOTIFICATION_ID_COMPILER
+        NotificationGroupVyper.RUN -> NOTIFICATION_ID_TEST
+        NotificationGroupVyper.ANALYZE -> NOTIFICATION_ID_ANALYZER
+        NotificationGroupVyper.COMMON -> NOTIFICATION_ID_COMMON
     }
 
     /**
      * Notification that displayed to user for specific project
      */
     data class VyperNotification(
-            val notificationListener: NotificationListener?,
-            val title: String,
-            val message: String,
-            val status: NotificationStatusVyper,
-            val group: NotificationGroupVyper,
-            val project: Project)
+        val notificationListener: NotificationListener?,
+        val title: String,
+        val message: String,
+        val status: NotificationStatusVyper,
+        val group: NotificationGroupVyper,
+        val project: Project
+    )
 
 
     /**
@@ -66,19 +72,15 @@ object VyperMessageProcessor {
      */
     fun notificateInBalloon(vyperNotification: VyperNotification) {
         val notification = when (vyperNotification.status) {
-            VyperMessageProcessor.NotificationStatusVyper.LOGGING ->
-                NotificationGroup.logOnlyGroup(vyperNotification.group.convert()).createNotification(
-                        vyperNotification.title,
-                        vyperNotification.message,
-                        vyperNotification.status.convert().toNotificationType(),
-                        vyperNotification.notificationListener
-                )
-            else -> NotificationGroup(vyperNotification.group.convert(), NotificationDisplayType.BALLOON, true).createNotification(
-                    vyperNotification.title,
-                    vyperNotification.message,
-                    vyperNotification.status.convert().toNotificationType(),
-                    vyperNotification.notificationListener
-            )
+            NotificationStatusVyper.LOGGING ->
+                NotificationGroupManager
+                    .getInstance()
+                    .getNotificationGroup(vyperNotification.group.convertNotification())
+                    .createNotification(vyperNotification.title, vyperNotification.message, vyperNotification.status.convertNotify())
+            else -> NotificationGroupManager
+                .getInstance()
+                .getNotificationGroup(vyperNotification.group.convertNotification())
+                .createNotification(vyperNotification.title, vyperNotification.message, vyperNotification.status.convertNotify())
         }.setImportant(false) // or true.
 
         notification.notify(vyperNotification.project)
@@ -87,13 +89,17 @@ object VyperMessageProcessor {
     /**
      * TODO not use this method, not ready use @notificateInBalloon
      */
-    fun notificateInPopup(htmlText: String, project: Project, time: Long, status: NotificationStatusVyper,
-                          hyperlinkListener: HyperlinkListener) {
+    fun notificateInPopup(
+        htmlText: String, project: Project, time: Long, status: NotificationStatusVyper,
+        hyperlinkListener: HyperlinkListener
+    ) {
         val statusBar = WindowManager.getInstance().getIdeFrame(project)
         val popup =
-                JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(htmlText,
-                        status.convert(), hyperlinkListener).setFadeoutTime(time)
-        popup.createBalloon().show(RelativePoint.getCenterOf(statusBar.component), Balloon.Position.atRight)
+            JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
+                htmlText,
+                status.convertMessage(), hyperlinkListener
+            ).setFadeoutTime(time)
+        popup.createBalloon().show(RelativePoint.getCenterOf(statusBar!!.component), Balloon.Position.atRight)
     }
 
 

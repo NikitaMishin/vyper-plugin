@@ -1,12 +1,9 @@
 package com.vyperplugin.psi
 
-import com.intellij.formatting.blocks.prev
+
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.IconLoader
-import com.intellij.openapi.util.io.endsWithName
 import com.intellij.psi.PsiElement
-import com.intellij.psi.stubs.IStubElementType
-import com.intellij.psi.tree.IElementType
 import com.vyperplugin.psi.VyperTypes.*
 import com.vyperplugin.references.*
 
@@ -22,7 +19,10 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
         val parent = node.psi.parent
         val grandparent = parent.parent
         return when {
-            parent is VyperMemberAccessExpression && parent.varLiteral == node.psi -> VyperMemberAccessReference(this, parent)
+            parent is VyperMemberAccessExpression && parent.varLiteral == node.psi -> VyperMemberAccessReference(
+                this,
+                parent
+            )
             //Call expr - > MemberAccess -> VarLitral
             //Call expr -> PrimaryExpr -> VarLiteral
             grandparent is VyperCallElement -> VyperCallReference(grandparent)
@@ -38,19 +38,20 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
 }
 
 
-
 abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), VyperCallExpression {
 
     override val referenceNameElement: PsiElement
-
-        get() = {
+        get()  //else selfAccess
+        {
             val sibl = node.findChildByType(LPAREN)?.treePrev
-             when{
-                sibl!!.psi is VyperPrimaryExpression -> findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi ?: firstChild
-                 //else selfAccess
-                else ->  findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi ?: firstChild
+            //else selfAccess
+            return when (sibl!!.psi) {
+                is VyperPrimaryExpression -> findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi
+                    ?: firstChild
+                //else selfAccess
+                else -> findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi ?: firstChild
             }
-        }()
+        }
     override val referenceName: String
         get() = referenceNameElement.text
 
@@ -58,7 +59,7 @@ abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), Vy
 
 }
 
-abstract class VyperStructTypeMixin(node : ASTNode) : VyperNamedElementImpl(node), VyperStructType {
+abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperStructType {
     override val referenceNameElement: PsiElement
         get() = findChildByType(IDENTIFIER)!!
 
@@ -70,7 +71,7 @@ abstract class VyperStructTypeMixin(node : ASTNode) : VyperNamedElementImpl(node
     }
 }
 
-abstract class VyperFunctionDefMixin(node : ASTNode) : VyperNamedElementImpl(node), VyperFunctionDefinition {
+abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperFunctionDefinition {
     override val referenceNameElement: PsiElement
         get() = findChildByType(IDENTIFIER)!!
 
@@ -78,7 +79,7 @@ abstract class VyperFunctionDefMixin(node : ASTNode) : VyperNamedElementImpl(nod
         get() = referenceNameElement.text
 
     override val modifiers: List<PsiElement>
-        get() = findChildrenByType<PsiElement>(FUNCTION_MODIFIER)
+        get() = findChildrenByType(FUNCTION_MODIFIER)
 
     override val parameters: VyperFunctionArgs?
         get() = findChildByType(FUNCTION_ARGS)

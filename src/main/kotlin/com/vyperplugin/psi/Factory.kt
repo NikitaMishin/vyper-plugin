@@ -1,7 +1,6 @@
 package com.vyperplugin.psi
 
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.vyperplugin.VyperFileType
 
@@ -14,7 +13,7 @@ class VyperPsiFactory(val project: Project) {
     }
 
     private inline fun <reified T : VyperElement> createFromText(code: String): T? =
-            PsiFileFactory.getInstance(project)
-                    .createFileFromText("DUMMY.vy", VyperFileType, code)
-                    .childOfType()
+        PsiFileFactory.getInstance(project)
+            .createFileFromText("DUMMY.vy", VyperFileType.INSTANCE, code)
+            .childOfType()
 }

@@ -10,7 +10,6 @@ import com.vyperplugin.toolWindow.VyperWindow
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 
 
 object MythXAnalyzer {
@@ -29,14 +28,16 @@ object MythXAnalyzer {
         GlobalScope.async {
             try {
                 val submitResponse = api.partialAnalyze(
-                        api.login(address, pass).first!!.jwtTokens,
-                        bytecode, deployedBytecode
+                    api.login(address, pass).first!!.jwtTokens,
+                    bytecode, deployedBytecode
                 )
 
                 if (submitResponse.first!!.status == "ERROR") {
-                    notify(project, fileName, "<html>Some errors in submitted code, " +
-                            "please check " + "correctness of submitted code for $fileName</html>",
-                            VyperMessageProcessor.NotificationStatusVyper.ERROR)
+                    notify(
+                        project, fileName, "<html>Some errors in submitted code, " +
+                                "please check " + "correctness of submitted code for $fileName</html>",
+                        VyperMessageProcessor.NotificationStatusVyper.ERROR
+                    )
                     return@async
                 }
 
@@ -47,9 +48,11 @@ object MythXAnalyzer {
                     val status = api.getAnalysisStatus(submitResponse.first!!.uuid, token)
 
                     if (status.first!!.status == "Error") {
-                        notify(project, fileName, "<html>Some errors in submitted code, " +
-                                "please check " + "correctness of submitted code for $fileName</html>",
-                                VyperMessageProcessor.NotificationStatusVyper.ERROR)
+                        notify(
+                            project, fileName, "<html>Some errors in submitted code, " +
+                                    "please check " + "correctness of submitted code for $fileName</html>",
+                            VyperMessageProcessor.NotificationStatusVyper.ERROR
+                        )
                         return@async
                     }
                     if (status.first!!.status == "Finished") {
@@ -61,9 +64,11 @@ object MythXAnalyzer {
                     delay(api.waitTimeOfAnalysis)
                 }
             } catch (e: Exception) {
-                notify(project, fileName, "<html>Some errors occurred, please check your" +
-                        " password with username or correctness of submitted code in file $fileName</html>",
-                        VyperMessageProcessor.NotificationStatusVyper.ERROR)
+                notify(
+                    project, fileName, "<html>Some errors occurred, please check your" +
+                            " password with username or correctness of submitted code in file $fileName</html>",
+                    VyperMessageProcessor.NotificationStatusVyper.ERROR
+                )
             }
         }
 
@@ -82,7 +87,7 @@ object MythXAnalyzer {
 
                 //diplay to user
                 buildOutput = buildOutput.append(
-                        """
+                    """
                                 severity:${it.severity}
                                 swcTitle:${it.swcID}
                                 description of vulnerabilities:
@@ -100,26 +105,32 @@ object MythXAnalyzer {
 
         if (isIssueFound) {
             // notify user
-            notify(project, fileName, "<html>$fileName contains vulnerabilities. " +
-                    "See toolWindow for details </html>",
-                    VyperMessageProcessor.NotificationStatusVyper.WARNING)
+            notify(
+                project, fileName, "<html>$fileName contains vulnerabilities. " +
+                        "See toolWindow for details </html>",
+                VyperMessageProcessor.NotificationStatusVyper.WARNING
+            )
             // add to tab analyze
-            VyperWindow.appendTextToTabsWindow(project, VyperWindow.VyperWindowTab.ANALYZE_TAB, "\n$buildOutput")
+            VyperWindow.replaceTextInTabsWindow(project, VyperWindow.VyperWindowTab.ANALYZE_TAB, "\n$buildOutput")
 
         } else {
-            notify(project, fileName, "<html>$fileName doesn't contain vulnerabilities </html>",
-                    VyperMessageProcessor.NotificationStatusVyper.INFO)
+            notify(
+                project, fileName, "<html>$fileName doesn't contain vulnerabilities </html>",
+                VyperMessageProcessor.NotificationStatusVyper.INFO
+            )
         }
     }
 
 
-    private fun notify(project: Project, fileName: String, html: String,
-                       status: VyperMessageProcessor.NotificationStatusVyper) {
+    private fun notify(
+        project: Project, fileName: String, html: String,
+        status: VyperMessageProcessor.NotificationStatusVyper
+    ) {
         VyperMessageProcessor.notificateInBalloon(
-                VyperMessageProcessor.VyperNotification(
-                        null, "MythX", html, status,
-                        VyperMessageProcessor.NotificationGroupVyper.COMMON, project
-                )
+            VyperMessageProcessor.VyperNotification(
+                null, "MythX", html, status,
+                VyperMessageProcessor.NotificationGroupVyper.COMMON, project
+            )
         )
     }
 

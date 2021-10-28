@@ -16,14 +16,16 @@ import java.io.File
 
 object VyperStubGenerator {
 
-    fun createStubInGenSourceFolder(data: String, module: Module, project: Project,
-                                    fullPathToFile: String, extension: String) {
+    fun createStubInGenSourceFolder(
+        data: String, module: Module, project: Project,
+        fullPathToFile: String, extension: String
+    ) {
         generateFolder(module, project)
         VirtualFileManager.getInstance().asyncRefresh {
             WriteCommandAction.runWriteCommandAction(project) {
 
                 val parent = getGeneratedSourceRoot(module)
-                        ?: throw NullPointerException("No generated source folder is found")
+                    ?: throw NullPointerException("No generated source folder is found")
                 val filename = fullPathToFile.split("/").last()
 
                 val filePath = parent.path + "/" + filename + extension
@@ -47,8 +49,8 @@ object VyperStubGenerator {
     }
 
     private fun getGeneratedSourceRoot(module: Module): VirtualFile? =
-            ModuleRootManager.getInstance(module).sourceRoots
-                    .firstOrNull { it.name == VyperSettings.INSTANCE.genarateOutputPath }
+        ModuleRootManager.getInstance(module).sourceRoots
+            .firstOrNull { it.name == VyperSettings.INSTANCE.genarateOutputPath }
 
 
     private fun generateFolder(module: Module, project: Project) {

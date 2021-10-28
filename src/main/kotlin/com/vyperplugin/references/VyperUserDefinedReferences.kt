@@ -2,9 +2,13 @@ package com.vyperplugin.references
 
 import com.intellij.psi.PsiElement
 import com.vyperplugin.completion.VyperCompleter
-import com.vyperplugin.psi.*
+import com.vyperplugin.psi.VyperCallElement
+import com.vyperplugin.psi.VyperMemberAccessExpression
+import com.vyperplugin.psi.VyperStructType
+import com.vyperplugin.psi.VyperVarLiteral
 
-class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element),
+    VyperReference {
 
     override fun multiResolve(): Collection<PsiElement> {
         return VyperResolver.resolveVarLiteral(element)
@@ -15,7 +19,8 @@ class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<Vy
     }
 }
 
-class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemberAccessExpression): VyperReferenceBase<VyperVarLiteral>(element) ,VyperReference {
+class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemberAccessExpression) :
+    VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
     override fun multiResolve(): Collection<PsiElement> {
         return VyperResolver.resolveMemberAccess(member)
     }
@@ -38,7 +43,8 @@ class VyperCallReference(element: VyperCallElement) : VyperReferenceBase<VyperCa
     }
 }
 
-class VyperStructTypeReference(element: VyperStructType) : VyperReferenceBase<VyperStructType>(element), VyperReference {
+class VyperStructTypeReference(element: VyperStructType) : VyperReferenceBase<VyperStructType>(element),
+    VyperReference {
     override fun getVariants(): Array<out Any> {
         return VyperCompleter.completeTypes()
     }

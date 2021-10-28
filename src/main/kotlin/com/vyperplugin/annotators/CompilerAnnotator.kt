@@ -24,7 +24,7 @@ class VyperCompilerListener(val project: Project) : PropertyChangeListener {
             val psiFile = PsiManager.getInstance(project).findFile(data.file)
             //what if user picks another file?
             val dm = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)
-            for(report in data.error) {
+            for (report in data.error) {
                 val start = dm!!.getLineStartOffset(report.line - 1)
                 val end = dm.getLineEndOffset(report.line - 1)
                 val message = report.msg
@@ -56,7 +56,7 @@ class CompilerAnnotator : Annotator {
 }
 
 object CompilerOutput {
-    var messages : MutableList<CompilerMessage> = mutableListOf()
+    var messages: MutableList<CompilerMessage> = mutableListOf()
 }
 
-data class CompilerMessage(val range: TextRange, val message : String )
+data class CompilerMessage(val range: TextRange, val message: String)

@@ -11,9 +11,11 @@ import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
 import javax.swing.*
 
-class VyperRunContractMultiple(private var project: Project,
-                               private var module: Module,
-                               private var file: VirtualFile) : JDialog() {
+class VyperRunContractMultiple(
+    private var project: Project,
+    private var module: Module,
+    private var file: VirtualFile
+) : JDialog() {
 
     lateinit var contentPane: JPanel
     lateinit var buttonRun: JButton
@@ -40,10 +42,12 @@ class VyperRunContractMultiple(private var project: Project,
         buttonRun.isEnabled = false
 
         val testInput =
-                VyperTestParameters(project, module, file,
-                        functionCalls.text,
-                        initArgs.text.lines().filter { it != "" }.toTypedArray(),
-                        arrayOf())
+            VyperTestParameters(
+                project, module, file,
+                functionCalls.text,
+                initArgs.text.lines().filter { it != "" }.toTypedArray(),
+                arrayOf()
+            )
 
         propertyChangeSupport.firePropertyChange(VyperRunContractCase.MULTIPLE, null, testInput)
         dispose()
@@ -68,7 +72,11 @@ class VyperRunContractMultiple(private var project: Project,
         })
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction({ onCancel() }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+        contentPane.registerKeyboardAction(
+            { onCancel() },
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+        )
     }
 
 

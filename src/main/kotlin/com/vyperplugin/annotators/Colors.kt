@@ -4,7 +4,7 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.options.colors.AttributesDescriptor
 
-enum class VyperColor(humanName: String, val default: TextAttributesKey) {
+enum class VyperColor(humanName: String, default: TextAttributesKey) {
     LINE_COMMENT("Comment", DefaultLanguageHighlighterColors.LINE_COMMENT),
 
     BRACES("Braces", DefaultLanguageHighlighterColors.BRACES),
