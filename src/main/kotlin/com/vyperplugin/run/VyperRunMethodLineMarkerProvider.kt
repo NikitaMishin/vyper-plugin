@@ -12,38 +12,41 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.psi.PsiElement
-import com.intellij.util.Function
 import com.vyperplugin.gui.VyperRunContractCase
 import com.vyperplugin.gui.VyperRunMenuSingle
 import com.vyperplugin.psi.VyperFunctionDefinition
 import java.awt.event.MouseEvent
+import java.util.function.Supplier
 
 
-class VyperMethodRunHandler(private val funcName: String) : GutterIconNavigationHandler<PsiElement> {
+class VyperMethodRunHandler(private val funcName: String, private val funcDef: VyperFunctionDefinition) :
+    GutterIconNavigationHandler<PsiElement> {
     /**
      * when user clicks on run icon
      * ui component for run method is open
      * and handler attaches to button run
      */
     override fun navigate(e: MouseEvent?, elt: PsiElement) {
-        val file = elt.containingFile.virtualFile!!
+        val file = funcDef.containingFile.virtualFile!!
 
 
         val frame = VyperRunMenuSingle(
-                elt.project, ModuleManager.getInstance(elt.project).modules.first(), file)
-        val funcArgs = getArgsFromSignature(elt as VyperFunctionDefinition)
-        val initArgs = getInitArgsFromSignature(elt)
+            funcDef.project, ModuleManager.getInstance(funcDef.project).modules.first(), file
+        )
+        val funcArgs = getArgsFromSignature(funcDef)
+        val initArgs = getInitArgsFromSignature(funcDef)
 
         frame.addPropertyChangeListener { event ->
             run {
                 if (event.propertyName == VyperRunContractCase.SINGLE) {
                     ApplicationManager.getApplication().runWriteAction {
                         FileDocumentManager.getInstance().saveAllDocuments()
-                        ProgressManager.getInstance().run(object : Task.Backgroundable(elt.project, "running contract...") {
-                            override fun run(indicator: ProgressIndicator) {
-                                VyperRun.testContractSingleMethod(event.newValue as VyperTestParameters)
-                            }
-                        })
+                        ProgressManager.getInstance()
+                            .run(object : Task.Backgroundable(funcDef.project, "Running contract...") {
+                                override fun run(indicator: ProgressIndicator) {
+                                    VyperRun.testContractSingleMethod(event.newValue as VyperTestParameters)
+                                }
+                            })
                     }
 
                 } else {
@@ -74,9 +77,9 @@ class VyperMethodRunHandler(private val funcName: String) : GutterIconNavigation
     private fun getInitArgsFromSignature(elt: VyperFunctionDefinition): Array<String> {
 
         val initMethod = elt.parent.children
-                .filter { (it is VyperFunctionDefinition) }
-                .map { it as VyperFunctionDefinition }
-                .filter { it.identifier!!.text == "__init__" }
+            .filter { (it is VyperFunctionDefinition) }
+            .map { it as VyperFunctionDefinition }
+            .filter { it.identifier!!.text == "__init__" }
         if (initMethod.isNotEmpty() && initMethod.first().functionArgs != null) {
             return initMethod.first().functionArgs!!.text.split(',').toTypedArray()
         }
@@ -86,31 +89,43 @@ class VyperMethodRunHandler(private val funcName: String) : GutterIconNavigation
     }
 }
 
-
 class VyperRunMethodLineMarkerProvider : LineMarkerProvider {
     override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? = null
-
-    override fun collectSlowLineMarkers(elements: MutableList<PsiElement>, result: MutableCollection<LineMarkerInfo<PsiElement>>) {
-        loop@ for (element in elements) {
+    override fun collectSlowLineMarkers(
+        elements: MutableList<out PsiElement>,
+        result: MutableCollection<in LineMarkerInfo<*>>
+    ) {
+        for (element in elements) {
             when (element) {
                 is VyperFunctionDefinition -> {
-                    if (element.identifier == null) continue@loop
-
-                    val methodName = element.identifier
-
-                    if (methodName == null ||
-                            methodName.text == "__init__" || methodName.text == "__default__") continue@loop
-
-                    result.add(
-                            LineMarkerInfo(element,
-                                    methodName.textRange,
-                                    AllIcons.RunConfigurations.TestState.Run, 0,
-                                    Function { param: PsiElement -> "run ${(param as VyperFunctionDefinition).identifier!!.text}" },
-                                    VyperMethodRunHandler(methodName.text), GutterIconRenderer.Alignment.LEFT)
-                    )
+                    element.identifier?.let { methodName ->
+                        val func = { _: PsiElement -> "run ${methodName.text}" }
+                        if (!(
+                                    methodName.text == "__init__" || methodName.text == "__default__"
+                                    )
+                        ) result.add(
+                            LineMarkerInfo(
+                                methodName,
+                                methodName.textRange,
+                                AllIcons.RunConfigurations.TestState.Run,
+                                func,
+                                VyperMethodRunHandler(methodName.text, element),
+                                GutterIconRenderer.Alignment.LEFT,
+                                VyperSupplier(methodName.text)
+                            )
+                        )
+                    } ?: continue
                 }
             }
 
         }
     }
+
+    private class VyperSupplier(val data: String) : Supplier<String> {
+
+        override fun get(): String {
+            return data
+        }
+    }
 }
+

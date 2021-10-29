@@ -7,19 +7,22 @@ import com.vyperplugin.annotators.VyperCompilerListener
 import com.vyperplugin.annotators.VyperSmartCheckListener
 
 @SuppressWarnings("Deprecated")
-class VyperInternalTypeFactory(project : Project) : AbstractProjectComponent(project) {
+class VyperInternalTypeFactory(project: Project) : AbstractProjectComponent(project) {
 
     private val psiFactory: VyperPsiFactory = VyperPsiFactory(project)
 
-    lateinit var  msg: VyperStructDefinition
+    lateinit var msg: VyperStructDefinition
         private set
-    init{
-        ApplicationManager.getApplication().runReadAction{
-        msg = psiFactory.createStruct("""struct Msg:
+
+    init {
+        ApplicationManager.getApplication().runReadAction {
+            msg = psiFactory.createStruct(
+                """struct Msg:
         |   sender : address
         |   value : wei_value
         |   gas : uint256
-    """.trimMargin())
+    """.trimMargin()
+            )
         }
 
         VyperCompilerListener(project).listenAnalysis()

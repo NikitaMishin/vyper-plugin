@@ -18,18 +18,24 @@ import com.vyperplugin.toolWindow.VyperWindow
  * @callArgs either  empty if called method has no args and called several methods or "arg1,arg2,argn"
  */
 data class VyperTestParameters(
-        var project: Project,
-        val module: Module,
-        var file: VirtualFile,
-        var callSequence: String,
-        var initArgs: Array<String>,
-        var callArgs: Array<String>
+    var project: Project,
+    val module: Module,
+    var file: VirtualFile,
+    var callSequence: String,
+    var initArgs: Array<String>,
+    var callArgs: Array<String>
 )
 
 object VyperRun {
 
 
-    private fun exec(bindDir: String, fullFilePath: String, callSequence: String, init: Array<String>, project: Project): ToolResult {
+    private fun exec(
+        bindDir: String,
+        fullFilePath: String,
+        callSequence: String,
+        init: Array<String>,
+        project: Project
+    ): ToolResult {
 
         return VyperRunDocker(bindDir, fullFilePath, callSequence, init).execWrapper(project)
     }
@@ -62,20 +68,28 @@ object VyperRun {
     private fun processResult(testParams: VyperTestParameters, res: ToolResult) {
         when (res.statusDocker) {
             StatusDocker.SUCCESS -> {
-                VyperWindow.appendTextToTabsWindow(
-                        testParams.project, VyperWindow.VyperWindowTab.RUN_TAB, res.stdout)
-                notify("Success", VyperMessageProcessor.NotificationStatusVyper.INFO,
-                        testParams.project)
+                VyperWindow.replaceTextInTabsWindow(
+                    testParams.project, VyperWindow.VyperWindowTab.RUN_TAB, res.stdout
+                )
+                notify(
+                    "Success", VyperMessageProcessor.NotificationStatusVyper.INFO,
+                    testParams.project
+                )
             }
             StatusDocker.FAILED -> {
-                VyperWindow.appendTextToTabsWindow(
-                        testParams.project, VyperWindow.VyperWindowTab.RUN_TAB, res.stderr)
-                notify("Failed", VyperMessageProcessor.NotificationStatusVyper.ERROR,
-                        testParams.project)
+                VyperWindow.replaceTextInTabsWindow(
+                    testParams.project, VyperWindow.VyperWindowTab.RUN_TAB, res.stderr
+                )
+                notify(
+                    "Failed", VyperMessageProcessor.NotificationStatusVyper.ERROR,
+                    testParams.project
+                )
             }
             StatusDocker.EMPTY_OUTPUT -> {
-                notify("Empty output", VyperMessageProcessor.NotificationStatusVyper.WARNING,
-                        testParams.project)
+                notify(
+                    "Empty output", VyperMessageProcessor.NotificationStatusVyper.WARNING,
+                    testParams.project
+                )
             }
             else -> {
                 // internal error just skip already notified user
@@ -85,10 +99,10 @@ object VyperRun {
 
     private fun notify(html: String, status: VyperMessageProcessor.NotificationStatusVyper, project: Project) {
         VyperMessageProcessor.notificateInBalloon(
-                VyperMessageProcessor.VyperNotification(
-                        null, "vyper-run", html,
-                        status, VyperMessageProcessor.NotificationGroupVyper.RUN, project
-                )
+            VyperMessageProcessor.VyperNotification(
+                null, "vyper-run", html,
+                status, VyperMessageProcessor.NotificationGroupVyper.RUN, project
+            )
         )
 
     }

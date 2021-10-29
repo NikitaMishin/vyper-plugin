@@ -1,8 +1,11 @@
 package com.vyperplugin.docker
 
-import com.spotify.docker.client.DockerClient
-import com.spotify.docker.client.messages.ContainerConfig
-import com.spotify.docker.client.messages.HostConfig
+import com.github.dockerjava.api.async.ResultCallback
+import com.github.dockerjava.api.model.Bind
+import com.github.dockerjava.api.model.Frame
+import com.github.dockerjava.api.model.HostConfig
+import com.github.dockerjava.api.model.Volume
+
 
 /**
  * vyper-run contract_name.vy "call1(params1,parems2,parems3);call2()" -i 1,2," "
@@ -10,10 +13,21 @@ import com.spotify.docker.client.messages.HostConfig
  * if params is a list then \"[[args] ...] \"
  * init is ArrayOf("-i",1, ",", 2, " \" \" ")
  */
-class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSequence: String,
-                     var init: Array<String> = arrayOf()) : AbstractToolDocker() {
+class VyperRunDocker(
+    var bindDir: String, var fullPathToFile: String, var callSequence: String,
+    var init: Array<String> = arrayOf()
+) : AbstractToolDocker() {
 
-    override var IMAGE: String = "murmulla/vyper_and_vyper_run:version2"
+    inner class VyperRunAdapterLogs : ResultCallback.Adapter<Frame>() {
+        override fun onNext(item: Frame) {
+            logs.add(item.toString())
+        }
+    }
+
+    private val logs = mutableListOf<String>()
+
+    override var IMAGE = "murmulla/vyper_and_vyper_run"
+    override var IMAGE_TAG = "version2"
     private val toolName = "vyper-run"
     private val initCommand = "-i"
     override fun exec(): ToolResult = testRun()
@@ -28,52 +42,51 @@ class VyperRunDocker(var bindDir: String, var fullPathToFile: String, var callSe
                 initArgs.add(i)
                 initArgs.add(",")
             }
-
-            arrayOf(fullPathToFile.split("/").last(), filteredSeq, initCommand,(initArgs.dropLast(1).joinToString("")))
-                    //*(initArgs.toTypedArray()))
+            arrayOf(fullPathToFile.split("/").last(), filteredSeq, initCommand, (initArgs.dropLast(1).joinToString("")))
+            //*(initArgs.toTypedArray()))
         }
     }
 
     private fun testRun(): ToolResult {
-
-        val hostConfig = HostConfig.builder()
-                .binds("$bindDir/:$dockerBindDir")
-                .build()
+        val hostConfig = HostConfig()
+            .withBinds(Bind(bindDir, Volume(dockerBindDir)))
 
         val t = getInput()
-        val containerConfig = ContainerConfig.builder()
-                .image(IMAGE)
-                .hostConfig(hostConfig)
-                .workingDir(dockerBindDir)
-                .cmd(*t)
-                .entrypoint(toolName)
-                .build()
+        val creation = pluginDockerClient
+            .createContainerCmd("$IMAGE:$IMAGE_TAG")
+            .withHostConfig(hostConfig)
+            .withCmd(*t)
+            .withEntrypoint(toolName)
+            .withWorkingDir(dockerBindDir)
+            .exec()
 
-        val creation = pluginDockerClient.dockerClient.createContainer(containerConfig)
-        val id = creation.id()!!
+        val id = creation.id
 
-        val streamSTDOUT = pluginDockerClient.dockerClient.attachContainer(id, DockerClient.AttachParameter.STDIN,
-                DockerClient.AttachParameter.STDOUT, DockerClient.AttachParameter.STREAM)
-        val streamSTDERR = pluginDockerClient.dockerClient.attachContainer(id, DockerClient.AttachParameter.STDIN,
-                DockerClient.AttachParameter.STDERR, DockerClient.AttachParameter.STREAM)
+        pluginDockerClient.startContainerCmd(id).exec()
 
+        pluginDockerClient
+            .logContainerCmd(id)
+            .withStdErr(true)
+            .withStdOut(true)
+            .withFollowStream(true)
+            .exec(VyperRunAdapterLogs())
+            .awaitCompletion()
 
-        pluginDockerClient.dockerClient.startContainer(id)
-        val logSTDOUT = streamSTDOUT.readFully()
-        val logSTDERR = streamSTDERR.readFully()
-        pluginDockerClient.dockerClient.removeContainer(id)
+        val logsRunError = logs.filter { it.contains("stderr", true) }.map { it.removePrefix("STDERR: ") }
+        val logsRunOut = logs.filter { it.contains("stdout", true) }.map { it.removePrefix("STDOUT: ") }
+        pluginDockerClient
+            .removeContainerCmd(id)
+            .exec()
 
-        when {
-            logSTDERR.isBlank() && logSTDOUT.isNotBlank() ->
-                return ToolResult(logSTDOUT, "", fullPathToFile, StatusDocker.SUCCESS)
-            logSTDERR.isBlank() && logSTDOUT.isBlank() ->
-                return ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
-            logSTDERR.isNotBlank() ->
-                return ToolResult("", logSTDERR, fullPathToFile, StatusDocker.FAILED)
+        return when {
+            logsRunError.isEmpty() && logsRunOut.isNotEmpty() ->
+                ToolResult(logsRunOut.joinToString(separator = "\n"), "", fullPathToFile, StatusDocker.SUCCESS)
+            logsRunError.isEmpty() && logsRunOut.isEmpty() ->
+                ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
+            else ->
+                ToolResult("", logsRunError.joinToString(separator = "\n"), fullPathToFile, StatusDocker.FAILED)
 
         }
-        // just for
-        throw IllegalStateException()
     }
 
 }

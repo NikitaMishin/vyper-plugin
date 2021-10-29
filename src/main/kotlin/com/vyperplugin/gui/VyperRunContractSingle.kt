@@ -20,9 +20,11 @@ object VyperRunContractCase {
 
 
 //TODO Browsable contract, more friendly UI
-class VyperRunMenuSingle(private var project: Project,
-                         private var module: Module,
-                         private var file: VirtualFile) : JDialog() {
+class VyperRunMenuSingle(
+    private var project: Project,
+    private var module: Module,
+    private var file: VirtualFile
+) : JDialog() {
 
     private lateinit var contentPane: JPanel
     private lateinit var buttonRun: JButton
@@ -37,7 +39,7 @@ class VyperRunMenuSingle(private var project: Project,
     private lateinit var funcArgsArray: Array<JTextField>
 
 
-    protected var propertyChangeSupport = PropertyChangeSupport(this)
+    private var propertyChangeSupport = PropertyChangeSupport(this)
 
     override fun addPropertyChangeListener(listener: PropertyChangeListener) {
         propertyChangeSupport.addPropertyChangeListener(listener)
@@ -94,7 +96,11 @@ class VyperRunMenuSingle(private var project: Project,
             }
         })
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction({ onCancel() }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+        contentPane.registerKeyboardAction(
+            { onCancel() },
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+        )
     }
 
     fun displaySingle(contractName: String, funcName: String, args: Array<String>, init: Array<String>) {
@@ -111,9 +117,11 @@ class VyperRunMenuSingle(private var project: Project,
     private fun onRun() {
         buttonRun.isEnabled = false // called only once
         val testInput =
-                VyperTestParameters(project, module, file, funcName.text,
-                        initArgsArray.map { it.text }.toTypedArray(),
-                        funcArgsArray.map { it.text }.toTypedArray())
+            VyperTestParameters(
+                project, module, file, funcName.text,
+                initArgsArray.map { it.text }.toTypedArray(),
+                funcArgsArray.map { it.text }.toTypedArray()
+            )
         propertyChangeSupport.firePropertyChange(VyperRunContractCase.SINGLE, null, testInput)
         dispose()
     }

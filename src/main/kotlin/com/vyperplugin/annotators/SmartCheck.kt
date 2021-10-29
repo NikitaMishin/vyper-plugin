@@ -25,7 +25,7 @@ class VyperSmartCheckListener(val project: Project) : PropertyChangeListener {
             val psiFile = PsiManager.getInstance(project).findFile(data.file)
             //what if user picks another file?
             val dm = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)
-            for(report in data.smartCheckData) {
+            for (report in data.smartCheckData) {
                 val start = dm!!.getLineStartOffset(report.line - 1)
                 val end = dm.getLineEndOffset(report.line - 1)
                 val message = report.ruleId
@@ -56,7 +56,7 @@ class SmartCheckAnnotator : Annotator {
 }
 
 object SmartCheckOutput {
-    var messages : MutableList<SmartCheckMessage> = mutableListOf()
+    var messages: MutableList<SmartCheckMessage> = mutableListOf()
 }
 
-data class SmartCheckMessage(val range: TextRange, val message : String )
+data class SmartCheckMessage(val range: TextRange, val message: String)

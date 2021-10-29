@@ -1,10 +1,11 @@
 package com.vyperplugin.docker
 
+import com.github.dockerjava.api.async.ResultCallback
+import com.github.dockerjava.api.exception.DockerException
+import com.github.dockerjava.api.model.PullResponseItem
 import com.intellij.ide.BrowserUtil
 import com.intellij.notification.NotificationListener
 import com.intellij.openapi.project.Project
-import com.spotify.docker.client.DockerClient
-import com.spotify.docker.client.exceptions.DockerCertificateException
 import com.vyperplugin.VyperMessageProcessor
 import javax.swing.event.HyperlinkEvent
 
@@ -37,6 +38,7 @@ abstract class AbstractToolDocker {
      * name of the image container
      */
     protected abstract var IMAGE: String
+    protected abstract var IMAGE_TAG: String
 
     /**
      * start container and return result
@@ -54,20 +56,20 @@ abstract class AbstractToolDocker {
         return try {
             if (!isImageExistLocally()) {
                 VyperMessageProcessor.notificateInBalloon(
-                        VyperMessageProcessor.VyperNotification(
-                                null, "Docker",
-                                "<html>Image is not found in your system. " +
-                                        "It may take a while to download it. " +
-                                        "Please wait</html>",
-                                VyperMessageProcessor.NotificationStatusVyper.INFO,
-                                VyperMessageProcessor.NotificationGroupVyper.COMMON,
-                                project
-                        )
+                    VyperMessageProcessor.VyperNotification(
+                        null, "Docker",
+                        "<html>Image is not found in your system. " +
+                                "It may take a while to download it. " +
+                                "Please wait</html>",
+                        VyperMessageProcessor.NotificationStatusVyper.INFO,
+                        VyperMessageProcessor.NotificationGroupVyper.COMMON,
+                        project
+                    )
                 )
                 downloadImage()
             }
             exec()
-        } catch (dockerCertificateException: DockerCertificateException) {
+        } catch (dockerException: DockerException) {
             notify(project)
             ToolResult("", "", "", StatusDocker.INTERNAL_ERROR)
         } catch (e: InterruptedException) {
@@ -79,30 +81,36 @@ abstract class AbstractToolDocker {
 
     private fun notify(project: Project) {
         VyperMessageProcessor.notificateInBalloon(
-                VyperMessageProcessor.VyperNotification(
-                        NotificationListener { _, hyperlinkEvent ->
-                            if (hyperlinkEvent.eventType == HyperlinkEvent.EventType.ACTIVATED)
-                                BrowserUtil.browse(hyperlinkEvent.url)
-                        }, "Docker",
-                        "<html>Error running docker.\n" +
-                                " Do you install <a href=\"https://docs.docker.com/install/\">docker</a>" +
-                                " and setup docker to run without sudo/root privilege?\n" +
-                                "For linux setup docker-group </html>",
-                        VyperMessageProcessor.NotificationStatusVyper.WARNING,
-                        VyperMessageProcessor.NotificationGroupVyper.COMMON,
-                        project
-                )
+            VyperMessageProcessor.VyperNotification(
+                { _, hyperlinkEvent ->
+                    if (hyperlinkEvent.eventType == HyperlinkEvent.EventType.ACTIVATED)
+                        BrowserUtil.browse(hyperlinkEvent.url)
+                }, "Docker",
+                "<html>Error running docker.\n" +
+                        " Do you install <a href=\"https://docs.docker.com/install/\">docker</a>" +
+                        " and setup docker to run without sudo/root privilege?\n" +
+                        "For linux setup docker-group </html>",
+                VyperMessageProcessor.NotificationStatusVyper.WARNING,
+                VyperMessageProcessor.NotificationGroupVyper.COMMON,
+                project
+            )
         )
     }
 
     private fun isImageExistLocally(): Boolean {
-        return pluginDockerClient.dockerClient.listImages(DockerClient.ListImagesParam.byName(IMAGE)).isNotEmpty()
+        val kek = pluginDockerClient.listImagesCmd().exec()
+        val lol = kek.find { it.repoTags.any { k -> k.contains(IMAGE, true) } }
+        return lol != null
     }
 
     //TODO make progress bar or notificate user about that
     private fun downloadImage() {
-        pluginDockerClient.dockerClient.pull(IMAGE)
+        pluginDockerClient.pullImageCmd(IMAGE).withTag(IMAGE_TAG).exec(VyperPullImageAdapter()).awaitCompletion()
     }
 
-
+    private class VyperPullImageAdapter : ResultCallback.Adapter<PullResponseItem>() {
+        override fun onNext(item: PullResponseItem) {
+            super.onNext(item)
+        }
+    }
 }

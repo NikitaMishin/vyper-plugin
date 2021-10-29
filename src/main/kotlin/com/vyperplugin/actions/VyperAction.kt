@@ -9,6 +9,6 @@ abstract class VyperAction : AnAction() {
     val vyExtensionRegExp: Regex = Regex(".+\\.vy$")
 
     protected fun getClickedFiles(e: AnActionEvent): Array<VirtualFile>? =
-            PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext)
+        PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext)
 
 }

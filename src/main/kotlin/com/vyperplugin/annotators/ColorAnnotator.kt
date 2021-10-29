@@ -2,6 +2,7 @@ package com.vyperplugin.annotators
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
+import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.vyperplugin.psi.VyperElement
 import com.vyperplugin.psi.VyperVarLiteral
@@ -13,7 +14,7 @@ class VyperColorAnnotator : Annotator {
             val highlight = highlight(element)
             if (highlight != null) {
                 val (partToHighlight, color) = highlight
-                holder.createInfoAnnotation(partToHighlight, null).textAttributes = color.textAttributesKey
+                holder.newAnnotation(HighlightSeverity.INFORMATION, "").range(partToHighlight).textAttributes(color.textAttributesKey).create()
             }
         }
     }

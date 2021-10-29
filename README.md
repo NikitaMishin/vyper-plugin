@@ -17,7 +17,7 @@ see demo on [youtube](https://www.youtube.com/watch?v=M6f6xgcP4Xo&feature=youtu.
 
 **Build:**
 ------------
- to build the plugin you should have IntelliJ IDEA. Clone the project and run gradle build task.
+ to build the plugin you should have IntelliJ IDEA. Clone the project and run gradle buildPlugin task.
 
 **Test** 
 ------------

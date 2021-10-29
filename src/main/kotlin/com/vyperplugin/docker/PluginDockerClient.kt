@@ -1,16 +1,22 @@
 package com.vyperplugin.docker
 
-import com.spotify.docker.client.DefaultDockerClient
-import com.spotify.docker.client.DockerClient
-import com.spotify.docker.client.exceptions.DockerCertificateException
+import com.github.dockerjava.api.DockerClient
+import com.github.dockerjava.core.DefaultDockerClientConfig
+import com.github.dockerjava.core.DockerClientImpl
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
+import java.time.Duration
 
+internal val dockerConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build()
+internal val dockerHttpClient = ApacheDockerHttpClient.Builder()
+    .dockerHost(dockerConfig.dockerHost)
+    .sslConfig(dockerConfig.sslConfig)
+    .maxConnections(100)
+    .connectionTimeout(Duration.ofSeconds(10))
+    .responseTimeout(Duration.ofSeconds(15))
+    .build()
 
-class PluginDockerClient @Throws(DockerCertificateException::class) constructor() {
-    // error throws specifcally when no group docker defined
-
-    val dockerClient: DockerClient = DefaultDockerClient.fromEnv().build()
-
+class PluginDockerClient {
     companion object {
-        val INSTANCE = PluginDockerClient()
+        val INSTANCE: DockerClient = DockerClientImpl.getInstance(dockerConfig, dockerHttpClient)
     }
 }

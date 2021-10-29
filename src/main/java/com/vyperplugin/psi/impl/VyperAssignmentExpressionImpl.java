@@ -1,14 +1,15 @@
 // This is a generated file. Not intended for manual editing.
 package com.vyperplugin.psi.impl;
 
-import java.util.List;
-import org.jetbrains.annotations.*;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static com.vyperplugin.psi.VyperTypes.*;
-import com.vyperplugin.psi.*;
+import com.vyperplugin.psi.VyperAssignmentExpression;
+import com.vyperplugin.psi.VyperExpression;
+import com.vyperplugin.psi.VyperVisitor;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class VyperAssignmentExpressionImpl extends VyperExpressionImpl implements VyperAssignmentExpression {
 

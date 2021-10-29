@@ -7,18 +7,20 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.TokenType
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.formatter.FormatterUtil
-import com.intellij.psi.tree.IElementType
-import com.vyperplugin.psi.*
+import com.vyperplugin.psi.VyperFunctionDefinition
+import com.vyperplugin.psi.VyperLocalVariableDefinition
+import com.vyperplugin.psi.VyperStatement
+import com.vyperplugin.psi.VyperStructDefinition
 import com.vyperplugin.psi.VyperTypes.*
 import java.util.*
 
 class VyperFormattingBlock(
-        private val astNode: ASTNode,
-        private val alignment: Alignment?,
-        private val indent: Indent,
-        private val wrap: Wrap?,
-        private val codeStyleSettings: CodeStyleSettings,
-        private val spacingBuilder: SpacingBuilder
+    private val astNode: ASTNode,
+    private val alignment: Alignment?,
+    private val indent: Indent,
+    private val wrap: Wrap?,
+    private val codeStyleSettings: CodeStyleSettings,
+    private val spacingBuilder: SpacingBuilder
 ) : ASTBlock {
     private val nodeSubBlocks: List<Block> by lazy { buildSubBlocks() }
     private val isNodeIncomplete: Boolean by lazy { FormatterUtil.isIncomplete(node) }
@@ -57,8 +59,8 @@ class VyperFormattingBlock(
         val parentType = parent?.elementType
         val result = when {
             child is PsiComment && type in listOf(
-                    VyperTypes.FUNCTION_DEFINITION,
-                    VyperTypes.STRUCT_DEFINITION
+                FUNCTION_DEFINITION,
+                STRUCT_DEFINITION
             ) -> Indent.getNormalIndent()
             childType is VyperStatement && type is VyperFunctionDefinition -> Indent.getNormalIndent()
             childType is VyperLocalVariableDefinition && type is VyperStructDefinition -> Indent.getNormalIndent()
@@ -81,8 +83,8 @@ class VyperFormattingBlock(
         return result
     }
 
-    private fun newChildIndent(childIndex: Int): Indent? = when {
-        node.elementType in listOf(STRUCT_DEFINITION, FUNCTION_DEFINITION) -> {
+    private fun newChildIndent(childIndex: Int): Indent? = when (node.elementType) {
+        in listOf(STRUCT_DEFINITION, FUNCTION_DEFINITION) -> {
             val lbraceIndex = subBlocks.indexOfFirst { it is ASTBlock && it.node!!.elementType == COLON }
             if (lbraceIndex != -1 && lbraceIndex < childIndex) {
                 Indent.getNormalIndent()
@@ -96,7 +98,7 @@ class VyperFormattingBlock(
     override fun getNode(): ASTNode = astNode
     override fun getTextRange(): TextRange = astNode.textRange
     override fun getWrap(): Wrap? = wrap
-    override fun getIndent(): Indent? = indent
+    override fun getIndent(): Indent = indent
     override fun getAlignment(): Alignment? = alignment
 
     override fun getSpacing(child1: Block?, child2: Block): Spacing? {
@@ -104,7 +106,7 @@ class VyperFormattingBlock(
     }
 
     override fun getChildAttributes(newChildIndex: Int): ChildAttributes =
-            ChildAttributes(newChildIndent(newChildIndex), null)
+        ChildAttributes(newChildIndent(newChildIndex), null)
 
     override fun isIncomplete(): Boolean = isNodeIncomplete
 

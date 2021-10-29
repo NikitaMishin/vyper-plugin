@@ -1,18 +1,26 @@
 package com.vyperplugin.docker
 
-import com.spotify.docker.client.DockerClient
-import com.spotify.docker.client.LogStream
-import com.spotify.docker.client.exceptions.DockerException
-import com.spotify.docker.client.messages.ContainerConfig
-import com.spotify.docker.client.messages.HostConfig
-
+import com.github.dockerjava.api.async.ResultCallback
+import com.github.dockerjava.api.model.Bind
+import com.github.dockerjava.api.model.Frame
+import com.github.dockerjava.api.model.HostConfig
+import com.github.dockerjava.api.model.Volume
 
 class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : AbstractToolDocker() {
 
-    override var IMAGE = "murmulla/smartcheck:version1"
+    override var IMAGE = "murmulla/smartcheck"
+    override var IMAGE_TAG = "version1"
 
     private val toolName = "smartcheck.jar"
     private var incompleteCommand = arrayOf("sh", "-c")
+
+    inner class SmartCheckAdapter : ResultCallback.Adapter<Frame>() {
+        override fun onNext(item: Frame) {
+            logs.add(item.toString())
+        }
+    }
+
+    private val logs = mutableListOf<String>()
 
     override fun exec(): ToolResult {
 
@@ -25,36 +33,30 @@ class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : Abstra
         }
     }
 
-
-    @Throws(DockerException::class, InterruptedException::class)
     fun analyzeFileInBindDir(filename: String): String {
 
-        val hostConfig = HostConfig.builder()
-                .binds("$bindDir:$dockerBindDir")
-                .build()
+        val hostConfig = HostConfig()
+            .withBinds(Bind(bindDir, Volume(dockerBindDir)))
 
         val completeCommand = incompleteCommand + arrayOf("java -jar $toolName -p $dockerBindDir/$filename")
-        val containerConfig = ContainerConfig.builder()
-                .image(IMAGE)
-                .hostConfig(hostConfig)
-                .cmd(*completeCommand)
-                .build()
+        val creation = pluginDockerClient
+            .createContainerCmd("$IMAGE:$IMAGE_TAG")
+            .withHostConfig(hostConfig)
+            .withCmd(*completeCommand)
+            .exec()
 
-        val creation = pluginDockerClient.dockerClient.createContainer(containerConfig)
-        val id = creation.id()!!
+        val id = creation.id
 
-        val logs: String
-        val stream: LogStream = pluginDockerClient.dockerClient.attachContainer(id,
-                DockerClient.AttachParameter.LOGS, DockerClient.AttachParameter.STDOUT,
-                // DockerClient.AttachParameter.STDERR, ignore antlr errors
-                DockerClient.AttachParameter.STREAM)
+        pluginDockerClient.startContainerCmd(id).exec()
 
-        pluginDockerClient.dockerClient.startContainer(id)
+        pluginDockerClient
+            .logContainerCmd(id)
+            .withStdOut(true)
+            .withFollowStream(true)
+            .exec(SmartCheckAdapter())
+            .awaitCompletion()
 
-        logs = stream.readFully()
-        pluginDockerClient.dockerClient.removeContainer(id)
-        return logs
+        pluginDockerClient.removeContainerCmd(id).exec()
+        return logs.joinToString("\n") { it.removePrefix("STDOUT: ") }
     }
-
-
 }

@@ -3,7 +3,12 @@ package com.vyperplugin
 import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon
 
-object VyperFileType  : LanguageFileType(VyperLanguage) {
+class VyperFileType : LanguageFileType(VyperLanguage) {
+
+    companion object {
+        @JvmStatic
+        val INSTANCE = VyperFileType()
+    }
 
     override fun getName(): String {
         return "Vyper file"
@@ -17,7 +22,7 @@ object VyperFileType  : LanguageFileType(VyperLanguage) {
         return "vy"
     }
 
-    override fun getIcon(): Icon? {
+    override fun getIcon(): Icon {
         return VyperIcons.FILE
     }
 }

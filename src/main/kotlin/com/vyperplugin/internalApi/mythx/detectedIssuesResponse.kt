@@ -12,31 +12,31 @@ data class Description(
 
 
 data class DetectedIssue(
-        @SerializedName("sourceList")
+    @SerializedName("sourceList")
     val sourceList: List<String>?,
-        @SerializedName("sourceType")
+    @SerializedName("sourceType")
     val sourceType: String = "",
-        @SerializedName("meta")
+    @SerializedName("meta")
     val meta: Any,
-        @SerializedName("issues")
+    @SerializedName("issues")
     val issues: List<IssuesItem>?,
-        @SerializedName("sourceFormat")
+    @SerializedName("sourceFormat")
     val sourceFormat: String = ""
 )
 
 
 data class IssuesItem(
-        @SerializedName("severity")
+    @SerializedName("severity")
     val severity: String = "",
-        @SerializedName("swcTitle")
+    @SerializedName("swcTitle")
     val swcTitle: String = "",
-        @SerializedName("swcID")
+    @SerializedName("swcID")
     val swcID: String = "",
-        @SerializedName("extra")
+    @SerializedName("extra")
     val extra: Any,
-        @SerializedName("description")
+    @SerializedName("description")
     val description: Description,
-        @SerializedName("locations")
+    @SerializedName("locations")
     val locations: List<LocationsItem>?
 )
 

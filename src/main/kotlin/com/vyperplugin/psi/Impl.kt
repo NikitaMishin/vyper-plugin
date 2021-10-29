@@ -11,7 +11,8 @@ abstract class VyperElementImpl(node: ASTNode) : ASTWrapperPsiElement(node), Vyp
     override fun getReference(): VyperReference? = null
 }
 
-abstract class VyperNamedElementImpl(node: ASTNode) : VyperElementImpl(node), VyperNamedElement, PsiNameIdentifierOwner {
+abstract class VyperNamedElementImpl(node: ASTNode) : VyperElementImpl(node), VyperNamedElement,
+    PsiNameIdentifierOwner {
 
     override fun getNameIdentifier(): PsiElement? = findChildByType(IDENTIFIER)
 
@@ -19,7 +20,7 @@ abstract class VyperNamedElementImpl(node: ASTNode) : VyperElementImpl(node), Vy
 
     override fun getName(): String? = nameIdentifier?.text
 
-    override fun getNavigationElement(): PsiElement = nameIdentifier?: this
+    override fun getNavigationElement(): PsiElement = nameIdentifier ?: this
 
     override fun getTextOffset(): Int = nameIdentifier?.textOffset ?: super.getTextOffset()
 }

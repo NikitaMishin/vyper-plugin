@@ -32,7 +32,7 @@ public class _VyperLexer implements FlexLexer {
    *                  at the beginning of a line
    * l is of the form l = 2*k, k a non negative integer
    */
-  private static final int ZZ_LEXSTATE[] = { 
+  private static final int[] ZZ_LEXSTATE = {
      0, 0
   };
 
@@ -46,15 +46,15 @@ public class _VyperLexer implements FlexLexer {
   }
 
   /* The ZZ_CMAP_Z table has 68 entries */
-  static final char ZZ_CMAP_Z[] = zzUnpackCMap(
+  static final char[] ZZ_CMAP_Z = zzUnpackCMap(
     "\1\0\103\200");
 
   /* The ZZ_CMAP_Y table has 256 entries */
-  static final char ZZ_CMAP_Y[] = zzUnpackCMap(
+  static final char[] ZZ_CMAP_Y = zzUnpackCMap(
     "\1\0\1\1\53\2\1\3\22\2\1\4\37\2\1\3\237\2");
 
   /* The ZZ_CMAP_A table has 640 entries */
-  static final char ZZ_CMAP_A[] = zzUnpackCMap(
+  static final char[] ZZ_CMAP_A = zzUnpackCMap(
     "\11\0\1\32\1\2\2\1\1\2\22\0\1\32\1\62\1\7\1\3\1\0\1\63\1\0\1\13\1\44\1\45"+
     "\1\55\1\54\1\36\1\27\1\16\1\56\1\30\1\104\1\105\1\111\1\14\1\107\1\110\1\14"+
     "\1\106\1\14\1\37\1\35\1\64\1\60\1\61\1\67\1\34\1\76\1\75\1\10\1\77\1\26\1"+
@@ -95,17 +95,17 @@ public class _VyperLexer implements FlexLexer {
   private static int [] zzUnpackAction() {
     int [] result = new int[337];
     int offset = 0;
-    offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
+    offset = zzUnpackAction(offset, result);
     return result;
   }
 
-  private static int zzUnpackAction(String packed, int offset, int [] result) {
+  private static int zzUnpackAction(int offset, int[] result) {
     int i = 0;       /* index in packed string  */
     int j = offset;  /* index in unpacked array */
-    int l = packed.length();
+    int l = _VyperLexer.ZZ_ACTION_PACKED_0.length();
     while (i < l) {
-      int count = packed.charAt(i++);
-      int value = packed.charAt(i++);
+      int count = _VyperLexer.ZZ_ACTION_PACKED_0.charAt(i++);
+      int value = _VyperLexer.ZZ_ACTION_PACKED_0.charAt(i++);
       do result[j++] = value; while (--count > 0);
     }
     return j;
@@ -165,17 +165,17 @@ public class _VyperLexer implements FlexLexer {
   private static int [] zzUnpackRowMap() {
     int [] result = new int[337];
     int offset = 0;
-    offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
+    offset = zzUnpackRowMap(offset, result);
     return result;
   }
 
-  private static int zzUnpackRowMap(String packed, int offset, int [] result) {
+  private static int zzUnpackRowMap(int offset, int[] result) {
     int i = 0;  /* index in packed string  */
     int j = offset;  /* index in unpacked array */
-    int l = packed.length();
+    int l = _VyperLexer.ZZ_ROWMAP_PACKED_0.length();
     while (i < l) {
-      int high = packed.charAt(i++) << 16;
-      result[j++] = high | packed.charAt(i++);
+      int high = _VyperLexer.ZZ_ROWMAP_PACKED_0.charAt(i++) << 16;
+      result[j++] = high | _VyperLexer.ZZ_ROWMAP_PACKED_0.charAt(i++);
     }
     return j;
   }
@@ -879,17 +879,17 @@ public class _VyperLexer implements FlexLexer {
   private static int [] zzUnpackTrans() {
     int [] result = new int[21165];
     int offset = 0;
-    offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
+    offset = zzUnpackTrans(offset, result);
     return result;
   }
 
-  private static int zzUnpackTrans(String packed, int offset, int [] result) {
+  private static int zzUnpackTrans(int offset, int[] result) {
     int i = 0;       /* index in packed string  */
     int j = offset;  /* index in unpacked array */
-    int l = packed.length();
+    int l = _VyperLexer.ZZ_TRANS_PACKED_0.length();
     while (i < l) {
-      int count = packed.charAt(i++);
-      int value = packed.charAt(i++);
+      int count = _VyperLexer.ZZ_TRANS_PACKED_0.charAt(i++);
+      int value = _VyperLexer.ZZ_TRANS_PACKED_0.charAt(i++);
       value--;
       do result[j++] = value; while (--count > 0);
     }
@@ -925,27 +925,21 @@ public class _VyperLexer implements FlexLexer {
   private static int [] zzUnpackAttribute() {
     int [] result = new int[337];
     int offset = 0;
-    offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
+    offset = zzUnpackAttribute(offset, result);
     return result;
   }
 
-  private static int zzUnpackAttribute(String packed, int offset, int [] result) {
+  private static int zzUnpackAttribute(int offset, int[] result) {
     int i = 0;       /* index in packed string  */
     int j = offset;  /* index in unpacked array */
-    int l = packed.length();
+    int l = _VyperLexer.ZZ_ATTRIBUTE_PACKED_0.length();
     while (i < l) {
-      int count = packed.charAt(i++);
-      int value = packed.charAt(i++);
+      int count = _VyperLexer.ZZ_ATTRIBUTE_PACKED_0.charAt(i++);
+      int value = _VyperLexer.ZZ_ATTRIBUTE_PACKED_0.charAt(i++);
       do result[j++] = value; while (--count > 0);
     }
     return j;
   }
-
-  /** the input device */
-  private java.io.Reader zzReader;
-
-  /** the current state of the DFA */
-  private int zzState;
 
   /** the current lexical state */
   private int zzLexicalState = YYINITIAL;
@@ -967,11 +961,6 @@ public class _VyperLexer implements FlexLexer {
       from input */
   private int zzEndRead;
 
-  /**
-   * zzAtBOL == true <=> the scanner is currently at the beginning of a line
-   */
-  private boolean zzAtBOL = true;
-
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
 
@@ -980,7 +969,7 @@ public class _VyperLexer implements FlexLexer {
 
   /* user code: */
   public _VyperLexer() {
-    this((java.io.Reader)null);
+    this(null);
   }
 
 
@@ -990,7 +979,7 @@ public class _VyperLexer implements FlexLexer {
    * @param   in  the java.io.Reader to read input from.
    */
   public _VyperLexer(java.io.Reader in) {
-    this.zzReader = in;
+    /** the input device */
   }
 
 
@@ -1028,7 +1017,10 @@ public class _VyperLexer implements FlexLexer {
     zzBuffer = buffer;
     zzCurrentPos = zzMarkedPos = zzStartRead = start;
     zzAtEOF  = false;
-    zzAtBOL = true;
+    /**
+     * zzAtBOL == true <=> the scanner is currently at the beginning of a line
+     */
+    boolean zzAtBOL = true;
     zzEndRead = end;
     yybegin(initialState);
   }
@@ -1040,7 +1032,7 @@ public class _VyperLexer implements FlexLexer {
    *
    * @exception   java.io.IOException  if any I/O-Error occurs
    */
-  private boolean zzRefill() throws java.io.IOException {
+  private boolean zzRefill() {
     return true;
   }
 
@@ -1155,8 +1147,6 @@ public class _VyperLexer implements FlexLexer {
     int zzEndReadL = zzEndRead;
     CharSequence zzBufferL = zzBuffer;
 
-    int [] zzTransL = ZZ_TRANS;
-    int [] zzRowMapL = ZZ_ROWMAP;
     int [] zzAttrL = ZZ_ATTRIBUTE;
 
     while (true) {
@@ -1166,7 +1156,8 @@ public class _VyperLexer implements FlexLexer {
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
 
-      zzState = ZZ_LEXSTATE[zzLexicalState];
+      /** the current state of the DFA */
+      int zzState = ZZ_LEXSTATE[zzLexicalState];
 
       // set up zzAction for empty match case:
       int zzAttributes = zzAttrL[zzState];
@@ -1192,8 +1183,6 @@ public class _VyperLexer implements FlexLexer {
             zzMarkedPos   = zzMarkedPosL;
             boolean eof = zzRefill();
             // get translated positions and possibly new buffer
-            zzCurrentPosL  = zzCurrentPos;
-            zzMarkedPosL   = zzMarkedPos;
             zzBufferL      = zzBuffer;
             zzEndReadL     = zzEndRead;
             if (eof) {
@@ -1205,7 +1194,7 @@ public class _VyperLexer implements FlexLexer {
               zzCurrentPosL += Character.charCount(zzInput);
             }
           }
-          int zzNext = zzTransL[ zzRowMapL[zzState] + ZZ_CMAP(zzInput) ];
+          int zzNext = ZZ_TRANS[ ZZ_ROWMAP[zzState] + ZZ_CMAP(zzInput) ];
           if (zzNext == -1) break zzForAction;
           zzState = zzNext;
 
@@ -1232,492 +1221,396 @@ public class _VyperLexer implements FlexLexer {
             { return BAD_CHARACTER;
             } 
             // fall through
-          case 99: break;
+          case 99:
+          case 196:
+          case 195:
+          case 194:
+          case 193:
+          case 192:
+          case 191:
+          case 190:
+          case 189:
+          case 188:
+          case 187:
+          case 186:
+          case 185:
+          case 184:
+          case 183:
+          case 182:
+          case 181:
+          case 180:
+          case 179:
+          case 178:
+          case 177:
+          case 176:
+          case 175:
+          case 174:
+          case 173:
+          case 172:
+          case 171:
+          case 170:
+          case 169:
+          case 168:
+          case 167:
+          case 166:
+          case 165:
+          case 164:
+          case 163:
+          case 162:
+          case 161:
+          case 160:
+          case 159:
+          case 158:
+          case 157:
+          case 156:
+          case 155:
+          case 154:
+          case 153:
+          case 152:
+          case 151:
+          case 150:
+          case 149:
+          case 148:
+          case 147:
+          case 146:
+          case 145:
+          case 144:
+          case 143:
+          case 142:
+          case 141:
+          case 140:
+          case 139:
+          case 138:
+          case 137:
+          case 136:
+          case 135:
+          case 134:
+          case 133:
+          case 132:
+          case 131:
+          case 130:
+          case 129:
+          case 128:
+          case 127:
+          case 126:
+          case 125:
+          case 124:
+          case 123:
+          case 122:
+          case 121:
+          case 120:
+          case 119:
+          case 118:
+          case 117:
+          case 116:
+          case 115:
+          case 114:
+          case 113:
+          case 112:
+          case 111:
+          case 110:
+          case 109:
+          case 108:
+          case 107:
+          case 106:
+          case 105:
+          case 104:
+          case 103:
+          case 102:
+          case 101:
+          case 100:
+            break;
           case 2: 
             { return WHITE_SPACE;
-            } 
-            // fall through
-          case 100: break;
+            }
           case 3: 
             { return COMMENT;
-            } 
-            // fall through
-          case 101: break;
+            }
           case 4: 
             { return IDENTIFIER;
-            } 
-            // fall through
-          case 102: break;
+            }
           case 5: 
             { return DECIMALNUMBER;
-            } 
-            // fall through
-          case 103: break;
+            }
           case 6: 
             { return DOT;
-            } 
-            // fall through
-          case 104: break;
+            }
           case 7: 
             { return MINUS;
-            } 
-            // fall through
-          case 105: break;
+            }
           case 8: 
             { return DECORATOR;
-            } 
-            // fall through
-          case 106: break;
+            }
           case 9: 
             { return SEMICOLON;
-            } 
-            // fall through
-          case 107: break;
+            }
           case 10: 
             { return COMMA;
-            } 
-            // fall through
-          case 108: break;
+            }
           case 11: 
             { return COLON;
-            } 
-            // fall through
-          case 109: break;
+            }
           case 12: 
             { return LBRACKET;
-            } 
-            // fall through
-          case 110: break;
+            }
           case 13: 
             { return RBRACKET;
-            } 
-            // fall through
-          case 111: break;
+            }
           case 14: 
             { return LBRACE;
-            } 
-            // fall through
-          case 112: break;
+            }
           case 15: 
             { return RBRACE;
-            } 
-            // fall through
-          case 113: break;
+            }
           case 16: 
             { return LPAREN;
-            } 
-            // fall through
-          case 114: break;
+            }
           case 17: 
             { return RPAREN;
-            } 
-            // fall through
-          case 115: break;
+            }
           case 18: 
             { return PLUS;
-            } 
-            // fall through
-          case 116: break;
+            }
           case 19: 
             { return MULT;
-            } 
-            // fall through
-          case 117: break;
+            }
           case 20: 
             { return DIV;
-            } 
-            // fall through
-          case 118: break;
+            }
           case 21: 
             { return ASSIGN;
-            } 
-            // fall through
-          case 119: break;
+            }
           case 22: 
             { return MORE;
-            } 
-            // fall through
-          case 120: break;
+            }
           case 23: 
             { return PERCENT;
-            } 
-            // fall through
-          case 121: break;
+            }
           case 24: 
             { return LESS;
-            } 
-            // fall through
-          case 122: break;
+            }
           case 25: 
             { return CARET;
-            } 
-            // fall through
-          case 123: break;
+            }
           case 26: 
             { return QUESTION;
-            } 
-            // fall through
-          case 124: break;
+            }
           case 27: 
             { return TILDE;
-            } 
-            // fall through
-          case 125: break;
+            }
           case 28: 
             { return STRINGLITERALDOUBLE;
-            } 
-            // fall through
-          case 126: break;
+            }
           case 29: 
             { return STRINGLITERALSINGLE;
-            } 
-            // fall through
-          case 127: break;
+            }
           case 30: 
             { return FIXEDNUMBER;
-            } 
-            // fall through
-          case 128: break;
+            }
           case 31: 
             { return AS;
-            } 
-            // fall through
-          case 129: break;
+            }
           case 32: 
             { return MINUS_ASSIGN;
-            } 
-            // fall through
-          case 130: break;
+            }
           case 33: 
             { return IF;
-            } 
-            // fall through
-          case 131: break;
+            }
           case 34: 
             { return IN;
-            } 
-            // fall through
-          case 132: break;
+            }
           case 35: 
             { return OR;
-            } 
-            // fall through
-          case 133: break;
+            }
           case 36: 
             { return PLUS_ASSIGN;
-            } 
-            // fall through
-          case 134: break;
+            }
           case 37: 
             { return EXPONENT;
-            } 
-            // fall through
-          case 135: break;
+            }
           case 38: 
             { return MULT_ASSIGN;
-            } 
-            // fall through
-          case 136: break;
+            }
           case 39: 
             { return DIV_ASSIGN;
-            } 
-            // fall through
-          case 137: break;
+            }
           case 40: 
             { return EQ;
-            } 
-            // fall through
-          case 138: break;
+            }
           case 41: 
             { return TO;
-            } 
-            // fall through
-          case 139: break;
+            }
           case 42: 
             { return MOREEQ;
-            } 
-            // fall through
-          case 140: break;
+            }
           case 43: 
             { return RSHIFT;
-            } 
-            // fall through
-          case 141: break;
+            }
           case 44: 
             { return NEQ;
-            } 
-            // fall through
-          case 142: break;
+            }
           case 45: 
             { return PERCENT_ASSIGN;
-            } 
-            // fall through
-          case 143: break;
+            }
           case 46: 
             { return LESSEQ;
-            } 
-            // fall through
-          case 144: break;
+            }
           case 47: 
             { return LSHIFT;
-            } 
-            // fall through
-          case 145: break;
+            }
           case 48: 
             { return STRINGLITERALDOUBLEB;
-            } 
-            // fall through
-          case 146: break;
+            }
           case 49: 
             { return STRINGLITERALSINGLEB;
-            } 
-            // fall through
-          case 147: break;
+            }
           case 50: 
             { return SCIENTIFICNUMBER;
-            } 
-            // fall through
-          case 148: break;
+            }
           case 51: 
             { return AND;
-            } 
-            // fall through
-          case 149: break;
+            }
           case 52: 
             { return HEXNUMBER;
-            } 
-            // fall through
-          case 150: break;
+            }
           case 53: 
             { return MAP;
-            } 
-            // fall through
-          case 151: break;
+            }
           case 54: 
             { return FOR;
-            } 
-            // fall through
-          case 152: break;
+            }
           case 55: 
             { return NOT;
-            } 
-            // fall through
-          case 153: break;
+            }
           case 56: 
             { return DEF;
-            } 
-            // fall through
-          case 154: break;
+            }
           case 57: 
             { return ELSE;
-            } 
-            // fall through
-          case 155: break;
+            }
           case 58: 
             { return ELIF;
-            } 
-            // fall through
-          case 156: break;
+            }
           case 59: 
             { return BOOL;
-            } 
-            // fall through
-          case 157: break;
+            }
           case 60: 
             { return BOOLEANLITERAL;
-            } 
-            // fall through
-          case 158: break;
+            }
           case 61: 
             { return PASS;
-            } 
-            // fall through
-          case 159: break;
+            }
           case 62: 
             { return FROM;
-            } 
-            // fall through
-          case 160: break;
+            }
           case 63: 
             { return EVENT;
-            } 
-            // fall through
-          case 161: break;
+            }
           case 64: 
             { return BREAK;
-            } 
-            // fall through
-          case 162: break;
+            }
           case 65: 
             { return BYTES;
-            } 
-            // fall through
-          case 163: break;
+            }
           case 66: 
             { return RAISE;
-            } 
-            // fall through
-          case 164: break;
+            }
           case 67: 
             { return RANGE;
-            } 
-            // fall through
-          case 165: break;
+            }
           case 68: 
             { return UNITS;
-            } 
-            // fall through
-          case 166: break;
+            }
           case 69: 
             { return FIXED;
-            } 
-            // fall through
-          case 167: break;
+            }
           case 70: 
             { return CLEAR;
-            } 
-            // fall through
-          case 168: break;
+            }
           case 71: 
             { return HEXLITERAL;
-            } 
-            // fall through
-          case 169: break;
+            }
           case 72: 
             { return MULTILINESTRINGTOKEN;
-            } 
-            // fall through
-          case 170: break;
+            }
           case 73: 
             { return RETURN;
-            } 
-            // fall through
-          case 171: break;
+            }
           case 74: 
             { return ASSERT;
-            } 
-            // fall through
-          case 172: break;
+            }
           case 75: 
             { return STRUCT;
-            } 
-            // fall through
-          case 173: break;
+            }
           case 76: 
             { return STRING;
-            } 
-            // fall through
-          case 174: break;
+            }
           case 77: 
             { return IMPORT;
-            } 
-            // fall through
-          case 175: break;
+            }
           case 78: 
             { return INT128;
-            } 
-            // fall through
-          case 176: break;
+            }
           case 79: 
             { return PUBLIC;
-            } 
-            // fall through
-          case 177: break;
+            }
           case 80: 
             { return BYTES32;
-            } 
-            // fall through
-          case 178: break;
+            }
           case 81: 
             { return UINT256;
-            } 
-            // fall through
-          case 179: break;
+            }
           case 82: 
             { return ADDRESS;
-            } 
-            // fall through
-          case 180: break;
+            }
           case 83: 
             { return PRIVATE;
-            } 
-            // fall through
-          case 181: break;
+            }
           case 84: 
             { return PAYABLE;
-            } 
-            // fall through
-          case 182: break;
+            }
           case 85: 
             { return TYPENAME;
-            } 
-            // fall through
-          case 183: break;
+            }
           case 86: 
             { return CONSTANT;
-            } 
-            // fall through
-          case 184: break;
+            }
           case 87: 
             { return CONTRACT;
-            } 
-            // fall through
-          case 185: break;
+            }
           case 88: 
             { return CONTINUE;
-            } 
-            // fall through
-          case 186: break;
+            }
           case 89: 
             { return MODIFYING;
-            } 
-            // fall through
-          case 187: break;
+            }
           case 90: 
             { return IMPLEMENTS;
-            } 
-            // fall through
-          case 188: break;
+            }
           case 91: 
             { return MAX_INT128;
-            } 
-            // fall through
-          case 189: break;
+            }
           case 92: 
             { return MIN_INT128;
-            } 
-            // fall through
-          case 190: break;
+            }
           case 93: 
             { return MAX_DECIMAL;
-            } 
-            // fall through
-          case 191: break;
+            }
           case 94: 
             { return MAX_UINT256;
-            } 
-            // fall through
-          case 192: break;
+            }
           case 95: 
             { return MIN_DECIMAL;
-            } 
-            // fall through
-          case 193: break;
+            }
           case 96: 
             { return NONREENTRANT;
-            } 
-            // fall through
-          case 194: break;
+            }
           case 97: 
             { return ZERO_ADDRESS;
-            } 
-            // fall through
-          case 195: break;
+            }
           case 98: 
             { return EMPTY_BYTES32;
-            } 
-            // fall through
-          case 196: break;
+            }
           default:
             zzScanError(ZZ_NO_MATCH);
           }

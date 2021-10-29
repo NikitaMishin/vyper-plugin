@@ -6,11 +6,11 @@ import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiReference
 import com.vyperplugin.references.VyperReference
 
-interface VyperElement: PsiElement {
+interface VyperElement : PsiElement {
     override fun getReference(): PsiReference?
 }
 
-interface VyperNamedElement: VyperElement, PsiNamedElement, NavigatablePsiElement
+interface VyperNamedElement : VyperElement, PsiNamedElement, NavigatablePsiElement
 
 interface VyperReferenceElement : VyperNamedElement {
     val referenceNameElement: PsiElement
