@@ -13,12 +13,11 @@ buildSearchableOptions {
     enabled = false
 }
 
-sourceCompatibility = 11
 group 'com.vyperplugin'
 version '1.1-SNAPSHOT'
 
 intellij {
-    version = '2021.2'
+    version = '2021.3'
     plugins = ['com.intellij.java']
 }
 
@@ -26,7 +25,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.github.docker-java/docker-java
     implementation group: 'com.github.docker-java', name: 'docker-java', version: '3.2.12'
-
 
     // https://mvnrepository.com/artifact/com.github.docker-java/docker-java-transport-httpclient5
     implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.2.12'
@@ -48,7 +46,7 @@ dependencies {
 
 configurations {
     // turn of when test docker without deploying plugin
-    compile.exclude  module: "slf4j-api"
+    compile.exclude module: "slf4j-api"
 }
 
 patchPluginXml {
@@ -63,3 +61,5 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "11"
 }
+
+sourceCompatibility = 11
