@@ -17,7 +17,7 @@ see demo on [youtube](https://www.youtube.com/watch?v=M6f6xgcP4Xo&feature=youtu.
 
 **Build:**
 ------------
- to build the plugin you should have IntelliJ IDEA. Clone the project and run gradle buildPlugin task.
+ to build the plugin you should have IntelliJ IDEA. Clone the project, set your Intellij IDEA version in `build.gradle` file (line `20`) and run gradle buildPlugin task. After that, locate the created `.zip` in `/bild/distributions` folder and add it as external plugin (_"Install Plguin from Disk... "_).
 
 **Test** 
 ------------
