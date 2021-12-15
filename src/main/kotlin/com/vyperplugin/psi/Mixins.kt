@@ -66,9 +66,7 @@ abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node)
     override val referenceName: String
         get() = referenceNameElement.text
 
-    override fun getReference(): VyperReference? {
-        return VyperStructTypeReference(this)
-    }
+
 }
 
 abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperFunctionDefinition {

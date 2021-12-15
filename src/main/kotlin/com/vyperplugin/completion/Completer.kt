@@ -117,22 +117,30 @@ object VyperCompleter {
     }
 }
 
-fun baseTypes() = hashSetOf("__init__()", "__default__")
-
 class VyperBaseTypesCompletionContributor : CompletionContributor(), DumbAware {
     init {
-        extend(CompletionType.BASIC, stateVarInsideContract(),
+        extend(CompletionType.BASIC, baseTypes(),
             object : CompletionProvider<CompletionParameters>() {
+                val types = listOf(
+                    "int128",
+                    "uint256",
+                    "bytes32",
+                    "bytes[]",
+                    "address",
+                    "fixed",
+                    "bool",
+                    "map()",
+                    "timestamp",
+                    "string[]",
+                    "constant()"
+                )
+
                 override fun addCompletions(
                     parameters: CompletionParameters,
                     context: ProcessingContext,
                     result: CompletionResultSet
                 ) {
-                    baseTypes().asSequence()
-                        .map { "$it " }
-                        .map(LookupElementBuilder::create)
-                        .map(result::addElement)
-                        .toList()
+                    types.forEach { result.addElement(LookupElementBuilder.create(it)) }
                 }
 
             })
@@ -143,3 +151,5 @@ fun stateVarInsideContract() =
     PlatformPatterns.psiElement(VyperTypes.IDENTIFIER)
         .inside(PlatformPatterns.psiElement(VyperFunctionDefinition::class.java))
         .inside(VyperFile::class.java)
+
+fun baseTypes() = PlatformPatterns.psiElement().inside(PlatformPatterns.psiElement(VyperType::class.java))

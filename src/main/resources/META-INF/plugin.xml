@@ -27,7 +27,7 @@
         <lang.braceMatcher language="Vyper"
                            implementationClass="com.vyperplugin.editorActions.PairedBraceMatcherVyper"/>
         <!--        <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.SelfAccessUnresolvedReferenceAnnotator"/>-->
-
+        <lang.commenter language="Vyper" implementationClass="com.vyperplugin.commenter.VyperCommenter"/>
         <completion.contributor language="Vyper"
                                 implementationClass="com.vyperplugin.completion.VyperBaseTypesCompletionContributor"/>
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperDeclarationsOrderAnnotator"/>
