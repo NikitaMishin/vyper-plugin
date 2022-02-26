@@ -4,8 +4,10 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.DumbAware
+import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
+import com.vyperplugin.VyperFileType
 import com.vyperplugin.VyperIcons
 import com.vyperplugin.psi.*
 import com.vyperplugin.references.VyperResolver
@@ -146,6 +148,57 @@ class VyperBaseTypesCompletionContributor : CompletionContributor(), DumbAware {
             })
     }
 }
+
+class VyperInFileContributor : CompletionContributor() {
+    init {
+        extend(CompletionType.BASIC, inFile(),
+            object : CompletionProvider<CompletionParameters>() {
+                override fun addCompletions(
+                    parameters: CompletionParameters,
+                    context: ProcessingContext,
+                    result: CompletionResultSet
+                ) {
+                    result.addElement(LookupElementBuilder.create("def"))
+                    result.addElement(LookupElementBuilder.create("struct"))
+                    result.addElement(LookupElementBuilder.create("contract"))
+                    result.addElement(LookupElementBuilder.create("import"))
+                }
+            }
+        )
+    }
+}
+
+class VyperFunModifierContributor : CompletionContributor() {
+    init {
+        extend(CompletionType.BASIC, funModifiers(),
+            object : CompletionProvider<CompletionParameters>() {
+                val mods = listOf(
+                    "public",
+                    "private",
+                    "payable",
+                    "nonreentrant()",
+                    "modifying",
+                    "constant",
+                    "external",
+                    "view",
+                    "internal",
+                    "pure",
+                )
+                override fun addCompletions(
+                    parameters: CompletionParameters,
+                    context: ProcessingContext,
+                    result: CompletionResultSet
+                ) {
+                    mods.forEach { result.addElement(LookupElementBuilder.create(it)) }
+                }
+            }
+        )
+    }
+}
+
+fun inFile() = PlatformPatterns.psiElement().inFile(PlatformPatterns.psiFile()).and(PlatformPatterns.psiElement().withSuperParent(2, PlatformPatterns.psiFile()))
+
+fun funModifiers() = PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(VyperTypes.DECORATOR))
 
 fun stateVarInsideContract() =
     PlatformPatterns.psiElement(VyperTypes.IDENTIFIER)

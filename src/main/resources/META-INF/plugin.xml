@@ -30,6 +30,10 @@
         <lang.commenter language="Vyper" implementationClass="com.vyperplugin.commenter.VyperCommenter"/>
         <completion.contributor language="Vyper"
                                 implementationClass="com.vyperplugin.completion.VyperBaseTypesCompletionContributor"/>
+        <completion.contributor language="Vyper"
+                                implementationClass="com.vyperplugin.completion.VyperInFileContributor"/>
+        <completion.contributor language="Vyper"
+                                implementationClass="com.vyperplugin.completion.VyperFunModifierContributor"/>
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperColorAnnotator"/>
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.SmartCheckAnnotator"/>

@@ -1,16 +1,15 @@
 // This is a generated file. Not intended for manual editing.
 package com.vyperplugin.psi.impl;
 
+import java.util.List;
+import org.jetbrains.annotations.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.vyperplugin.psi.VyperLocalVariableDeclaration;
+import com.intellij.psi.util.PsiTreeUtil;
+import static com.vyperplugin.psi.VyperTypes.*;
 import com.vyperplugin.psi.VyperNamedElementImpl;
-import com.vyperplugin.psi.VyperType;
-import com.vyperplugin.psi.VyperVisitor;
-import org.jetbrains.annotations.NotNull;
-
-import static com.vyperplugin.psi.VyperTypes.IDENTIFIER;
+import com.vyperplugin.psi.*;
 
 public class VyperLocalVariableDeclarationImpl extends VyperNamedElementImpl implements VyperLocalVariableDeclaration {
 
@@ -22,6 +21,7 @@ public class VyperLocalVariableDeclarationImpl extends VyperNamedElementImpl imp
     visitor.visitLocalVariableDeclaration(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof VyperVisitor) accept((VyperVisitor)visitor);
     else super.accept(visitor);

@@ -2,16 +2,16 @@ package com.vyperplugin.references
 
 import com.intellij.psi.PsiElement
 import com.vyperplugin.completion.VyperCompleter
-import com.vyperplugin.psi.VyperCallElement
-import com.vyperplugin.psi.VyperMemberAccessExpression
-import com.vyperplugin.psi.VyperStructType
-import com.vyperplugin.psi.VyperVarLiteral
+import com.vyperplugin.psi.*
+import com.vyperplugin.psi.impl.VyperFunctionDefinitionImpl
+import com.vyperplugin.psi.impl.VyperVarLiteralImpl
 
 class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element),
     VyperReference {
 
     override fun multiResolve(): Collection<PsiElement> {
-        return VyperResolver.resolveVarLiteral(element)
+        val kek = VyperResolver.resolveVarLiteral(element)
+        return kek
     }
 
     override fun getVariants(): Array<out Any> {

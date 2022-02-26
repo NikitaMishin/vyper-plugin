@@ -33,7 +33,21 @@ object VyperResolver {
 
             is VyperLocalVariableDeclaration -> listOf(scope)
 
-            is VyperStatement -> lexicalDeclarations(scope.firstChild, place)
+            is VyperStatement -> {
+                val temp = mutableListOf<PsiElement>().apply {
+                    var start = scope
+                    while (start.prevSibling != null) {
+                        this.add(start.prevSibling)
+                        start = start.prevSibling
+                    }
+                }
+                temp.filterIsInstance<VyperStatement>().toList()
+                    .fold(emptyList()) { acc, elem ->
+                        acc.plus(
+                            lexicalDeclarations(elem.firstChild, place)
+                        )
+                    }
+            }
 
             is VyperFile -> scope.getStatements().filter { it !is VyperFunctionDefinition }
                 .flatMap { lexicalDeclarations(it, place) }
@@ -120,15 +134,20 @@ object VyperResolver {
         id: VyperVarLiteral
     ): List<VyperNamedElement> {
 //
-        return resolveSelfAccessVarLiteralRec(element)
+        return resolveSelfAccessVarLiteralRec(element).plus(resolveSelfAccessFunction(element))
             .filter { it.name == id.name }
 
     }
 
     //
+    fun resolveSelfAccessFunction(element: VyperMemberAccessExpression): List<VyperNamedElement> {
+        return (element.file as VyperFile).getStatements().filter { it is VyperFunctionDefinition }
+            .map { it as VyperNamedElement }
+    }
+
     fun resolveSelfAccessVarLiteralRec(element: VyperMemberAccessExpression): List<VyperNamedElement> {
         return (element.file as VyperFile).getStatements().filter { it is VyperStateVariableDeclaration }
-            .map { it as VyperStateVariableDeclaration }
+            .map { it as VyperNamedElement }
     }
 }
 

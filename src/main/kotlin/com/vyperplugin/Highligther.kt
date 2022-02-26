@@ -75,7 +75,7 @@ class VyperHighlighter : SyntaxHighlighterBase() {
 
 
         private fun modificators() = setOf<IElementType>(
-            PUBLIC, PRIVATE, PAYABLE, NONREENTRANT, MODIFYING, CONSTANT
+            PUBLIC, PRIVATE, PAYABLE, NONREENTRANT, MODIFYING, CONSTANT, EXTERNAL, VIEW, INTERNAL, PURE
         )
 
 

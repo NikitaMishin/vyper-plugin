@@ -78,7 +78,6 @@ def bid(_blindedBid: bytes32):
         })
     self.bidCounts[msg.sender] += 1
 
-
 # Returns a boolean value, `True` if bid placed successfully, `False` otherwise.
 @private
 def placeBid(bidder: address, value: wei_value) -> bool:
@@ -95,6 +94,7 @@ def placeBid(bidder: address, value: wei_value) -> bool:
     self.highestBidder = bidder
 
     return True
+
 
 
 # Reveal your blinded bids. You will get a refund for all correctly blinded

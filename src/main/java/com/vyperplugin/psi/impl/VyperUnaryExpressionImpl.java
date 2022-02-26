@@ -1,13 +1,14 @@
 // This is a generated file. Not intended for manual editing.
 package com.vyperplugin.psi.impl;
 
+import java.util.List;
+import org.jetbrains.annotations.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.vyperplugin.psi.VyperExpression;
-import com.vyperplugin.psi.VyperUnaryExpression;
-import com.vyperplugin.psi.VyperVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.util.PsiTreeUtil;
+import static com.vyperplugin.psi.VyperTypes.*;
+import com.vyperplugin.psi.*;
 
 public class VyperUnaryExpressionImpl extends VyperExpressionImpl implements VyperUnaryExpression {
 
@@ -15,10 +16,12 @@ public class VyperUnaryExpressionImpl extends VyperExpressionImpl implements Vyp
     super(node);
   }
 
+  @Override
   public void accept(@NotNull VyperVisitor visitor) {
     visitor.visitUnaryExpression(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof VyperVisitor) accept((VyperVisitor)visitor);
     else super.accept(visitor);

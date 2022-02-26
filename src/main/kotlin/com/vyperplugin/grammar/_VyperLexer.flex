@@ -23,6 +23,7 @@ import static com.vyperplugin.psi.VyperTypes.*;
 %unicode
 
 EOL=\R
+WHITE_SPACE=\s+
 
 COMMENT=(#.*)
 HEXLITERAL=hex\"([0-9a-fA-F]+)\"
@@ -36,7 +37,8 @@ FIXEDNUMBER=(([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*)*\.([0-9][_0-9]*))
 BOOLEANLITERAL=True|False
 SCIENTIFICNUMBER=((([0-9][_0-9]*)+|([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*|[0-9])*\.[_0-9]+)[Ee][+-]?[_0-9]+)
 HEXNUMBER=(0[xX][_0-9a-fA-F]+)
-WHITE_SPACE=[ \s\t\n\x0B\f\r]+
+NEWLINE=(\n|(\r\n))
+WHITE_SPACE=[ \t\n\x0B\f\r]+
 IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
 
 %%
@@ -88,6 +90,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "private"                   { return PRIVATE; }
   "nonreentrant"              { return NONREENTRANT; }
   "payable"                   { return PAYABLE; }
+  "external"                  { return EXTERNAL; }
   "modifying"                 { return MODIFYING; }
   "event"                     { return EVENT; }
   "range"                     { return RANGE; }
@@ -98,6 +101,9 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "contract"                  { return CONTRACT; }
   "def"                       { return DEF; }
   "struct"                    { return STRUCT; }
+  "internal"                  { return INTERNAL; }
+  "view"                      { return VIEW; }
+  "pure"                      { return PURE; }
   "elif"                      { return ELIF; }
   "else"                      { return ELSE; }
   "if"                        { return IF; }
@@ -120,6 +126,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "bool"                      { return BOOL; }
   "string"                    { return STRING; }
   "map"                       { return MAP; }
+  "HashMap"                   { return HASHMAP; }
   "ZERO_ADDRESS"              { return ZERO_ADDRESS; }
   "EMPTY_BYTES32"             { return EMPTY_BYTES32; }
   "MAX_INT128"                { return MAX_INT128; }
@@ -140,6 +147,8 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   {BOOLEANLITERAL}            { return BOOLEANLITERAL; }
   {SCIENTIFICNUMBER}          { return SCIENTIFICNUMBER; }
   {HEXNUMBER}                 { return HEXNUMBER; }
+  {NEWLINE}                   { return NEWLINE; }
+  {WHITE_SPACE}               { return WHITE_SPACE; }
   {IDENTIFIER}                { return IDENTIFIER; }
 
 }

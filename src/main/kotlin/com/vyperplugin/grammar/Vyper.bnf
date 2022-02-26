@@ -83,6 +83,7 @@ tokens = [
     private='private'
     nonreentrant='nonreentrant'
     payable='payable'
+    external='external'
     modifying='modifying'
     event='event'
     range = 'range'
@@ -268,7 +269,7 @@ FunctionDefinition ::=
 
 //FunctionModifier ::= (&INDEQ FunctionModifierOptional)* (&INDEQ FunctionModifierMandatory) (&INDEQ FunctionModifierOptional)*
 //private FunctionModifierMandatory ::= DECORATOR ((&INDNONE public) | (&INDNONE private)) {pin = 1}
-FunctionModifier ::=  (DECORATOR (&INDNONE (public | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))))
+FunctionModifier ::=  (DECORATOR (&INDNONE (public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))))
                       {pin = 1}
 
 UNIQUE_KEY ::=  stringLiteralSingle | stringLiteralDouble
@@ -363,7 +364,7 @@ private RangeInterval ::= PrimaryExpression ',' PrimaryExpression ',' PrimaryExp
                          | PrimaryExpression
 
 
-RangeExpression ::= range &INDNONE '(' RangeInterval ')'
+RangeExpression ::= range &INDNONE '(' (Expression | RangeInterval ) ')'
 
 
 //SelfAccessExpression ::= self (&INDNONE '.') (&INDNONE Expression)
@@ -465,7 +466,9 @@ ListType ::= (UnitType| ValueType|StructType) &INDNONE '[' (DecimalNumber | Iden
 StructType ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
                                                      mixin = "com.vyperplugin.psi.VyperStructTypeMixin"}
 
-MapType ::= map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')' {
+MapType ::= (map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')') |
+ (HashMap &INDNONE '[' (ValueType|UnitType) ',' (ReferenceType |  UnitType|ValueType| StructType  ) ']')
+ {
 pin=1
 }
 
