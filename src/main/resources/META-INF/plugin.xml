@@ -5,11 +5,8 @@
 
     <description>Plugin for smart contract language Vyper.</description>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
-    <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
-    -->
+
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
@@ -21,6 +18,7 @@
         <notificationGroup id = "RUN" displayType="BALLOON"/>
         <notificationGroup id = "COMMON" displayType="BALLOON"/>
         <notificationGroup id = "ANALYZE" displayType="BALLOON"/>
+        <lang.findUsagesProvider language="Vyper" implementationClass="com.vyperplugin.usages.VyperFindUsagesProvider"/>
         <lang.parserDefinition language="Vyper" implementationClass="com.vyperplugin.VyperParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Vyper" implementationClass="com.vyperplugin.VyperHighlighterFactory"/>
         <toolWindow id = "Vyper Tools" anchor="bottom" factoryClass="com.vyperplugin.toolWindow.VyperToolFactory" canCloseContents="true"/>
