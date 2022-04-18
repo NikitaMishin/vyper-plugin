@@ -29,6 +29,12 @@ public class VyperPrimaryExpressionImpl extends VyperExpressionImpl implements V
 
   @Override
   @Nullable
+  public VyperBuiltIn getBuiltIn() {
+    return findChildByClass(VyperBuiltIn.class);
+  }
+
+  @Override
+  @Nullable
   public VyperMultiLineString getMultiLineString() {
     return findChildByClass(VyperMultiLineString.class);
   }

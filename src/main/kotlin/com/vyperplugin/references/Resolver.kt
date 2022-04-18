@@ -1,9 +1,14 @@
 package com.vyperplugin.references
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFileFactory
+import com.intellij.psi.PsiManager
+import com.intellij.psi.search.FilenameIndex
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.containers.toMutableSmartList
 import com.vyperplugin.psi.*
 import com.vyperplugin.psi.VyperTypes.VAR_LITERAL
+import java.io.File
 
 
 object VyperResolver {
@@ -14,6 +19,17 @@ object VyperResolver {
     fun lexicalDeclarations(place: PsiElement, stop: (PsiElement) -> Boolean = { false }): List<VyperNamedElement> {
 
         return lexicalDeclRec(place, stop).distinct()
+    }
+
+    private fun getImportDecls(element: PsiElement): List<PsiElement> {
+        val newList = element.file.children.filterIsInstance<VyperImportPath>().map { it ->
+            val localPath = it.text
+//            val absPath = place.file.project.basePath + localPath.replace('.', '/') + ".vy"
+            val kek = FilenameIndex.getVirtualFilesByName(localPath.drop(localPath.indexOfLast { it == '.' } + 1) + ".vy", GlobalSearchScope.projectScope(it.project)).first()
+            val psiFile = PsiManager.getInstance(it.project).findFile(kek)
+            psiFile!!.children.filter { a -> a is VyperUserDefinedConstantsExpression || a is VyperFunctionDefinition  }
+        }.reduce { acc, psiElements -> acc.plus(psiElements) }
+        return newList
     }
 
     private fun lexicalDeclRec(place: PsiElement, stop: (PsiElement) -> Boolean): List<VyperNamedElement> {

@@ -6,6 +6,7 @@
     <description>Plugin for smart contract language Vyper.</description>
 
     <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.java</depends>
 
 
     <extensions defaultExtensionNs="com.intellij">
@@ -50,7 +51,6 @@
 
     <project-components>
         <component>
-            <interface-class>com.vyperplugin.psi.VyperInternalTypeFactory</interface-class>
             <implementation-class>com.vyperplugin.psi.VyperInternalTypeFactory</implementation-class>
         </component>
     </project-components>
@@ -87,7 +87,7 @@
         </group>
 
 
-        <group id="VyperGroup" text="Vyper actions">
+        <group id="VyperGroup" text="Vyper Actions">
             <action id="Vyper.Compile" text="Compile"
                     description="Compile vyper file"
                     class="com.vyperplugin.actions.CompileVyperFileAction">
@@ -102,7 +102,7 @@
 
 
             <action id="Vyper.Run"
-                    text="Run methods" description="Test contract"
+                    text="Run Methods" description="Test contract"
                     class="com.vyperplugin.actions.VyperRunAction">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl R" />
             </action>>

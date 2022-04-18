@@ -113,6 +113,7 @@ external OPTIND ::= indOpt
 
 
 
+
 // : External contract and struct declarations must come before event declarations, global declarations,
 // and function definitions
 private SourceUnit ::= ( ImportDirective
@@ -399,7 +400,9 @@ FunctionCallExpression ::= (Identifier &INDNONE '(' FunctionCallArguments? ')') 
 
 
 //left recursion?
-MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral)
+MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral) {
+    name = "member access"
+}
 MemberIndexAccess ::=  Expression &INDNONE '.' Expression &INDNONE '[' Expression']' {extends=Expression}
 //recover?
 IndexAccessExpression ::= Expression &INDNONE '[' Expression']'
@@ -421,7 +424,10 @@ MultDivExpression ::= Expression ('*' | '/' | '%') Expression
 ExponentExpression ::= Expression '**' Expression
 
 //multistring??
-AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {pin = 1}
+AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {
+    pin = 1
+    name = "assert expression"
+}
 private AssertMessage ::= ',' (stringLiteralDouble| stringLiteralSingle | MultiLineString)
 
 FunctionCallArguments ::= Expression? ( &INDNONE ',' Expression )*
@@ -429,17 +435,25 @@ FunctionCallArguments ::= Expression? ( &INDNONE ',' Expression )*
 
 
 
-PrimaryExpression ::= VarLiteral
-                  |BooleanLiteral
+PrimaryExpression ::= BuiltIn
+                  | VarLiteral
+                  | BooleanLiteral
                   | NumberLiteral
                   | HexLiteral
                   | StringLiteral
                   | Constants
                   //type??
                   | TYPE
+                  {
+                    name = "blyaaaaaaa"
+                  }
 
 VarLiteral ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
-                           mixin = "com.vyperplugin.psi.VyperVarLiteralMixin"}
+                           mixin = "com.vyperplugin.psi.VyperVarLiteralMixin"
+                           name = "variable"
+                           }
+
+BuiltIn ::= 'concat' | 'sha3'
 
 
 

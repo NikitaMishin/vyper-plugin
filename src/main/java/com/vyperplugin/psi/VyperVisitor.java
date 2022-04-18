@@ -22,6 +22,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitBuiltIn(@NotNull VyperBuiltIn o) {
+    visitElement(o);
+  }
+
   public void visitCallExpression(@NotNull VyperCallExpression o) {
     visitExpression(o);
     // visitReferenceElement(o);

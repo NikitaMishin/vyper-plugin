@@ -12,6 +12,7 @@ public interface VyperTypes {
   IElementType ASSERT_EXPRESSION = new VyperElementType("ASSERT_EXPRESSION");
   IElementType ASSIGNMENT_EXPRESSION = new VyperElementType("ASSIGNMENT_EXPRESSION");
   IElementType BAD_STATEMENT = new VyperElementType("BAD_STATEMENT");
+  IElementType BUILT_IN = new VyperElementType("BUILT_IN");
   IElementType CALL_EXPRESSION = new VyperElementType("CALL_EXPRESSION");
   IElementType CLEAR_EXPRESSION = new VyperElementType("CLEAR_EXPRESSION");
   IElementType COMP_EXPRESSION = new VyperElementType("COMP_EXPRESSION");
@@ -181,6 +182,9 @@ public interface VyperTypes {
       }
       else if (type == BAD_STATEMENT) {
         return new VyperBadStatementImpl(node);
+      }
+      else if (type == BUILT_IN) {
+        return new VyperBuiltInImpl(node);
       }
       else if (type == CALL_EXPRESSION) {
         return new VyperCallExpressionImpl(node);

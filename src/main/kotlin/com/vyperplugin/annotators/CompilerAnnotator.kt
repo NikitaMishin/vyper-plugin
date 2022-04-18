@@ -20,7 +20,7 @@ class VyperCompilerListener(val project: Project) : PropertyChangeListener {
         val data = evt!!.newValue as VyperCompiler.CompilerMessage
 
         ApplicationManager.getApplication().runReadAction {
-            //            val virtFile = VfsUtil.findFile(File("/home/gerwant/IdeaProjects/test/src/com/company/test.vy").toPath(), true)
+
             val psiFile = PsiManager.getInstance(project).findFile(data.file)
             //what if user picks another file?
             val dm = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)

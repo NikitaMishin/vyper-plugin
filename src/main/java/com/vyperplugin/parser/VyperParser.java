@@ -93,6 +93,18 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // 'concat' | 'sha3'
+  public static boolean BuiltIn(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "BuiltIn")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, BUILT_IN, "<built in>");
+    r = consumeToken(b, "concat");
+    if (!r) r = consumeToken(b, "sha3");
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // Expression &INDNONE ':' ((&INDNONE Statement)
   //                                      | <<indented (Statement (&INDEQ Statement)*)>>)
   static boolean CondStmt(PsiBuilder b, int l) {
@@ -3047,11 +3059,11 @@ public class VyperParser implements PsiParser, LightPsiParser {
   // Identifier
   public static boolean VarLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VarLiteral")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    if (!nextTokenIs(b, "<variable>", IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _NONE_, VAR_LITERAL, "<variable>");
     r = consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, VAR_LITERAL, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -3760,7 +3772,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "AssertExpression")) return false;
     if (!nextTokenIsSmart(b, ASSERT)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, ASSERT_EXPRESSION, null);
+    Marker m = enter_section_(b, l, _NONE_, ASSERT_EXPRESSION, "<assert expression>");
     r = consumeTokenSmart(b, ASSERT);
     p = r; // pin = 1
     r = r && report_error_(b, AssertExpression_1(b, l + 1));
@@ -4061,7 +4073,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // VarLiteral
+  // BuiltIn
+  //                   | VarLiteral
   //                   |BooleanLiteral
   //                   | NumberLiteral
   //                   | HexLiteral
@@ -4072,8 +4085,9 @@ public class VyperParser implements PsiParser, LightPsiParser {
   public static boolean PrimaryExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PrimaryExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, PRIMARY_EXPRESSION, "<primary expression>");
-    r = VarLiteral(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, PRIMARY_EXPRESSION, "<blyaaaaaaa>");
+    r = BuiltIn(b, l + 1);
+    if (!r) r = VarLiteral(b, l + 1);
     if (!r) r = BooleanLiteral(b, l + 1);
     if (!r) r = NumberLiteral(b, l + 1);
     if (!r) r = HexLiteral(b, l + 1);
