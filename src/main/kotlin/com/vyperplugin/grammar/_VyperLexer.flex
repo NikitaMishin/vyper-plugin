@@ -101,6 +101,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "contract"                  { return CONTRACT; }
   "def"                       { return DEF; }
   "struct"                    { return STRUCT; }
+  "pass"                      { return PASS; }
   "internal"                  { return INTERNAL; }
   "view"                      { return VIEW; }
   "pure"                      { return PURE; }
@@ -113,7 +114,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "break"                     { return BREAK; }
   "return"                    { return RETURN; }
   "raise"                     { return RAISE; }
-  "pass"                      { return PASS; }
+  "log"                       { return LOG; }
   "TypeName"                  { return TYPENAME; }
   "clear"                     { return CLEAR; }
   "assert"                    { return ASSERT; }

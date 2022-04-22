@@ -12,7 +12,6 @@ public interface VyperTypes {
   IElementType ASSERT_EXPRESSION = new VyperElementType("ASSERT_EXPRESSION");
   IElementType ASSIGNMENT_EXPRESSION = new VyperElementType("ASSIGNMENT_EXPRESSION");
   IElementType BAD_STATEMENT = new VyperElementType("BAD_STATEMENT");
-  IElementType BUILT_IN = new VyperElementType("BUILT_IN");
   IElementType CALL_EXPRESSION = new VyperElementType("CALL_EXPRESSION");
   IElementType CLEAR_EXPRESSION = new VyperElementType("CLEAR_EXPRESSION");
   IElementType COMP_EXPRESSION = new VyperElementType("COMP_EXPRESSION");
@@ -20,6 +19,7 @@ public interface VyperTypes {
   IElementType EMIT_STATEMENT = new VyperElementType("EMIT_STATEMENT");
   IElementType EQ_EXPRESSION = new VyperElementType("EQ_EXPRESSION");
   IElementType EVENT_DECLARATION = new VyperElementType("EVENT_DECLARATION");
+  IElementType EVENT_LOG_EXPRESSION = new VyperElementType("EVENT_LOG_EXPRESSION");
   IElementType EVENT_PROPERTY = new VyperElementType("EVENT_PROPERTY");
   IElementType EXPONENT_EXPRESSION = new VyperElementType("EXPONENT_EXPRESSION");
   IElementType EXPRESSION = new VyperElementType("EXPRESSION");
@@ -115,6 +115,7 @@ public interface VyperTypes {
   IElementType LBRACKET = new VyperTokenType("[");
   IElementType LESS = new VyperTokenType("<");
   IElementType LESSEQ = new VyperTokenType("<=");
+  IElementType LOG = new VyperTokenType("log");
   IElementType LPAREN = new VyperTokenType("(");
   IElementType LSHIFT = new VyperTokenType("<<");
   IElementType MAP = new VyperTokenType("map");
@@ -141,6 +142,7 @@ public interface VyperTypes {
   IElementType PERCENT_ASSIGN = new VyperTokenType("%=");
   IElementType PLUS = new VyperTokenType("+");
   IElementType PLUS_ASSIGN = new VyperTokenType("+=");
+  IElementType PRIMARYEXPRESSION_0_0 = new VyperTokenType("PrimaryExpression_0_0");
   IElementType PRIVATE = new VyperTokenType("private");
   IElementType PUBLIC = new VyperTokenType("public");
   IElementType PURE = new VyperTokenType("pure");
@@ -183,9 +185,6 @@ public interface VyperTypes {
       else if (type == BAD_STATEMENT) {
         return new VyperBadStatementImpl(node);
       }
-      else if (type == BUILT_IN) {
-        return new VyperBuiltInImpl(node);
-      }
       else if (type == CALL_EXPRESSION) {
         return new VyperCallExpressionImpl(node);
       }
@@ -206,6 +205,9 @@ public interface VyperTypes {
       }
       else if (type == EVENT_DECLARATION) {
         return new VyperEventDeclarationImpl(node);
+      }
+      else if (type == EVENT_LOG_EXPRESSION) {
+        return new VyperEventLogExpressionImpl(node);
       }
       else if (type == EVENT_PROPERTY) {
         return new VyperEventPropertyImpl(node);

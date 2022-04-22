@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface VyperPrimaryExpression extends VyperExpression {
 
   @Nullable
-  VyperBuiltIn getBuiltIn();
-
-  @Nullable
   VyperMultiLineString getMultiLineString();
 
   @Nullable

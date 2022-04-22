@@ -211,12 +211,12 @@ private recoverStruct ::= !(&INDLT | &INDEQ)
 
 //ok
 //Events must all come before global declarations and function definitions
-EventDeclaration ::= Identifier &INDNONE ':' &INDNONE event &INDNONE '(' '{'   EventProperty? '}' ')'  {
+EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProperty?) | (&INDNONE pass))  {
 pin=5
 }
 
 EventProperty ::= Identifier ':'    (IndexedData | TYPE)
-                (',' Identifier ':' (IndexedData |TYPE))*
+                (Identifier ':' (IndexedData |TYPE))*
 
 IndexedData ::= IndexedType '(' TYPE ')'
 
@@ -356,6 +356,9 @@ Expression ::=
   | MemberIndexAccess
   | InlineArrayExpression
   | PrimaryExpression
+  | EventLogExpression
+
+EventLogExpression ::= log &INDNONE Identifier '(' Expression (',' Expression)* ')'
 
 
 //self function call?
@@ -435,7 +438,7 @@ FunctionCallArguments ::= Expression? ( &INDNONE ',' Expression )*
 
 
 
-PrimaryExpression ::= BuiltIn
+PrimaryExpression ::=
                   | VarLiteral
                   | BooleanLiteral
                   | NumberLiteral
@@ -453,7 +456,7 @@ VarLiteral ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceEleme
                            name = "variable"
                            }
 
-BuiltIn ::= 'concat' | 'sha3'
+//BuiltIn ::= 'concat' | 'sha3'
 
 
 
