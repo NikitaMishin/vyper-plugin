@@ -1,15 +1,27 @@
 <idea-plugin require-restart="true">
     <id>com.vyperplugin.vyper-plugin</id>
     <name>Vyper</name>
-    <vendor email="replace" url="repalace">NikAndAlex</vendor>
+    <version>2.0</version>
+    <vendor email="https://github.com/NikitaMishin/vyper-plugin" url="https://github.com/NikitaMishin/vyper-plugin">VyperPluginSupport</vendor>
+    <idea-version since-build="211"/>
 
-    <description>Plugin for smart contract language Vyper.</description>
+    <description>
+    <![CDATA[
+    Provides support for Vyper language.
+    <p>The following features are available with IntelliJ IDEA:<ul>
+      <li>Vyper Compiler</li>
+      <li>SmartCheck Analyzer</li>
+      <li>Compiler error codes</li>
+    </ul>
+    </p>
+    ]]>
+    </description>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
-    <!-- uncomment to enable plugin in all products
+    <change-notes>Initial release of the plugin.</change-notes>
+
     <depends>com.intellij.modules.lang</depends>
-    -->
+    <depends>com.intellij.java</depends>
+
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
@@ -21,15 +33,20 @@
         <notificationGroup id = "RUN" displayType="BALLOON"/>
         <notificationGroup id = "COMMON" displayType="BALLOON"/>
         <notificationGroup id = "ANALYZE" displayType="BALLOON"/>
+        <lang.findUsagesProvider language="Vyper" implementationClass="com.vyperplugin.usages.VyperFindUsagesProvider"/>
         <lang.parserDefinition language="Vyper" implementationClass="com.vyperplugin.VyperParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Vyper" implementationClass="com.vyperplugin.VyperHighlighterFactory"/>
         <toolWindow id = "Vyper Tools" anchor="bottom" factoryClass="com.vyperplugin.toolWindow.VyperToolFactory" canCloseContents="true"/>
         <lang.braceMatcher language="Vyper"
                            implementationClass="com.vyperplugin.editorActions.PairedBraceMatcherVyper"/>
         <!--        <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.SelfAccessUnresolvedReferenceAnnotator"/>-->
-
+        <lang.commenter language="Vyper" implementationClass="com.vyperplugin.commenter.VyperCommenter"/>
         <completion.contributor language="Vyper"
                                 implementationClass="com.vyperplugin.completion.VyperBaseTypesCompletionContributor"/>
+        <completion.contributor language="Vyper"
+                                implementationClass="com.vyperplugin.completion.VyperInFileContributor"/>
+        <completion.contributor language="Vyper"
+                                implementationClass="com.vyperplugin.completion.VyperFunModifierContributor"/>
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.VyperColorAnnotator"/>
         <annotator language="Vyper" implementationClass="com.vyperplugin.annotators.SmartCheckAnnotator"/>
@@ -46,9 +63,9 @@
 
     </extensions>
 
+    <!--DEPRECATED TODO FIX-->
     <project-components>
         <component>
-            <interface-class>com.vyperplugin.psi.VyperInternalTypeFactory</interface-class>
             <implementation-class>com.vyperplugin.psi.VyperInternalTypeFactory</implementation-class>
         </component>
     </project-components>
@@ -68,15 +85,9 @@
             <add-to-group group-id="AnalyzeActions" anchor="first"/>
         </action>
 
-
-
-
-
-
         <!-- VyperActions -->
         <group id="VyperActions">
         </group>
-
 
         <group id="VyperMenu" text="_Vyper" popup="true">
             <separator/>
@@ -85,7 +96,7 @@
         </group>
 
 
-        <group id="VyperGroup" text="Vyper actions">
+        <group id="VyperGroup" text="Vyper Actions">
             <action id="Vyper.Compile" text="Compile"
                     description="Compile vyper file"
                     class="com.vyperplugin.actions.CompileVyperFileAction">
@@ -100,7 +111,7 @@
 
 
             <action id="Vyper.Run"
-                    text="Run methods" description="Test contract"
+                    text="Run Methods" description="Test contract"
                     class="com.vyperplugin.actions.VyperRunAction">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl R" />
             </action>>

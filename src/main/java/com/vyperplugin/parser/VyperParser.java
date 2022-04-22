@@ -1,21 +1,20 @@
 // This is a generated file. Not intended for manual editing.
 package com.vyperplugin.parser;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LightPsiParser;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
-import com.intellij.lang.PsiParser;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-
-import static com.vyperplugin.parser.ParserUtil.*;
 import static com.vyperplugin.psi.VyperTypes.*;
+import static com.vyperplugin.parser.ParserUtil.*;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.TokenSet;
+import com.intellij.lang.PsiParser;
+import com.intellij.lang.LightPsiParser;
 
+@SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class VyperParser implements PsiParser, LightPsiParser {
 
-  public @NotNull ASTNode parse(@NotNull IElementType t, @NotNull PsiBuilder b) {
+  public ASTNode parse(IElementType t, PsiBuilder b) {
     parseLight(t, b);
     return b.getTreeBuilt();
   }
@@ -24,128 +23,25 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     b = Companion.adapt_builder_(t, b, this, EXTENDS_SETS_);
     Marker m = enter_section_(b, 0, _COLLAPSE_, null);
-    if (t == BAD_STATEMENT) {
-      r = BadStatement(b, 0);
-    }
-    else if (t == CUSTOM_UNIT_TYPE) {
-      r = CustomUnitType(b, 0);
-    }
-    else if (t == EMIT_STATEMENT) {
-      r = EmitStatement(b, 0);
-    }
-    else if (t == EVENT_DECLARATION) {
-      r = EventDeclaration(b, 0);
-    }
-    else if (t == EVENT_PROPERTY) {
-      r = EventProperty(b, 0);
-    }
-    else if (t == EXPRESSION) {
-      r = Expression(b, 0, -1);
-    }
-    else if (t == EXTERNAL_INTERFACES) {
-      r = ExternalInterfaces(b, 0);
-    }
-    else if (t == FOR_STATEMENT) {
-      r = ForStatement(b, 0);
-    }
-    else if (t == FUNCTION_ARGS) {
-      r = FunctionArgs(b, 0);
-    }
-    else if (t == FUNCTION_CALL_ARGUMENTS) {
-      r = FunctionCallArguments(b, 0);
-    }
-    else if (t == FUNCTION_CALL_EXPRESSION) {
-      r = FunctionCallExpression(b, 0);
-    }
-    else if (t == FUNCTION_DEFINITION) {
-      r = FunctionDefinition(b, 0);
-    }
-    else if (t == FUNCTION_MODIFIER) {
-      r = FunctionModifier(b, 0);
-    }
-    else if (t == IMPORT_PATH) {
-      r = IMPORT_PATH(b, 0);
-    }
-    else if (t == IF_STATEMENT) {
-      r = IfStatement(b, 0);
-    }
-    else if (t == IMPLEMENTS_DIRECTIVE) {
-      r = ImplementsDirective(b, 0);
-    }
-    else if (t == INDEXED_DATA) {
-      r = IndexedData(b, 0);
-    }
-    else if (t == LIST_TYPE) {
-      r = ListType(b, 0);
-    }
-    else if (t == LOCAL_VARIABLE_DECLARATION) {
-      r = LocalVariableDeclaration(b, 0);
-    }
-    else if (t == LOCAL_VARIABLE_DEFINITION) {
-      r = LocalVariableDefinition(b, 0);
-    }
-    else if (t == MAP_TYPE) {
-      r = MapType(b, 0);
-    }
-    else if (t == MULTI_LINE_STRING) {
-      r = MultiLineString(b, 0);
-    }
-    else if (t == PARAM_DEF) {
-      r = ParamDef(b, 0);
-    }
-    else if (t == STATE_VARIABLE_DECLARATION) {
-      r = StateVariableDeclaration(b, 0);
-    }
-    else if (t == STATE_VARIABLE_MODIFIER) {
-      r = StateVariableModifier(b, 0);
-    }
-    else if (t == STATEMENT) {
-      r = Statement(b, 0);
-    }
-    else if (t == STRUCT_DEFINITION) {
-      r = StructDefinition(b, 0);
-    }
-    else if (t == STRUCT_TYPE) {
-      r = StructType(b, 0);
-    }
-    else if (t == TYPE) {
-      r = TYPE(b, 0);
-    }
-    else if (t == UNIQUE_KEY) {
-      r = UNIQUE_KEY(b, 0);
-    }
-    else if (t == UNIT_TYPE) {
-      r = UnitType(b, 0);
-    }
-    else if (t == UNITS_DEFINITION) {
-      r = UnitsDefinition(b, 0);
-    }
-    else if (t == USER_DEFINED_CONSTANTS_EXPRESSION) {
-      r = UserDefinedConstantsExpression(b, 0);
-    }
-    else if (t == VALUE_TYPE) {
-      r = ValueType(b, 0);
-    }
-    else if (t == VAR_LITERAL) {
-      r = VarLiteral(b, 0);
-    }
-    else {
-      r = parse_root_(b);
-    }
+    r = parse_root_(t, b);
     exit_section_(b, 0, m, t, r, true, TRUE_CONDITION);
   }
 
-  protected boolean parse_root_(PsiBuilder b) {
-    return VyperFile(b, 0 + 1);
+  protected boolean parse_root_(IElementType t, PsiBuilder b) {
+    return parse_root_(t, b, 0);
+  }
+
+  static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
+    return VyperFile(b, l + 1);
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(AND_EXPRESSION, ASSERT_EXPRESSION, ASSIGNMENT_EXPRESSION, CALL_EXPRESSION,
-      CLEAR_EXPRESSION, COMP_EXPRESSION, EQ_EXPRESSION, EXPONENT_EXPRESSION,
-      EXPRESSION, FUNCTION_CALL_EXPRESSION, INDEX_ACCESS_EXPRESSION, INLINE_ARRAY_EXPRESSION,
-      MEMBER_ACCESS_EXPRESSION, MEMBER_INDEX_ACCESS, MULT_DIV_EXPRESSION, NEW_EXPRESSION,
-      OR_EXPRESSION, PARENTHESIZIED_EXPRESSION, PLUS_MIN_EXPRESSION, PRIMARY_EXPRESSION,
-      RANGE_EXPRESSION, UNARY_EXPRESSION, USER_DEFINED_CONSTANTS_EXPRESSION),
+      CLEAR_EXPRESSION, COMP_EXPRESSION, EQ_EXPRESSION, EVENT_LOG_EXPRESSION,
+      EXPONENT_EXPRESSION, EXPRESSION, FUNCTION_CALL_EXPRESSION, INDEX_ACCESS_EXPRESSION,
+      INLINE_ARRAY_EXPRESSION, MEMBER_ACCESS_EXPRESSION, MEMBER_INDEX_ACCESS, MULT_DIV_EXPRESSION,
+      NEW_EXPRESSION, OR_EXPRESSION, PARENTHESIZIED_EXPRESSION, PLUS_MIN_EXPRESSION,
+      PRIMARY_EXPRESSION, RANGE_EXPRESSION, UNARY_EXPRESSION, USER_DEFINED_CONSTANTS_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -186,13 +82,13 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // booleanLiteral
-  static boolean BooleanLiteral(PsiBuilder b) {
+  static boolean BooleanLiteral(PsiBuilder b, int l) {
     return consumeToken(b, BOOLEANLITERAL);
   }
 
   /* ********************************************************** */
   // break
-  static boolean Break(PsiBuilder b) {
+  static boolean Break(PsiBuilder b, int l) {
     return consumeToken(b, BREAK);
   }
 
@@ -228,7 +124,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = CondStmt_3_0(b, l + 1);
-    if (!r) r = indented(b, l + 1, CondStmt_3_1_0_parser_);
+    if (!r) r = indented(b, l + 1, VyperParser::CondStmt_3_1_0);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -315,7 +211,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // continue
-  static boolean Continue(PsiBuilder b) {
+  static boolean Continue(PsiBuilder b, int l) {
     return consumeToken(b, CONTINUE);
   }
 
@@ -356,7 +252,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // decimalNumber
-  static boolean DecimalNumber(PsiBuilder b) {
+  static boolean DecimalNumber(PsiBuilder b, int l) {
     return consumeToken(b, DECIMALNUMBER);
   }
 
@@ -419,7 +315,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = ElseStmt_3_0(b, l + 1);
-    if (!r) r = indented(b, l + 1, ElseStmt_3_1_0_parser_);
+    if (!r) r = indented(b, l + 1, VyperParser::ElseStmt_3_1_0);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -513,22 +409,19 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Identifier &INDNONE ':' &INDNONE event &INDNONE '(' '{'   EventProperty? '}' ')'
+  // event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProperty?) | (&INDNONE pass))
   public static boolean EventDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EventDeclaration")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    if (!nextTokenIs(b, EVENT)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, EVENT_DECLARATION, null);
-    r = consumeToken(b, IDENTIFIER);
+    r = consumeToken(b, EVENT);
     r = r && EventDeclaration_1(b, l + 1);
-    r = r && consumeToken(b, COLON);
+    r = r && consumeToken(b, IDENTIFIER);
     r = r && EventDeclaration_3(b, l + 1);
-    r = r && consumeToken(b, EVENT);
+    r = r && consumeToken(b, COLON);
     p = r; // pin = 5
-    r = r && report_error_(b, EventDeclaration_5(b, l + 1));
-    r = p && report_error_(b, consumeTokens(b, -1, LPAREN, LBRACE)) && r;
-    r = p && report_error_(b, EventDeclaration_8(b, l + 1)) && r;
-    r = p && report_error_(b, consumeTokens(b, -1, RBRACE, RPAREN)) && r;
+    r = r && EventDeclaration_5(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -553,9 +446,59 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // &INDNONE
+  // (&INDGT EventProperty?) | (&INDNONE pass)
   private static boolean EventDeclaration_5(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EventDeclaration_5")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = EventDeclaration_5_0(b, l + 1);
+    if (!r) r = EventDeclaration_5_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDGT EventProperty?
+  private static boolean EventDeclaration_5_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventDeclaration_5_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = EventDeclaration_5_0_0(b, l + 1);
+    r = r && EventDeclaration_5_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDGT
+  private static boolean EventDeclaration_5_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventDeclaration_5_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indGt(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // EventProperty?
+  private static boolean EventDeclaration_5_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventDeclaration_5_0_1")) return false;
+    EventProperty(b, l + 1);
+    return true;
+  }
+
+  // &INDNONE pass
+  private static boolean EventDeclaration_5_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventDeclaration_5_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = EventDeclaration_5_1_0(b, l + 1);
+    r = r && consumeToken(b, PASS);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean EventDeclaration_5_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventDeclaration_5_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -563,16 +506,9 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // EventProperty?
-  private static boolean EventDeclaration_8(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EventDeclaration_8")) return false;
-    EventProperty(b, l + 1);
-    return true;
-  }
-
   /* ********************************************************** */
   // Identifier ':'    (IndexedData | TYPE)
-  //                 (',' Identifier ':' (IndexedData |TYPE))*
+  //                 (Identifier ':' (IndexedData |TYPE))*
   public static boolean EventProperty(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EventProperty")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -594,7 +530,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (',' Identifier ':' (IndexedData |TYPE))*
+  // (Identifier ':' (IndexedData |TYPE))*
   private static boolean EventProperty_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EventProperty_3")) return false;
     while (true) {
@@ -605,20 +541,20 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // ',' Identifier ':' (IndexedData |TYPE)
+  // Identifier ':' (IndexedData |TYPE)
   private static boolean EventProperty_3_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EventProperty_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, COMMA, IDENTIFIER, COLON);
-    r = r && EventProperty_3_0_3(b, l + 1);
+    r = consumeTokens(b, 0, IDENTIFIER, COLON);
+    r = r && EventProperty_3_0_2(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // IndexedData |TYPE
-  private static boolean EventProperty_3_0_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EventProperty_3_0_3")) return false;
+  private static boolean EventProperty_3_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventProperty_3_0_2")) return false;
     boolean r;
     r = IndexedData(b, l + 1);
     if (!r) r = TYPE(b, l + 1);
@@ -695,12 +631,13 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // ( FunctionArgs)
-  private static void ExternalInterfaceBody_5_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ExternalInterfaceBody_5_0")) return;
+  private static boolean ExternalInterfaceBody_5_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ExternalInterfaceBody_5_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = FunctionArgs(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // (&INDNONE '->' &INDNONE TYPE)?
@@ -711,8 +648,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE '->' &INDNONE TYPE
-  private static void ExternalInterfaceBody_7_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ExternalInterfaceBody_7_0")) return;
+  private static boolean ExternalInterfaceBody_7_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ExternalInterfaceBody_7_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = ExternalInterfaceBody_7_0_0(b, l + 1);
@@ -720,6 +657,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     r = r && ExternalInterfaceBody_7_0_2(b, l + 1);
     r = r && TYPE(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // &INDNONE
@@ -776,7 +714,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
     r = p && report_error_(b, ExternalInterfaces_3(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, COLON)) && r;
-    r = p && indented(b, l + 1, ExternalInterfaces_5_0_parser_) && r;
+    r = p && indented(b, l + 1, VyperParser::ExternalInterfaces_5_0) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -818,7 +756,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // fixedNumber
-  static boolean FixedNumber(PsiBuilder b) {
+  static boolean FixedNumber(PsiBuilder b, int l) {
     return consumeToken(b, FIXEDNUMBER);
   }
 
@@ -893,7 +831,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = ForStatement_9_0(b, l + 1);
-    if (!r) r = indented(b, l + 1, ForStatement_9_1_0_parser_);
+    if (!r) r = indented(b, l + 1, VyperParser::ForStatement_9_1_0);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -970,7 +908,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = FunBody_0(b, l + 1);
-    if (!r) r = indented(b, l + 1, FunBody_1_0_parser_);
+    if (!r) r = indented(b, l + 1, VyperParser::FunBody_1_0);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -1017,12 +955,13 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // (MultiLineString)
-  private static void FunBody_1_0_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FunBody_1_0_0_0")) return;
+  private static boolean FunBody_1_0_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunBody_1_0_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = MultiLineString(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // &INDEQ
@@ -1143,8 +1082,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE '->' &INDNONE TYPE
-  private static void FunDef_5_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FunDef_5_0")) return;
+  private static boolean FunDef_5_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunDef_5_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = FunDef_5_0_0(b, l + 1);
@@ -1152,6 +1091,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     r = r && FunDef_5_0_2(b, l + 1);
     r = r && TYPE(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // &INDNONE
@@ -1340,7 +1280,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = FunctionCallExpression_1_0(b, l + 1);
-    r = r && FunctionCallExpression_1_1();
+    r = r && FunctionCallExpression_1_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -1462,7 +1402,10 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  private static boolean FunctionCallExpression_1_1() {
+  // {
+  //    //implements and mixin
+  // }
+  private static boolean FunctionCallExpression_1_1(PsiBuilder b, int l) {
     return true;
   }
 
@@ -1519,7 +1462,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DECORATOR (&INDNONE (public | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')))
+  // DECORATOR (&INDNONE (public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')))
   public static boolean FunctionModifier(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionModifier")) return false;
     if (!nextTokenIs(b, DECORATOR)) return false;
@@ -1532,7 +1475,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // &INDNONE (public | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))
+  // &INDNONE (public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))
   private static boolean FunctionModifier_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionModifier_1")) return false;
     boolean r;
@@ -1553,27 +1496,31 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // public | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')
+  // public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')
   private static boolean FunctionModifier_1_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionModifier_1_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, PUBLIC);
+    if (!r) r = consumeToken(b, INTERNAL);
+    if (!r) r = consumeToken(b, VIEW);
+    if (!r) r = consumeToken(b, PURE);
+    if (!r) r = consumeToken(b, EXTERNAL);
     if (!r) r = consumeToken(b, PRIVATE);
     if (!r) r = consumeToken(b, CONSTANT);
     if (!r) r = consumeToken(b, PAYABLE);
-    if (!r) r = FunctionModifier_1_1_4(b, l + 1);
+    if (!r) r = FunctionModifier_1_1_8(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // nonreentrant (&INDNONE '(') UNIQUE_KEY ')'
-  private static boolean FunctionModifier_1_1_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FunctionModifier_1_1_4")) return false;
+  private static boolean FunctionModifier_1_1_8(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionModifier_1_1_8")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, NONREENTRANT);
-    r = r && FunctionModifier_1_1_4_1(b, l + 1);
+    r = r && FunctionModifier_1_1_8_1(b, l + 1);
     r = r && UNIQUE_KEY(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     exit_section_(b, m, null, r);
@@ -1581,19 +1528,19 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE '('
-  private static boolean FunctionModifier_1_1_4_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FunctionModifier_1_1_4_1")) return false;
+  private static boolean FunctionModifier_1_1_8_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionModifier_1_1_8_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = FunctionModifier_1_1_4_1_0(b, l + 1);
+    r = FunctionModifier_1_1_8_1_0(b, l + 1);
     r = r && consumeToken(b, LPAREN);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // &INDNONE
-  private static boolean FunctionModifier_1_1_4_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FunctionModifier_1_1_4_1_0")) return false;
+  private static boolean FunctionModifier_1_1_8_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionModifier_1_1_8_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -1603,13 +1550,13 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // hexLiteral
-  static boolean HexLiteral(PsiBuilder b) {
+  static boolean HexLiteral(PsiBuilder b, int l) {
     return consumeToken(b, HEXLITERAL);
   }
 
   /* ********************************************************** */
   // hexNumber
-  static boolean HexNumber(PsiBuilder b) {
+  static boolean HexNumber(PsiBuilder b, int l) {
     return consumeToken(b, HEXNUMBER);
   }
 
@@ -1739,13 +1686,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDEQ ElseStmt
-  private static void IfStatement_4_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "IfStatement_4_0")) return;
+  private static boolean IfStatement_4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "IfStatement_4_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = IfStatement_4_0_0(b, l + 1);
     r = r && ElseStmt(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // &INDEQ
@@ -1954,7 +1902,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "IndexedData")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, INDEXED_DATA, "<indexed data>");
-    r = IndexedType(b);
+    r = IndexedType(b, l + 1);
     r = r && consumeToken(b, LPAREN);
     r = r && TYPE(b, l + 1);
     r = r && consumeToken(b, RPAREN);
@@ -1964,7 +1912,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'indexed'
-  static boolean IndexedType(PsiBuilder b) {
+  static boolean IndexedType(PsiBuilder b, int l) {
     return consumeToken(b, "indexed");
   }
 
@@ -2009,7 +1957,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean ListType_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ListType_3")) return false;
     boolean r;
-    r = DecimalNumber(b);
+    r = DecimalNumber(b, l + 1);
     if (!r) r = consumeToken(b, IDENTIFIER);
     return r;
   }
@@ -2052,7 +2000,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean ListType_5_0_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ListType_5_0_2")) return false;
     boolean r;
-    r = DecimalNumber(b);
+    r = DecimalNumber(b, l + 1);
     if (!r) r = consumeToken(b, IDENTIFIER);
     return r;
   }
@@ -2162,27 +2110,38 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')'
+  // (map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')') |
+  //  (HashMap &INDNONE '[' (ValueType|UnitType) ',' (ReferenceType |  UnitType|ValueType| StructType  ) ']')
   public static boolean MapType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType")) return false;
-    if (!nextTokenIs(b, MAP)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, MAP_TYPE, null);
+    if (!nextTokenIs(b, "<map type>", HASHMAP, MAP)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, MAP_TYPE, "<map type>");
+    r = MapType_0(b, l + 1);
+    if (!r) r = MapType_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')'
+  private static boolean MapType_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MapType_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, MAP);
-    p = r; // pin = 1
-    r = r && report_error_(b, MapType_1(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, LPAREN)) && r;
-    r = p && report_error_(b, MapType_3(b, l + 1)) && r;
-    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
-    r = p && report_error_(b, MapType_5(b, l + 1)) && r;
-    r = p && consumeToken(b, RPAREN) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    r = r && MapType_0_1(b, l + 1);
+    r = r && consumeToken(b, LPAREN);
+    r = r && MapType_0_3(b, l + 1);
+    r = r && consumeToken(b, COMMA);
+    r = r && MapType_0_5(b, l + 1);
+    r = r && consumeToken(b, RPAREN);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   // &INDNONE
-  private static boolean MapType_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MapType_1")) return false;
+  private static boolean MapType_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MapType_0_1")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -2191,8 +2150,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // ValueType|UnitType
-  private static boolean MapType_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MapType_3")) return false;
+  private static boolean MapType_0_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MapType_0_3")) return false;
     boolean r;
     r = ValueType(b, l + 1);
     if (!r) r = UnitType(b, l + 1);
@@ -2200,8 +2159,54 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // ReferenceType |  UnitType|ValueType| StructType
-  private static boolean MapType_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MapType_5")) return false;
+  private static boolean MapType_0_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MapType_0_5")) return false;
+    boolean r;
+    r = ReferenceType(b, l + 1);
+    if (!r) r = UnitType(b, l + 1);
+    if (!r) r = ValueType(b, l + 1);
+    if (!r) r = StructType(b, l + 1);
+    return r;
+  }
+
+  // HashMap &INDNONE '[' (ValueType|UnitType) ',' (ReferenceType |  UnitType|ValueType| StructType  ) ']'
+  private static boolean MapType_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MapType_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, HASHMAP);
+    r = r && MapType_1_1(b, l + 1);
+    r = r && consumeToken(b, LBRACKET);
+    r = r && MapType_1_3(b, l + 1);
+    r = r && consumeToken(b, COMMA);
+    r = r && MapType_1_5(b, l + 1);
+    r = r && consumeToken(b, RBRACKET);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean MapType_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MapType_1_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // ValueType|UnitType
+  private static boolean MapType_1_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MapType_1_3")) return false;
+    boolean r;
+    r = ValueType(b, l + 1);
+    if (!r) r = UnitType(b, l + 1);
+    return r;
+  }
+
+  // ReferenceType |  UnitType|ValueType| StructType
+  private static boolean MapType_1_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MapType_1_5")) return false;
     boolean r;
     r = ReferenceType(b, l + 1);
     if (!r) r = UnitType(b, l + 1);
@@ -2227,9 +2232,9 @@ public class VyperParser implements PsiParser, LightPsiParser {
   static boolean NumberLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NumberLiteral")) return false;
     boolean r;
-    r = HexNumber(b);
-    if (!r) r = DecimalNumber(b);
-    if (!r) r = FixedNumber(b);
+    r = HexNumber(b, l + 1);
+    if (!r) r = DecimalNumber(b, l + 1);
+    if (!r) r = FixedNumber(b, l + 1);
     return r;
   }
 
@@ -2255,24 +2260,25 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // '=' Expression
-  private static void ParamDef_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ParamDef_3_0")) return;
+  private static boolean ParamDef_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ParamDef_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, ASSIGN);
     r = r && Expression(b, l + 1, -1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */
   // pass
-  static boolean PassStatement(PsiBuilder b) {
+  static boolean PassStatement(PsiBuilder b, int l) {
     return consumeToken(b, PASS);
   }
 
   /* ********************************************************** */
   // raise
-  static boolean Raise(PsiBuilder b) {
+  static boolean Raise(PsiBuilder b, int l) {
     return consumeToken(b, RAISE);
   }
 
@@ -2349,13 +2355,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE Expression
-  private static void Return_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Return_1_0")) return;
+  private static boolean Return_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Return_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = Return_1_0_0(b, l + 1);
     r = r && Expression(b, l + 1, -1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // &INDNONE
@@ -2403,7 +2410,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!r) r = FunctionDefinition(b, l + 1);
     if (!r) r = StateVariableDeclaration(b, l + 1);
     if (!r) r = BadStatement(b, l + 1);
-    exit_section_(b, l, m, r, false, structRecover_parser_);
+    exit_section_(b, l, m, r, false, VyperParser::structRecover);
     return r;
   }
 
@@ -2551,17 +2558,17 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "Statement")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, STATEMENT, "<statement>");
-    r = PassStatement(b);
+    r = PassStatement(b, l + 1);
     if (!r) r = IfStatement(b, l + 1);
     if (!r) r = ForStatement(b, l + 1);
-    if (!r) r = Continue(b);
-    if (!r) r = Break(b);
+    if (!r) r = Continue(b, l + 1);
+    if (!r) r = Break(b, l + 1);
     if (!r) r = Return(b, l + 1);
-    if (!r) r = Raise(b);
+    if (!r) r = Raise(b, l + 1);
     if (!r) r = EmitStatement(b, l + 1);
     if (!r) r = SimpleStatement(b, l + 1);
     if (!r) r = BadStatement(b, l + 1);
-    exit_section_(b, l, m, r, false, recoverStatement_parser_);
+    exit_section_(b, l, m, r, false, VyperParser::recoverStatement);
     return r;
   }
 
@@ -2585,7 +2592,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = StructSingleDef(b, l + 1);
-    if (!r) r = indented(b, l + 1, StructBody_1_0_parser_);
+    if (!r) r = indented(b, l + 1, VyperParser::StructBody_1_0);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -2646,7 +2653,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_);
     r = LocalVariableDefinition(b, l + 1);
     if (!r) r = BadStatement(b, l + 1);
-    exit_section_(b, l, m, r, false, structRecover_parser_);
+    exit_section_(b, l, m, r, false, VyperParser::structRecover);
     return r;
   }
 
@@ -2747,13 +2754,13 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'timedelta'
-  static boolean Timedelta(PsiBuilder b) {
+  static boolean Timedelta(PsiBuilder b, int l) {
     return consumeToken(b, "timedelta");
   }
 
   /* ********************************************************** */
   // 'timestamp'
-  static boolean Timestamp(PsiBuilder b) {
+  static boolean Timestamp(PsiBuilder b, int l) {
     return consumeToken(b, "timestamp");
   }
 
@@ -2776,9 +2783,9 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "UnitType")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, UNIT_TYPE, "<unit type>");
-    r = Timestamp(b);
-    if (!r) r = Timedelta(b);
-    if (!r) r = Wei_value(b);
+    r = Timestamp(b, l + 1);
+    if (!r) r = Timedelta(b, l + 1);
+    if (!r) r = Wei_value(b, l + 1);
     if (!r) r = CustomUnitType(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -2809,7 +2816,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     r = r && report_error_(b, UnitsDefinitionPrefix_1(b, l + 1));
     r = p && report_error_(b, UnitsDefinitionPrefix_2(b, l + 1)) && r;
     r = p && UnitsDefinitionPrefix_3(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, unitsRecover_parser_);
+    exit_section_(b, l, m, r, p, VyperParser::unitsRecover);
     return r || p;
   }
 
@@ -2863,13 +2870,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // (Identifier ':' StringLiteral) ( ',' Identifier ':' StringLiteral)*
-  private static void UnitsDefinitionPrefix_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "UnitsDefinitionPrefix_3_0")) return;
+  private static boolean UnitsDefinitionPrefix_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnitsDefinitionPrefix_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = UnitsDefinitionPrefix_3_0_0(b, l + 1);
     r = r && UnitsDefinitionPrefix_3_0_1(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // Identifier ':' StringLiteral
@@ -3037,7 +3045,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean ValueType_4_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ValueType_4_3")) return false;
     boolean r;
-    r = DecimalNumber(b);
+    r = DecimalNumber(b, l + 1);
     if (!r) r = consumeToken(b, IDENTIFIER);
     return r;
   }
@@ -3070,7 +3078,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean ValueType_7_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ValueType_7_3")) return false;
     boolean r;
-    r = DecimalNumber(b);
+    r = DecimalNumber(b, l + 1);
     if (!r) r = consumeToken(b, IDENTIFIER);
     return r;
   }
@@ -3079,11 +3087,11 @@ public class VyperParser implements PsiParser, LightPsiParser {
   // Identifier
   public static boolean VarLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VarLiteral")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    if (!nextTokenIs(b, "<variable>", IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _NONE_, VAR_LITERAL, "<variable>");
     r = consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, VAR_LITERAL, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -3096,13 +3104,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // (!<<eof>> SourceUnit) (&INDEQ SourceUnit)*
-  private static void VyperFile_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "VyperFile_0")) return;
+  private static boolean VyperFile_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VyperFile_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = VyperFile_0_0(b, l + 1);
     r = r && VyperFile_0_1(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // !<<eof>> SourceUnit
@@ -3160,7 +3169,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'wei_value'
-  static boolean Wei_value(PsiBuilder b) {
+  static boolean Wei_value(PsiBuilder b, int l) {
     return consumeToken(b, "wei_value");
   }
 
@@ -3346,6 +3355,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   // 17: BINARY(MemberIndexAccess)
   // 18: ATOM(InlineArrayExpression)
   // 19: ATOM(PrimaryExpression)
+  // 20: ATOM(EventLogExpression)
   public static boolean Expression(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "Expression")) return false;
     addVariant(b, "<expression>");
@@ -3359,6 +3369,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!r) r = ClearExpression(b, l + 1);
     if (!r) r = InlineArrayExpression(b, l + 1);
     if (!r) r = PrimaryExpression(b, l + 1);
+    if (!r) r = EventLogExpression(b, l + 1);
     p = r;
     r = r && Expression_0(b, l + 1, g);
     exit_section_(b, l, m, null, r, p, null);
@@ -3376,7 +3387,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
       }
       else if (g < 3 && CallExpression_0(b, l + 1)) {
         r = true;
-        exit_section_(b, l, m, CALL_EXPRESSION, true, true, null);
+        exit_section_(b, l, m, CALL_EXPRESSION, r, true, null);
       }
       else if (g < 6 && EqExpression_0(b, l + 1)) {
         r = Expression(b, l, 6);
@@ -3413,7 +3424,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
       }
       else if (g < 16 && MemberAccessExpression_0(b, l + 1)) {
         r = true;
-        exit_section_(b, l, m, MEMBER_ACCESS_EXPRESSION, true, true, null);
+        exit_section_(b, l, m, MEMBER_ACCESS_EXPRESSION, r, true, null);
       }
       else if (g < 17 && MemberIndexAccess_0(b, l + 1)) {
         r = report_error_(b, Expression(b, l, 17));
@@ -3453,18 +3464,16 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean AssignmentExpression_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AssignmentExpression_0_1")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeTokenSmart(b, ASSIGN);
     if (!r) r = consumeTokenSmart(b, PLUS_ASSIGN);
     if (!r) r = consumeTokenSmart(b, MINUS_ASSIGN);
     if (!r) r = consumeTokenSmart(b, MULT_ASSIGN);
     if (!r) r = consumeTokenSmart(b, DIV_ASSIGN);
     if (!r) r = consumeTokenSmart(b, PERCENT_ASSIGN);
-    exit_section_(b, m, null, r);
     return r;
   }
 
-  // range &INDNONE '(' RangeInterval ')'
+  // range &INDNONE '(' (Expression | RangeInterval ) ')'
   public static boolean RangeExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RangeExpression")) return false;
     if (!nextTokenIsSmart(b, RANGE)) return false;
@@ -3473,7 +3482,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     r = consumeTokenSmart(b, RANGE);
     r = r && RangeExpression_1(b, l + 1);
     r = r && consumeToken(b, LPAREN);
-    r = r && RangeInterval(b, l + 1);
+    r = r && RangeExpression_3(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     exit_section_(b, m, RANGE_EXPRESSION, r);
     return r;
@@ -3486,6 +3495,15 @@ public class VyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // Expression | RangeInterval
+  private static boolean RangeExpression_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "RangeExpression_3")) return false;
+    boolean r;
+    r = Expression(b, l + 1, -1);
+    if (!r) r = RangeInterval(b, l + 1);
     return r;
   }
 
@@ -3657,13 +3675,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
 
   // ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression)
   //                              (',' ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression))*
-  private static void NewExpression_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "NewExpression_3_0")) return;
+  private static boolean NewExpression_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NewExpression_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = NewExpression_3_0_0(b, l + 1);
     r = r && NewExpression_3_0_1(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // (Identifier &INDNONE ':' &INDNONE Expression) | NewExpression
@@ -3783,7 +3802,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "AssertExpression")) return false;
     if (!nextTokenIsSmart(b, ASSERT)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, ASSERT_EXPRESSION, null);
+    Marker m = enter_section_(b, l, _NONE_, ASSERT_EXPRESSION, "<assert expression>");
     r = consumeTokenSmart(b, ASSERT);
     p = r; // pin = 1
     r = r && report_error_(b, AssertExpression_1(b, l + 1));
@@ -3811,13 +3830,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE AssertMessage
-  private static void AssertExpression_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "AssertExpression_3_0")) return;
+  private static boolean AssertExpression_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssertExpression_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = AssertExpression_3_0_0(b, l + 1);
     r = r && AssertMessage(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
   }
 
   // &INDNONE
@@ -3834,10 +3854,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean EqExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EqExpression_0")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeTokenSmart(b, EQ);
     if (!r) r = consumeTokenSmart(b, NEQ);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -3845,12 +3863,10 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean CompExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CompExpression_0")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeTokenSmart(b, LESS);
     if (!r) r = consumeTokenSmart(b, MORE);
     if (!r) r = consumeTokenSmart(b, LESSEQ);
     if (!r) r = consumeTokenSmart(b, MOREEQ);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -3858,10 +3874,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean PlusMinExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PlusMinExpression_0")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeTokenSmart(b, PLUS);
     if (!r) r = consumeTokenSmart(b, MINUS);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -3869,11 +3883,9 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean MultDivExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MultDivExpression_0")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeTokenSmart(b, MULT);
     if (!r) r = consumeTokenSmart(b, DIV);
     if (!r) r = consumeTokenSmart(b, PERCENT);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -3903,12 +3915,10 @@ public class VyperParser implements PsiParser, LightPsiParser {
   private static boolean UnaryExpression_0_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "UnaryExpression_0_0")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeTokenSmart(b, NOT);
     if (!r) r = consumeTokenSmart(b, TILDE);
     if (!r) r = consumeTokenSmart(b, PLUS);
     if (!r) r = consumeTokenSmart(b, MINUS);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -4093,8 +4103,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // VarLiteral
-  //                   |BooleanLiteral
+  // | VarLiteral
+  //                   | BooleanLiteral
   //                   | NumberLiteral
   //                   | HexLiteral
   //                   | StringLiteral
@@ -4104,11 +4114,12 @@ public class VyperParser implements PsiParser, LightPsiParser {
   public static boolean PrimaryExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PrimaryExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, PRIMARY_EXPRESSION, "<primary expression>");
-    r = VarLiteral(b, l + 1);
-    if (!r) r = BooleanLiteral(b);
+    Marker m = enter_section_(b, l, _NONE_, PRIMARY_EXPRESSION, "<blyaaaaaaa>");
+    r = consumeTokenSmart(b, PRIMARYEXPRESSION_0_0);
+    if (!r) r = VarLiteral(b, l + 1);
+    if (!r) r = BooleanLiteral(b, l + 1);
     if (!r) r = NumberLiteral(b, l + 1);
-    if (!r) r = HexLiteral(b);
+    if (!r) r = HexLiteral(b, l + 1);
     if (!r) r = StringLiteral(b, l + 1);
     if (!r) r = Constants(b, l + 1);
     if (!r) r = TYPE(b, l + 1);
@@ -4116,13 +4127,52 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  static final Parser CondStmt_3_1_0_parser_ = (b, l) -> CondStmt_3_1_0(b, l + 1);
-  static final Parser ElseStmt_3_1_0_parser_ = (b, l) -> ElseStmt_3_1_0(b, l + 1);
-  static final Parser ExternalInterfaces_5_0_parser_ = (b, l) -> ExternalInterfaces_5_0(b, l + 1);
-  static final Parser ForStatement_9_1_0_parser_ = (b, l) -> ForStatement_9_1_0(b, l + 1);
-  static final Parser FunBody_1_0_parser_ = (b, l) -> FunBody_1_0(b, l + 1);
-  static final Parser StructBody_1_0_parser_ = (b, l) -> StructBody_1_0(b, l + 1);
-  static final Parser recoverStatement_parser_ = (b, l) -> recoverStatement(b, l + 1);
-  static final Parser structRecover_parser_ = (b, l) -> structRecover(b, l + 1);
-  static final Parser unitsRecover_parser_ = (b, l) -> unitsRecover(b, l + 1);
+  // log &INDNONE Identifier '(' Expression (',' Expression)* ')'
+  public static boolean EventLogExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventLogExpression")) return false;
+    if (!nextTokenIsSmart(b, LOG)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokenSmart(b, LOG);
+    r = r && EventLogExpression_1(b, l + 1);
+    r = r && consumeTokensSmart(b, 0, IDENTIFIER, LPAREN);
+    r = r && Expression(b, l + 1, -1);
+    r = r && EventLogExpression_5(b, l + 1);
+    r = r && consumeToken(b, RPAREN);
+    exit_section_(b, m, EVENT_LOG_EXPRESSION, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean EventLogExpression_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventLogExpression_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (',' Expression)*
+  private static boolean EventLogExpression_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventLogExpression_5")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!EventLogExpression_5_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EventLogExpression_5", c)) break;
+    }
+    return true;
+  }
+
+  // ',' Expression
+  private static boolean EventLogExpression_5_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EventLogExpression_5_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokenSmart(b, COMMA);
+    r = r && Expression(b, l + 1, -1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
 }

@@ -5,6 +5,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiElement
 import com.vyperplugin.psi.VyperTypes.*
+import com.vyperplugin.psi.impl.VyperCallExpressionImpl
 import com.vyperplugin.references.*
 
 abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperVarLiteral {
@@ -18,15 +19,24 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
     override fun getReference(): VyperReference {
         val parent = node.psi.parent
         val grandparent = parent.parent
+//        println(grandparent)
         return when {
-            parent is VyperMemberAccessExpression && parent.varLiteral == node.psi -> VyperMemberAccessReference(
-                this,
-                parent
-            )
+            grandparent is VyperCallExpressionImpl && parent is VyperMemberAccessExpression -> {
+                VyperMemberAccessReference(
+                    this, parent
+                )
+            }
+            parent is VyperMemberAccessExpression && parent.varLiteral == node.psi -> {
+                VyperMemberAccessReference(
+                    this,
+                    parent
+                )
+            }
             //Call expr - > MemberAccess -> VarLitral
             //Call expr -> PrimaryExpr -> VarLiteral
-            grandparent is VyperCallElement -> VyperCallReference(grandparent)
-            else -> VyperVarLiteralReference(this)
+            else -> {
+                VyperVarLiteralReference(this)
+            }
         }
 //        if (parent is VyperCallElement) return VyperCallReference(parent)
 //        if (grandparent is VyperCallElement) return VyperCallReference(grandparent)
@@ -66,9 +76,7 @@ abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node)
     override val referenceName: String
         get() = referenceNameElement.text
 
-    override fun getReference(): VyperReference? {
-        return VyperStructTypeReference(this)
-    }
+
 }
 
 abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperFunctionDefinition {

@@ -1,9 +1,14 @@
 package com.vyperplugin.references
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFileFactory
+import com.intellij.psi.PsiManager
+import com.intellij.psi.search.FilenameIndex
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.containers.toMutableSmartList
 import com.vyperplugin.psi.*
 import com.vyperplugin.psi.VyperTypes.VAR_LITERAL
+import java.io.File
 
 
 object VyperResolver {
@@ -14,6 +19,17 @@ object VyperResolver {
     fun lexicalDeclarations(place: PsiElement, stop: (PsiElement) -> Boolean = { false }): List<VyperNamedElement> {
 
         return lexicalDeclRec(place, stop).distinct()
+    }
+
+    private fun getImportDecls(element: PsiElement): List<PsiElement> {
+        val newList = element.file.children.filterIsInstance<VyperImportPath>().map { it ->
+            val localPath = it.text
+//            val absPath = place.file.project.basePath + localPath.replace('.', '/') + ".vy"
+            val kek = FilenameIndex.getVirtualFilesByName(localPath.drop(localPath.indexOfLast { it == '.' } + 1) + ".vy", GlobalSearchScope.projectScope(it.project)).first()
+            val psiFile = PsiManager.getInstance(it.project).findFile(kek)
+            psiFile!!.children.filter { a -> a is VyperUserDefinedConstantsExpression || a is VyperFunctionDefinition  }
+        }.reduce { acc, psiElements -> acc.plus(psiElements) }
+        return newList
     }
 
     private fun lexicalDeclRec(place: PsiElement, stop: (PsiElement) -> Boolean): List<VyperNamedElement> {
@@ -33,7 +49,21 @@ object VyperResolver {
 
             is VyperLocalVariableDeclaration -> listOf(scope)
 
-            is VyperStatement -> lexicalDeclarations(scope.firstChild, place)
+            is VyperStatement -> {
+                val temp = mutableListOf<PsiElement>().apply {
+                    var start = scope
+                    while (start.prevSibling != null) {
+                        this.add(start.prevSibling)
+                        start = start.prevSibling
+                    }
+                }
+                temp.filterIsInstance<VyperStatement>().toList()
+                    .fold(emptyList()) { acc, elem ->
+                        acc.plus(
+                            lexicalDeclarations(elem.firstChild, place)
+                        )
+                    }
+            }
 
             is VyperFile -> scope.getStatements().filter { it !is VyperFunctionDefinition }
                 .flatMap { lexicalDeclarations(it, place) }
@@ -120,15 +150,20 @@ object VyperResolver {
         id: VyperVarLiteral
     ): List<VyperNamedElement> {
 //
-        return resolveSelfAccessVarLiteralRec(element)
+        return resolveSelfAccessVarLiteralRec(element).plus(resolveSelfAccessFunction(element))
             .filter { it.name == id.name }
 
     }
 
     //
+    fun resolveSelfAccessFunction(element: VyperMemberAccessExpression): List<VyperNamedElement> {
+        return (element.file as VyperFile).getStatements().filter { it is VyperFunctionDefinition }
+            .map { it as VyperNamedElement }
+    }
+
     fun resolveSelfAccessVarLiteralRec(element: VyperMemberAccessExpression): List<VyperNamedElement> {
         return (element.file as VyperFile).getStatements().filter { it is VyperStateVariableDeclaration }
-            .map { it as VyperStateVariableDeclaration }
+            .map { it as VyperNamedElement }
     }
 }
 

@@ -1,47 +1,43 @@
 # Blind Auction # Adapted to Vyper from [Solidity by Example](https://github.com/ethereum/solidity/blob/develop/docs/solidity-by-example.rst#blind-auction-1)
-import f.ff.fff as FF
-
 
 struct Bid:
   blindedBid: bytes32
-  deposit: wei_value
+  deposit: uint256
 
-
-contract C:
-    def dfd():constant
 # Note: because Vyper does not allow for dynamic arrays, we have limited the
 # number of bids that can be placed by one address to 128 in this example
 MAX_BIDS: constant(int128) = 128
 
-
 # Event for logging that auction has ended
-AuctionEnded: event({_highestBidder: address, _highestBid: wei_value})
+event AuctionEnded:
+    highestBidder: address
+    highestBid: uint256
 
 # Auction parameters
 beneficiary: public(address)
-biddingEnd: public(timestamp)
-revealEnd: public(timestamp)
+biddingEnd: public(uint256)
+revealEnd: public(uint256)
 
 # Set to true at the end of auction, disallowing any new bids
 ended: public(bool)
 
 # Final auction state
-highestBid: public(wei_value)
+highestBid: public(uint256)
 highestBidder: public(address)
 
 # State of the bids
-bids: map(address, Bid[128])
-bidCounts: map(address, int128)
+bids: HashMap[address, Bid[128]]
+bidCounts: HashMap[address, int128]
 
 # Allowed withdrawals of previous bids
-pendingReturns: map(address, wei_value)
+pendingReturns: HashMap[address, uint256]
 
 
 # Create a blinded auction with `_biddingTime` seconds bidding time and
 # `_revealTime` seconds reveal time on behalf of the beneficiary address
 # `_beneficiary`.
-@public
-def __init__(_beneficiary: address, _biddingTime: timedelta, _revealTime: timedelta):
+@external
+def __init__(_beneficiary: address, _biddingTime: uint256, _revealTime: uint256):
     self.beneficiary = _beneficiary
     self.biddingEnd = block.timestamp + _biddingTime
     self.revealEnd = self.biddingEnd + _revealTime
@@ -49,7 +45,7 @@ def __init__(_beneficiary: address, _biddingTime: timedelta, _revealTime: timede
 
 # Place a blinded bid with:
 #
-# _blindedBid = sha(concat(
+# _blindedBid = keccak256(concat(
 #       convert(value, bytes32),
 #       convert(fake, bytes32),
 #       secret)
@@ -60,7 +56,7 @@ def __init__(_beneficiary: address, _biddingTime: timedelta, _revealTime: timede
 # at least "value" and "fake" is not true. Setting "fake" to true and sending
 # not the exact amount are ways to hide the real bid but still make the
 # required deposit. The same address can place multiple bids.
-@public
+@external
 @payable
 def bid(_blindedBid: bytes32):
     # Check if bidding period is still open
@@ -74,16 +70,15 @@ def bid(_blindedBid: bytes32):
     self.bids[msg.sender][numBids] = Bid({
         blindedBid: _blindedBid,
         deposit: msg.value
-
         })
     self.bidCounts[msg.sender] += 1
 
 
 # Returns a boolean value, `True` if bid placed successfully, `False` otherwise.
-@private
-def placeBid(bidder: address, value: wei_value) -> bool:
+@internal
+def placeBid(bidder: address, _value: uint256) -> bool:
     # If bid is less than highest bid, bid fails
-    if (value <= self.highestBid):
+    if (_value <= self.highestBid):
         return False
 
     # Refund the previously highest bidder
@@ -91,7 +86,7 @@ def placeBid(bidder: address, value: wei_value) -> bool:
         self.pendingReturns[self.highestBidder] += self.highestBid
 
     # Place bid successfully and update auction state
-    self.highestBid = value
+    self.highestBid = _value
     self.highestBidder = bidder
 
     return True
@@ -99,8 +94,8 @@ def placeBid(bidder: address, value: wei_value) -> bool:
 
 # Reveal your blinded bids. You will get a refund for all correctly blinded
 # invalid bids and for all bids except for the totally highest.
-@public
-def reveal(_numBids: int128, _values: wei_value[128], _fakes: bool[128], _secrets: bytes32[128]):
+@external
+def reveal(_numBids: int128, _values: uint256[128], _fakes: bool[128], _secrets: bytes32[128]):
     # Check that bidding period is over
     assert block.timestamp > self.biddingEnd
 
@@ -111,8 +106,8 @@ def reveal(_numBids: int128, _values: wei_value[128], _fakes: bool[128], _secret
     assert _numBids == self.bidCounts[msg.sender]
 
     # Calculate refund for sender
-    refund: wei_value
-    for i in range(self.biddingEnd):
+    refund: uint256 = 0
+    for i in range(MAX_BIDS):
         # Note that loop may break sooner than 128 iterations if i >= _numBids
         if (i >= _numBids):
             break
@@ -121,10 +116,10 @@ def reveal(_numBids: int128, _values: wei_value[128], _fakes: bool[128], _secret
         bidToCheck: Bid = (self.bids[msg.sender])[i]
 
         # Check against encoded packet
-        value: wei_value = _values[i]
+        value: uint256 = _values[i]
         fake: bool = _fakes[i]
         secret: bytes32 = _secrets[i]
-        blindedBid: bytes32 = sha3(concat(
+        blindedBid: bytes32 = keccak256(concat(
             convert(value, bytes32),
             convert(fake, bytes32),
             secret
@@ -135,8 +130,6 @@ def reveal(_numBids: int128, _values: wei_value[128], _fakes: bool[128], _secret
         if (blindedBid != bidToCheck.blindedBid):
             assert 1 == 0
             continue
-        else:
-             pass
 
         # Add deposit to refund if bid was indeed revealed
         refund += bidToCheck.deposit
@@ -145,7 +138,7 @@ def reveal(_numBids: int128, _values: wei_value[128], _fakes: bool[128], _secret
                 refund -= value
 
         # Make it impossible for the sender to re-claim the same deposit
-        zeroBytes32: bytes32
+        zeroBytes32: bytes32 = EMPTY_BYTES32
         bidToCheck.blindedBid = zeroBytes32
 
     # Send refund if non-zero
@@ -154,10 +147,10 @@ def reveal(_numBids: int128, _values: wei_value[128], _fakes: bool[128], _secret
 
 
 # Withdraw a bid that was overbid.
-@public
+@external
 def withdraw():
     # Check that there is an allowed pending return.
-    pendingAmount: wei_value = self.pendingReturns[msg.sender]
+    pendingAmount: uint256 = self.pendingReturns[msg.sender]
     if (pendingAmount > 0):
         # If so, set pending returns to zero to prevent recipient from calling
         # this function again as part of the receiving call before `transfer`
@@ -170,7 +163,7 @@ def withdraw():
 
 
 # End the auction and send the highest bid to the beneficiary.
-@public
+@external
 def auctionEnd():
     # Check that reveal end has passed
     assert block.timestamp > self.revealEnd
@@ -179,7 +172,7 @@ def auctionEnd():
     assert not self.ended
 
     # Log auction ending and set flag
-    log.AuctionEnded(self.highestBidder, self.highestBid)
+    log AuctionEnded(self.highestBidder, self.highestBid)
     self.ended = True
 
     # Transfer funds to beneficiary

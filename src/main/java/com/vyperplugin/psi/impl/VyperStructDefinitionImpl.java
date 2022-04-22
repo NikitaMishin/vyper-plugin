@@ -1,18 +1,15 @@
 // This is a generated file. Not intended for manual editing.
 package com.vyperplugin.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import java.util.List;
+import org.jetbrains.annotations.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.vyperplugin.psi.VyperBadStatement;
-import com.vyperplugin.psi.VyperLocalVariableDefinition;
-import com.vyperplugin.psi.VyperStructDefinition;
-import com.vyperplugin.psi.VyperVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import static com.vyperplugin.psi.VyperTypes.IDENTIFIER;
+import com.intellij.psi.util.PsiTreeUtil;
+import static com.vyperplugin.psi.VyperTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.vyperplugin.psi.*;
 
 public class VyperStructDefinitionImpl extends ASTWrapperPsiElement implements VyperStructDefinition {
 
@@ -24,6 +21,7 @@ public class VyperStructDefinitionImpl extends ASTWrapperPsiElement implements V
     visitor.visitStructDefinition(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof VyperVisitor) accept((VyperVisitor)visitor);
     else super.accept(visitor);

@@ -83,6 +83,7 @@ tokens = [
     private='private'
     nonreentrant='nonreentrant'
     payable='payable'
+    external='external'
     modifying='modifying'
     event='event'
     range = 'range'
@@ -109,6 +110,7 @@ external INDLT ::= indLt
 external INDGT ::= indGt
 external INDNONE ::= indNone
 external OPTIND ::= indOpt
+
 
 
 
@@ -209,12 +211,12 @@ private recoverStruct ::= !(&INDLT | &INDEQ)
 
 //ok
 //Events must all come before global declarations and function definitions
-EventDeclaration ::= Identifier &INDNONE ':' &INDNONE event &INDNONE '(' '{'   EventProperty? '}' ')'  {
+EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProperty?) | (&INDNONE pass))  {
 pin=5
 }
 
 EventProperty ::= Identifier ':'    (IndexedData | TYPE)
-                (',' Identifier ':' (IndexedData |TYPE))*
+                (Identifier ':' (IndexedData |TYPE))*
 
 IndexedData ::= IndexedType '(' TYPE ')'
 
@@ -268,7 +270,7 @@ FunctionDefinition ::=
 
 //FunctionModifier ::= (&INDEQ FunctionModifierOptional)* (&INDEQ FunctionModifierMandatory) (&INDEQ FunctionModifierOptional)*
 //private FunctionModifierMandatory ::= DECORATOR ((&INDNONE public) | (&INDNONE private)) {pin = 1}
-FunctionModifier ::=  (DECORATOR (&INDNONE (public | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))))
+FunctionModifier ::=  (DECORATOR (&INDNONE (public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))))
                       {pin = 1}
 
 UNIQUE_KEY ::=  stringLiteralSingle | stringLiteralDouble
@@ -354,6 +356,9 @@ Expression ::=
   | MemberIndexAccess
   | InlineArrayExpression
   | PrimaryExpression
+  | EventLogExpression
+
+EventLogExpression ::= log &INDNONE Identifier '(' Expression (',' Expression)* ')'
 
 
 //self function call?
@@ -363,7 +368,7 @@ private RangeInterval ::= PrimaryExpression ',' PrimaryExpression ',' PrimaryExp
                          | PrimaryExpression
 
 
-RangeExpression ::= range &INDNONE '(' RangeInterval ')'
+RangeExpression ::= range &INDNONE '(' (Expression | RangeInterval ) ')'
 
 
 //SelfAccessExpression ::= self (&INDNONE '.') (&INDNONE Expression)
@@ -398,7 +403,9 @@ FunctionCallExpression ::= (Identifier &INDNONE '(' FunctionCallArguments? ')') 
 
 
 //left recursion?
-MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral)
+MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral) {
+    name = "member access"
+}
 MemberIndexAccess ::=  Expression &INDNONE '.' Expression &INDNONE '[' Expression']' {extends=Expression}
 //recover?
 IndexAccessExpression ::= Expression &INDNONE '[' Expression']'
@@ -420,7 +427,10 @@ MultDivExpression ::= Expression ('*' | '/' | '%') Expression
 ExponentExpression ::= Expression '**' Expression
 
 //multistring??
-AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {pin = 1}
+AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {
+    pin = 1
+    name = "assert expression"
+}
 private AssertMessage ::= ',' (stringLiteralDouble| stringLiteralSingle | MultiLineString)
 
 FunctionCallArguments ::= Expression? ( &INDNONE ',' Expression )*
@@ -428,17 +438,25 @@ FunctionCallArguments ::= Expression? ( &INDNONE ',' Expression )*
 
 
 
-PrimaryExpression ::= VarLiteral
-                  |BooleanLiteral
+PrimaryExpression ::=
+                  | VarLiteral
+                  | BooleanLiteral
                   | NumberLiteral
                   | HexLiteral
                   | StringLiteral
                   | Constants
                   //type??
                   | TYPE
+                  {
+                    name = "blyaaaaaaa"
+                  }
 
 VarLiteral ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
-                           mixin = "com.vyperplugin.psi.VyperVarLiteralMixin"}
+                           mixin = "com.vyperplugin.psi.VyperVarLiteralMixin"
+                           name = "variable"
+                           }
+
+//BuiltIn ::= 'concat' | 'sha3'
 
 
 
@@ -465,7 +483,9 @@ ListType ::= (UnitType| ValueType|StructType) &INDNONE '[' (DecimalNumber | Iden
 StructType ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
                                                      mixin = "com.vyperplugin.psi.VyperStructTypeMixin"}
 
-MapType ::= map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')' {
+MapType ::= (map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')') |
+ (HashMap &INDNONE '[' (ValueType|UnitType) ',' (ReferenceType |  UnitType|ValueType| StructType  ) ']')
+ {
 pin=1
 }
 

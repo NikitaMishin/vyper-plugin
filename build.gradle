@@ -1,11 +1,13 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.1.6'
+    id 'org.jetbrains.intellij' version '1.5.2'
     id 'org.jetbrains.kotlin.jvm' version '1.5.31'
 }
 
 
 repositories {
+    maven { url "https://www.jetbrains.com/intellij-repository/snapshots" }
+    maven { url "https://www.jetbrains.com/intellij-repository/releases" }
     mavenCentral()
 }
 
@@ -14,11 +16,11 @@ buildSearchableOptions {
 }
 
 group 'com.vyperplugin'
-version '1.1-SNAPSHOT'
+version '2.0'
 
 intellij {
-    version = '2021.3'
     plugins = ['com.intellij.java']
+    version = "LATEST-EAP-SNAPSHOT"
 }
 
 dependencies {
@@ -27,7 +29,7 @@ dependencies {
     implementation group: 'com.github.docker-java', name: 'docker-java', version: '3.2.12'
 
     // https://mvnrepository.com/artifact/com.github.docker-java/docker-java-transport-httpclient5
-    implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.2.12'
+    implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.2.13'
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.5.31'
 
@@ -50,9 +52,7 @@ configurations {
 }
 
 patchPluginXml {
-    changeNotes = """
-      Add change notes here.<br/>
-      <em>most HTML tags may be used</em>"""
+    sinceBuild = '172'
 }
 
 compileKotlin {

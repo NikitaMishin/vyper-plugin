@@ -1,9 +1,9 @@
 // This is a generated file. Not intended for manual editing.
 package com.vyperplugin.psi;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.PsiElement;
+import com.intellij.lang.ASTNode;
 import com.vyperplugin.psi.impl.*;
 
 public interface VyperTypes {
@@ -19,6 +19,7 @@ public interface VyperTypes {
   IElementType EMIT_STATEMENT = new VyperElementType("EMIT_STATEMENT");
   IElementType EQ_EXPRESSION = new VyperElementType("EQ_EXPRESSION");
   IElementType EVENT_DECLARATION = new VyperElementType("EVENT_DECLARATION");
+  IElementType EVENT_LOG_EXPRESSION = new VyperElementType("EVENT_LOG_EXPRESSION");
   IElementType EVENT_PROPERTY = new VyperElementType("EVENT_PROPERTY");
   IElementType EXPONENT_EXPRESSION = new VyperElementType("EXPONENT_EXPRESSION");
   IElementType EXPRESSION = new VyperElementType("EXPRESSION");
@@ -95,10 +96,12 @@ public interface VyperTypes {
   IElementType EQ = new VyperTokenType("==");
   IElementType EVENT = new VyperTokenType("event");
   IElementType EXPONENT = new VyperTokenType("**");
+  IElementType EXTERNAL = new VyperTokenType("external");
   IElementType FIXED = new VyperTokenType("fixed");
   IElementType FIXEDNUMBER = new VyperTokenType("fixedNumber");
   IElementType FOR = new VyperTokenType("for");
   IElementType FROM = new VyperTokenType("from");
+  IElementType HASHMAP = new VyperTokenType("HashMap");
   IElementType HEXLITERAL = new VyperTokenType("hexLiteral");
   IElementType HEXNUMBER = new VyperTokenType("hexNumber");
   IElementType IDENTIFIER = new VyperTokenType("Identifier");
@@ -107,10 +110,12 @@ public interface VyperTypes {
   IElementType IMPORT = new VyperTokenType("import");
   IElementType IN = new VyperTokenType("in");
   IElementType INT128 = new VyperTokenType("int128");
+  IElementType INTERNAL = new VyperTokenType("internal");
   IElementType LBRACE = new VyperTokenType("{");
   IElementType LBRACKET = new VyperTokenType("[");
   IElementType LESS = new VyperTokenType("<");
   IElementType LESSEQ = new VyperTokenType("<=");
+  IElementType LOG = new VyperTokenType("log");
   IElementType LPAREN = new VyperTokenType("(");
   IElementType LSHIFT = new VyperTokenType("<<");
   IElementType MAP = new VyperTokenType("map");
@@ -137,8 +142,10 @@ public interface VyperTypes {
   IElementType PERCENT_ASSIGN = new VyperTokenType("%=");
   IElementType PLUS = new VyperTokenType("+");
   IElementType PLUS_ASSIGN = new VyperTokenType("+=");
+  IElementType PRIMARYEXPRESSION_0_0 = new VyperTokenType("PrimaryExpression_0_0");
   IElementType PRIVATE = new VyperTokenType("private");
   IElementType PUBLIC = new VyperTokenType("public");
+  IElementType PURE = new VyperTokenType("pure");
   IElementType QUESTION = new VyperTokenType("?");
   IElementType RAISE = new VyperTokenType("raise");
   IElementType RANGE = new VyperTokenType("range");
@@ -160,6 +167,7 @@ public interface VyperTypes {
   IElementType TYPENAME = new VyperTokenType("TypeName");
   IElementType UINT256 = new VyperTokenType("uint256");
   IElementType UNITS = new VyperTokenType("units");
+  IElementType VIEW = new VyperTokenType("view");
   IElementType ZERO_ADDRESS = new VyperTokenType("ZERO_ADDRESS");
 
   class Factory {
@@ -197,6 +205,9 @@ public interface VyperTypes {
       }
       else if (type == EVENT_DECLARATION) {
         return new VyperEventDeclarationImpl(node);
+      }
+      else if (type == EVENT_LOG_EXPRESSION) {
+        return new VyperEventLogExpressionImpl(node);
       }
       else if (type == EVENT_PROPERTY) {
         return new VyperEventPropertyImpl(node);
