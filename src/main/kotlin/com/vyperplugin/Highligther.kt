@@ -59,7 +59,7 @@ class VyperHighlighter : SyntaxHighlighterBase() {
             IMPORT, FROM, AS, CONTRACT, IMPLEMENTS,
             STRUCT, DEF, UNITS,
             IF, ELSE, FOR, BREAK, CONTINUE, RAISE, RETURN,
-            MAP, ELIF, EVENT, PASS, ASSERT, CLEAR, RANGE
+            MAP, ELIF, EVENT, PASS, ASSERT, CLEAR, RANGE, LOG
         )
 
         private fun boolLiteral() = setOf<IElementType>(BOOLEANLITERAL)

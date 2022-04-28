@@ -65,10 +65,7 @@ object VyperWindow {
      */
     private fun createTab(toolWindow: ToolWindow, tabName: String) {
         val textPane = JTextPane()
-        //TODO Add dependency between IDE settings and output settings
-        textPane.background = Color(44, 44, 44)
         textPane.font = Font(Font.DIALOG, 0, textPane.font.size)
-        textPane.selectedTextColor = Color.WHITE
         textPane.name = NAME_TAB_TEXT_PANE
         textPane.isEditable = false
         val scrollPane = JBScrollPane(textPane)
