@@ -1,14 +1,9 @@
 package com.vyperplugin.references
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.containers.toMutableSmartList
 import com.vyperplugin.psi.*
 import com.vyperplugin.psi.VyperTypes.VAR_LITERAL
-import java.io.File
 
 
 object VyperResolver {
@@ -21,16 +16,16 @@ object VyperResolver {
         return lexicalDeclRec(place, stop).distinct()
     }
 
-    private fun getImportDecls(element: PsiElement): List<PsiElement> {
-        val newList = element.file.children.filterIsInstance<VyperImportPath>().map { it ->
-            val localPath = it.text
-//            val absPath = place.file.project.basePath + localPath.replace('.', '/') + ".vy"
-            val kek = FilenameIndex.getVirtualFilesByName(localPath.drop(localPath.indexOfLast { it == '.' } + 1) + ".vy", GlobalSearchScope.projectScope(it.project)).first()
-            val psiFile = PsiManager.getInstance(it.project).findFile(kek)
-            psiFile!!.children.filter { a -> a is VyperUserDefinedConstantsExpression || a is VyperFunctionDefinition  }
-        }.reduce { acc, psiElements -> acc.plus(psiElements) }
-        return newList
-    }
+//    private fun getImportDecls(element: PsiElement): List<PsiElement> {
+//        val newList = element.file.children.filterIsInstance<VyperImportPath>().map { it ->
+//            val localPath = it.text
+////            val absPath = place.file.project.basePath + localPath.replace('.', '/') + ".vy"
+//            val kek = FilenameIndex.getVirtualFilesByName(localPath.drop(localPath.indexOfLast { it == '.' } + 1) + ".vy", GlobalSearchScope.projectScope(it.project)).first()
+//            val psiFile = PsiManager.getInstance(it.project).findFile(kek)
+//            psiFile!!.children.filter { a -> a is VyperUserDefinedConstantsExpression || a is VyperFunctionDefinition  }
+//        }.reduce { acc, psiElements -> acc.plus(psiElements) }
+//        return newList
+//    }
 
     private fun lexicalDeclRec(place: PsiElement, stop: (PsiElement) -> Boolean): List<VyperNamedElement> {
         val parents = place.ancestors
@@ -87,12 +82,12 @@ object VyperResolver {
     }
 
 
-    fun resolveFunction(element: VyperCallExpression, skipThis: Boolean = false): Collection<FunctionResolveResult> {
-        return resolveFunRec(element, skipThis).filter { it.name == element.referenceName }
+    fun resolveFunction(element: VyperCallExpression): Collection<FunctionResolveResult> {
+        return resolveFunRec(element).filter { it.name == element.referenceName }
             .map { FunctionResolveResult(it) }
     }
 
-    private fun resolveFunRec(element: VyperCallExpression, skipThis: Boolean = false): List<VyperFunctionDefinition> {
+    private fun resolveFunRec(element: VyperCallExpression): List<VyperFunctionDefinition> {
         val res = mutableListOf<VyperFunctionDefinition>()
         val ref: VyperElement = element
         return when {
@@ -132,15 +127,6 @@ object VyperResolver {
         }
 
         return emptyList()
-    }
-
-    private fun <T> Sequence<T>.takeWhileInclusive(pred: (T) -> Boolean): Sequence<T> {
-        var shouldContinue = true
-        return takeWhile {
-            val result = shouldContinue
-            shouldContinue = pred(it)
-            result
-        }
     }
 
     //now only for self.var

@@ -15,8 +15,8 @@ class VyperCompilerDocker(
     var bindDir: String, var fullPathToFile: String,
     var args: Array<String> = arrayOf()
 ) : AbstractToolDocker() {
-    override var IMAGE = "murmulla/vyper_and_vyper_run"
-    override var IMAGE_TAG = "version2"
+    override var image = "murmulla/vyper_and_vyper_run"
+    override var imageTag = "version2"
     private val toolName = "vyper"
 
     inner class VyperAdapterLogs : ResultCallback.Adapter<Frame>() {
@@ -43,7 +43,7 @@ class VyperCompilerDocker(
             .withBinds(Bind(bindDir, Volume(dockerBindDir)))
 
         val creation = pluginDockerClient
-            .createContainerCmd("$IMAGE:$IMAGE_TAG")
+            .createContainerCmd("$image:$imageTag")
             .withHostConfig(hostConfig)
             .withCmd(*completeCommand)
             .withEntrypoint(toolName)
@@ -75,7 +75,7 @@ class VyperCompilerDocker(
                 fullPathToFile,
                 StatusDocker.SUCCESS
             )
-            logsError.isEmpty() && logsOut.isEmpty() -> ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
+            logsError.isEmpty() -> ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
             else -> ToolResult("", logsError.joinToString(separator = "\n"), fullPathToFile, StatusDocker.FAILED)
         }
     }

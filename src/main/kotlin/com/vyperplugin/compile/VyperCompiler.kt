@@ -1,6 +1,5 @@
 package com.vyperplugin.compile
 
-import com.intellij.notification.NotificationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
@@ -33,10 +32,6 @@ object VyperCompiler {
 
     fun addListener(listener: PropertyChangeListener) {
         propertyChangeSupport.addPropertyChangeListener(listener)
-    }
-
-    fun removeListener(listener: PropertyChangeListener) {
-        propertyChangeSupport.removePropertyChangeListener(listener)
     }
 
     private const val COMPILATION_FAILED = "Compilation failed"
@@ -140,11 +135,11 @@ object VyperCompiler {
 
     val regBaseError =
         Regex(
-            """vyper\.exceptions\.\w+Exception:\s+(?:line\s+(\d+)).*$""",
+            """vyper\.exceptions\.\w+Exception:\s+line\s+(\d+).*$""",
             setOf(RegexOption.MULTILINE)
         )
     val regError =
-        Regex("""File.+,\s+line\s+(\d+)\s[^\>]*""", setOf(RegexOption.MULTILINE))
+        Regex("""File.+,\s+line\s+(\d+)\s[^>]*""", setOf(RegexOption.MULTILINE))
 
 
     private fun parseCompilerOutput(stderr: String): List<CompilerError> {

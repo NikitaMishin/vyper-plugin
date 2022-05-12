@@ -34,7 +34,7 @@ object MythXAnalyzer {
 
                 if (submitResponse.first!!.status == "ERROR") {
                     notify(
-                        project, fileName, "<html>Some errors in submitted code, " +
+                        project, "<html>Some errors in submitted code, " +
                                 "please check " + "correctness of submitted code for $fileName</html>",
                         VyperMessageProcessor.NotificationStatusVyper.ERROR
                     )
@@ -49,7 +49,7 @@ object MythXAnalyzer {
 
                     if (status.first!!.status == "Error") {
                         notify(
-                            project, fileName, "<html>Some errors in submitted code, " +
+                            project, "<html>Some errors in submitted code, " +
                                     "please check " + "correctness of submitted code for $fileName</html>",
                             VyperMessageProcessor.NotificationStatusVyper.ERROR
                         )
@@ -65,7 +65,7 @@ object MythXAnalyzer {
                 }
             } catch (e: Exception) {
                 notify(
-                    project, fileName, "<html>Some errors occurred, please check your" +
+                    project, "<html>Some errors occurred, please check your" +
                             " password with username or correctness of submitted code in file $fileName</html>",
                     VyperMessageProcessor.NotificationStatusVyper.ERROR
                 )
@@ -106,7 +106,7 @@ object MythXAnalyzer {
         if (isIssueFound) {
             // notify user
             notify(
-                project, fileName, "<html>$fileName contains vulnerabilities. " +
+                project, "<html>$fileName contains vulnerabilities. " +
                         "See toolWindow for details </html>",
                 VyperMessageProcessor.NotificationStatusVyper.WARNING
             )
@@ -115,7 +115,7 @@ object MythXAnalyzer {
 
         } else {
             notify(
-                project, fileName, "<html>$fileName doesn't contain vulnerabilities </html>",
+                project, "<html>$fileName doesn't contain vulnerabilities </html>",
                 VyperMessageProcessor.NotificationStatusVyper.INFO
             )
         }
@@ -123,7 +123,7 @@ object MythXAnalyzer {
 
 
     private fun notify(
-        project: Project, fileName: String, html: String,
+        project: Project, html: String,
         status: VyperMessageProcessor.NotificationStatusVyper
     ) {
         VyperMessageProcessor.notificateInBalloon(

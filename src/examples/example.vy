@@ -120,7 +120,7 @@ def reveal(_numBids: int128, _values: uint256[128], _fakes: bool[128], _secrets:
         fake: bool = _fakes[i]
         secret: bytes32 = _secrets[i]
         blindedBid: bytes32 = keccak256(concat(
-            convert(value, bytes32),
+            convert(,value, bytes32),
             convert(fake, bytes32),
             secret
         ))
