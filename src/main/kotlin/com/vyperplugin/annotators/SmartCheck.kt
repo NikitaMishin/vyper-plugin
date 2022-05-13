@@ -4,6 +4,7 @@ package com.vyperplugin.annotators
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
+import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
@@ -48,7 +49,7 @@ class SmartCheckAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         if (element is VyperFile) {
             for (message in SmartCheckOutput.messages) {
-                holder.createWeakWarningAnnotation(message.range, message.message)
+                holder.newAnnotation(HighlightSeverity.WEAK_WARNING, message.message)
             }
             SmartCheckOutput.messages = mutableListOf()
         }

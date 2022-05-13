@@ -1,13 +1,11 @@
 package com.vyperplugin.psi
 
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.AbstractProjectComponent
 import com.intellij.openapi.project.Project
 import com.vyperplugin.annotators.VyperCompilerListener
 import com.vyperplugin.annotators.VyperSmartCheckListener
 
-@SuppressWarnings("Deprecated")
-class VyperInternalTypeFactory(project: Project) : AbstractProjectComponent(project) {
+class VyperInternalTypeFactory(project: Project) {
 
     private val psiFactory: VyperPsiFactory = VyperPsiFactory(project)
 

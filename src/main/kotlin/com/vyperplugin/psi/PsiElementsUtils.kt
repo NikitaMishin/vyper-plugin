@@ -16,17 +16,14 @@ fun PsiElement.rangeRelativeTo(ancestor: PsiElement): TextRange {
     return textRange.shiftRight(-ancestor.textRange.startOffset)
 }
 
-val PsiElement.parentRelativeRange: TextRange
-    get() = rangeRelativeTo(parent)
-
 inline fun <reified T : PsiElement> PsiElement.childOfType(strict: Boolean = true): T? =
     PsiTreeUtil.findChildOfType(this, T::class.java, strict)
 
 fun findLastChildByType(type: IElementType, node: ASTNode): ASTNode? {
     var child = node.lastChildNode
     while (child != null) {
-        val node_ = child
-        if (node_ != null && node_.elementType == type) return child
+        val astNode = child
+        if (astNode.elementType == type) return child
         child = child.treePrev
     }
     return null

@@ -2,6 +2,7 @@ package com.vyperplugin.annotators
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
+import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.vyperplugin.psi.VyperFile
 import com.vyperplugin.psi.VyperFunctionDefinition
@@ -22,8 +23,8 @@ class VyperDeclarationsOrderAnnotator : Annotator {
                 when (dec) {
 
                     is VyperFunctionDefinition -> {
-                        holder.createErrorAnnotation(
-                            element, "Global variables must all come " +
+                        holder.newAnnotation(
+                            HighlightSeverity.ERROR, "Global variables must all come " +
                                     "before function definitions"
                         )
                         break@loop

@@ -33,7 +33,7 @@ abstract class VyperReferenceBase<T : VyperReferenceElement>(element: T) : PsiPo
 //        return element
 //    }
 
-    override fun resolve(): VyperElement? = PsiPolyVariantReferenceBase@ super.resolve() as VyperElement?
+    override fun resolve(): VyperElement? = super.resolve() as VyperElement?
 
 
 //    protected open fun doRename(identifier: PsiElement, newName: String) {
