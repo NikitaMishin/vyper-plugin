@@ -31,7 +31,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.github.docker-java/docker-java-transport-httpclient5
     implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.2.13'
 
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.5.31'
 
     // https://mvnrepository.com/artifact/com.github.kittinunf.fuel/fuel-coroutines
     implementation group: 'com.github.kittinunf.fuel', name: 'fuel-coroutines', version: '2.3.1'
@@ -52,7 +51,7 @@ configurations {
 }
 
 patchPluginXml {
-    sinceBuild = '172'
+    sinceBuild = '211'
 }
 
 compileKotlin {

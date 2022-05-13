@@ -3,6 +3,7 @@
     <name>Vyper</name>
     <version>2.1.2</version>
     <vendor email="https://github.com/NikitaMishin/vyper-plugin" url="https://github.com/NikitaMishin/vyper-plugin">VyperPluginSupport</vendor>
+    <idea-version since-build="211"/>
 
     <description>
     <![CDATA[
