@@ -3,7 +3,6 @@ package com.vyperplugin.actions
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -31,9 +30,9 @@ class SmartCheckAnalyzeAction : VyperAction() {
         }
 
         //task for analyzer
-        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "analyzing with smartCheck...") {
+        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Analyzing with smartCheck...") {
             override fun run(indicator: ProgressIndicator) {
-                SmartCheckAnalyzer.smartCheckAnalyze(files, project, ModuleManager.getInstance(project).modules.first())
+                SmartCheckAnalyzer.smartCheckAnalyze(files, project)
             }
         })
 

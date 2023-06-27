@@ -58,7 +58,7 @@ object VyperStubGenerator {
 
             val model = ModuleRootManager.getInstance(module).modifiableModel
 
-            val parent = model.contentEntries.first() ?: model.addContentEntry(project.baseDir)
+            val parent = model.contentEntries.first() ?: model.addContentEntry(project.basePath!!)
             val genDirectory = VfsUtil.createDirectoryIfMissing(parent.file, VyperSettings.INSTANCE.genarateOutputPath)
 
             // mark as source directory or better exclude folder?

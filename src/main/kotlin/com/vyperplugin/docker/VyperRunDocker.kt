@@ -26,8 +26,8 @@ class VyperRunDocker(
 
     private val logs = mutableListOf<String>()
 
-    override var IMAGE = "murmulla/vyper_and_vyper_run"
-    override var IMAGE_TAG = "version2"
+    override var image = "murmulla/vyper_and_vyper_run"
+    override var imageTag = "version2"
     private val toolName = "vyper-run"
     private val initCommand = "-i"
     override fun exec(): ToolResult = testRun()
@@ -53,7 +53,7 @@ class VyperRunDocker(
 
         val t = getInput()
         val creation = pluginDockerClient
-            .createContainerCmd("$IMAGE:$IMAGE_TAG")
+            .createContainerCmd("$image:$imageTag")
             .withHostConfig(hostConfig)
             .withCmd(*t)
             .withEntrypoint(toolName)
@@ -81,7 +81,7 @@ class VyperRunDocker(
         return when {
             logsRunError.isEmpty() && logsRunOut.isNotEmpty() ->
                 ToolResult(logsRunOut.joinToString(separator = "\n"), "", fullPathToFile, StatusDocker.SUCCESS)
-            logsRunError.isEmpty() && logsRunOut.isEmpty() ->
+            logsRunError.isEmpty() ->
                 ToolResult("", "", fullPathToFile, StatusDocker.EMPTY_OUTPUT)
             else ->
                 ToolResult("", logsRunError.joinToString(separator = "\n"), fullPathToFile, StatusDocker.FAILED)

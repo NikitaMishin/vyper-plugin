@@ -9,7 +9,7 @@ import com.intellij.psi.tree.TokenSet
 import com.vyperplugin.VyperLexerAdapter
 import com.vyperplugin.psi.*
 
-class VyperFindUsagesProvider: FindUsagesProvider {
+class VyperFindUsagesProvider : FindUsagesProvider {
 
     override fun getWordsScanner(): WordsScanner {
         return DefaultWordsScanner(

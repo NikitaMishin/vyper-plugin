@@ -8,8 +8,8 @@ import com.github.dockerjava.api.model.Volume
 
 class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : AbstractToolDocker() {
 
-    override var IMAGE = "murmulla/smartcheck"
-    override var IMAGE_TAG = "version1"
+    override var image = "murmulla/smartcheck"
+    override var imageTag = "version1"
 
     private val toolName = "smartcheck.jar"
     private var incompleteCommand = arrayOf("sh", "-c")
@@ -40,7 +40,7 @@ class SmartCheckDocker(var bindDir: String, var fullPathToFile: String) : Abstra
 
         val completeCommand = incompleteCommand + arrayOf("java -jar $toolName -p $dockerBindDir/$filename")
         val creation = pluginDockerClient
-            .createContainerCmd("$IMAGE:$IMAGE_TAG")
+            .createContainerCmd("$image:$imageTag")
             .withHostConfig(hostConfig)
             .withCmd(*completeCommand)
             .exec()

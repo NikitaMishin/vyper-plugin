@@ -4,7 +4,6 @@ import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.exception.DockerException
 import com.github.dockerjava.api.model.PullResponseItem
 import com.intellij.ide.BrowserUtil
-import com.intellij.notification.NotificationListener
 import com.intellij.openapi.project.Project
 import com.vyperplugin.VyperMessageProcessor
 import javax.swing.event.HyperlinkEvent
@@ -17,7 +16,6 @@ enum class StatusDocker {
     EMPTY_OUTPUT,
     SUCCESS,
     FAILED,
-    TIME_LIMIT,
     INTERNAL_ERROR
 }
 
@@ -37,8 +35,8 @@ abstract class AbstractToolDocker {
     /**
      * name of the image container
      */
-    protected abstract var IMAGE: String
-    protected abstract var IMAGE_TAG: String
+    protected abstract var image: String
+    protected abstract var imageTag: String
 
     /**
      * start container and return result
@@ -99,13 +97,13 @@ abstract class AbstractToolDocker {
 
     private fun isImageExistLocally(): Boolean {
         val kek = pluginDockerClient.listImagesCmd().exec()
-        val lol = kek.find { it.repoTags.any { k -> k.contains(IMAGE, true) } }
+        val lol = kek.find { it.repoTags.any { k -> k.contains(image, true) } }
         return lol != null
     }
 
     //TODO make progress bar or notificate user about that
     private fun downloadImage() {
-        pluginDockerClient.pullImageCmd(IMAGE).withTag(IMAGE_TAG).exec(VyperPullImageAdapter()).awaitCompletion()
+        pluginDockerClient.pullImageCmd(image).withTag(imageTag).exec(VyperPullImageAdapter()).awaitCompletion()
     }
 
     private class VyperPullImageAdapter : ResultCallback.Adapter<PullResponseItem>() {

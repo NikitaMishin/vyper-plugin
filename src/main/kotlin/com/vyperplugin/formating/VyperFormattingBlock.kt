@@ -55,8 +55,6 @@ class VyperFormattingBlock(
     private fun calcIndent(child: ASTNode): Indent {
         val childType = child.elementType
         val type = astNode.elementType
-        val parent = astNode.treeParent
-        val parentType = parent?.elementType
         val result = when {
             child is PsiComment && type in listOf(
                 FUNCTION_DEFINITION,

@@ -4,7 +4,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.ui.components.JBScrollPane
-import java.awt.*
+import java.awt.Component
+import java.awt.Container
+import java.awt.EventQueue
+import java.awt.Font
 import javax.swing.JTextPane
 import javax.swing.text.DefaultCaret
 
@@ -33,21 +36,6 @@ object VyperWindow {
         VyperWindowTab.ANALYZE_TAB -> ID_ANALYZE_TAB
     }
 
-
-    /**
-     * Append @param text to the end of tab window in @param project
-     * Should be called in main thread.
-     * For example use ApplicationManager.getApplication().invokeLater()
-    }
-     */
-    fun appendTextToTabsWindow(project: Project, vyperWindowTab: VyperWindowTab, text: String) =
-        EventQueue.invokeLater {
-            val id = convert(vyperWindowTab)
-            val doc = getTabById(project, id).document
-            doc.insertString(doc.length, text, null)
-        }
-
-
     /**
      * Replace existing text in output with @param replace in @param project
      */
@@ -65,10 +53,7 @@ object VyperWindow {
      */
     private fun createTab(toolWindow: ToolWindow, tabName: String) {
         val textPane = JTextPane()
-        //TODO Add dependency between IDE settings and output settings
-        textPane.background = Color(44, 44, 44)
         textPane.font = Font(Font.DIALOG, 0, textPane.font.size)
-        textPane.selectedTextColor = Color.WHITE
         textPane.name = NAME_TAB_TEXT_PANE
         textPane.isEditable = false
         val scrollPane = JBScrollPane(textPane)

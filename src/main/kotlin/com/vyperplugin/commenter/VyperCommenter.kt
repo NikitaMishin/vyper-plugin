@@ -2,10 +2,10 @@ package com.vyperplugin.commenter
 
 import com.intellij.lang.Commenter
 
-class VyperCommenter: Commenter {
+class VyperCommenter : Commenter {
 
     override fun getLineCommentPrefix(): String {
-        return  "#"
+        return "#"
     }
 
     override fun getBlockCommentPrefix(): String? {

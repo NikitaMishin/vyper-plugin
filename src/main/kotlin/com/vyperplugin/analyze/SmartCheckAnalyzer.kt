@@ -1,6 +1,5 @@
 package com.vyperplugin.analyze
 
-import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.vyperplugin.VyperMessageProcessor
@@ -50,11 +49,6 @@ object SmartCheckAnalyzer {
         propertyChangeSupport.addPropertyChangeListener(listener)
     }
 
-    fun removeListener(listener: PropertyChangeListener) {
-        propertyChangeSupport.removePropertyChangeListener(listener)
-    }
-
-
     private fun addMessage(data: SmartCheckData) {
         propertyChangeSupport.firePropertyChange("ANALYSIS_SMART_CHECK", null, data)
     }
@@ -63,20 +57,20 @@ object SmartCheckAnalyzer {
         "ruleId: (\\w+)\npatternId: (\\w+)\nseverity: (\\w+)\nline: (\\d+)\ncolumn: (\\d+)"
     )
 
-    fun smartCheckAnalyze(files: Array<VirtualFile>, project: Project, module: Module) {
+    fun smartCheckAnalyze(files: Array<VirtualFile>, project: Project) {
         files.map {
             val res = SmartCheckDocker(it.parent.path, it.path).execWrapper(project)
             when (res.statusDocker) {
                 StatusDocker.SUCCESS -> {
                     val p = it.path
                     val arr = mutableListOf<SmartCheckSinglePattern>()
-                    pattern.findAll(res.stdout).toList().map {
+                    pattern.findAll(res.stdout).toList().map { itt ->
                         val data = SmartCheckSinglePattern(
-                            it.groups[1]!!.value,
-                            it.groups[2]!!.value,
-                            it.groups[3]!!.value,
-                            it.groups[4]!!.value.toInt(),
-                            it.groups[5]!!.value.toInt()
+                            itt.groups[1]!!.value,
+                            itt.groups[2]!!.value,
+                            itt.groups[3]!!.value,
+                            itt.groups[4]!!.value.toInt(),
+                            itt.groups[5]!!.value.toInt()
                         )
                         arr.add(data)
                     }

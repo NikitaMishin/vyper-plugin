@@ -14,7 +14,8 @@ class VyperColorAnnotator : Annotator {
             val highlight = highlight(element)
             if (highlight != null) {
                 val (partToHighlight, color) = highlight
-                holder.newAnnotation(HighlightSeverity.INFORMATION, "").range(partToHighlight).textAttributes(color.textAttributesKey).create()
+                holder.newAnnotation(HighlightSeverity.INFORMATION, "").range(partToHighlight)
+                    .textAttributes(color.textAttributesKey).create()
             }
         }
     }

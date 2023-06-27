@@ -4,10 +4,8 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.DumbAware
-import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
-import com.vyperplugin.VyperFileType
 import com.vyperplugin.VyperIcons
 import com.vyperplugin.psi.*
 import com.vyperplugin.references.VyperResolver
@@ -25,26 +23,6 @@ object VyperCompleter {
                 PrioritizedLookupElement.withPriority(it, 15.0)
             }
             .toTypedArray()
-    }
-
-    fun completeTypes(): Array<out LookupElement> {
-        return listOf(
-            "int128",
-            "uint256",
-            "bytes32",
-            "bytes[]",
-            "address",
-            "fixed",
-            "bool",
-            "map()",
-            "timestamp",
-            "string[]"
-        ).map {
-            LookupElementBuilder.create(it)
-                .withIcon(VyperIcons.FILE)
-        }.toTypedArray().map {
-            PrioritizedLookupElement.withPriority(it, 15.0)
-        }.toTypedArray()
     }
 
     fun completeMemberAccess(element: VyperMemberAccessExpression): Array<out LookupElement> {
@@ -79,17 +57,6 @@ object VyperCompleter {
         return LookupElementBuilder.create(elem)
     }
 
-    private fun Collection<VyperNamedElement>.createVarLookups(): Array<LookupElement> =
-        createVarLookups(VyperIcons.FILE)
-
-    private fun Collection<VyperNamedElement>.createVarLookups(icon: Icon): Array<LookupElement> {
-        return map {
-            LookupElementBuilder.create(it, it.name ?: "")
-                .withIcon(icon)
-        }.toTypedArray().map {
-            PrioritizedLookupElement.withPriority(it, 15.0)
-        }.toTypedArray()
-    }
 
     private fun Collection<VyperLocalVariableDeclaration>.createLocalVarLookups(icon: Icon): Array<LookupElement> {
         return map {
@@ -184,6 +151,7 @@ class VyperFunModifierContributor : CompletionContributor() {
                     "internal",
                     "pure",
                 )
+
                 override fun addCompletions(
                     parameters: CompletionParameters,
                     context: ProcessingContext,
@@ -196,13 +164,9 @@ class VyperFunModifierContributor : CompletionContributor() {
     }
 }
 
-fun inFile() = PlatformPatterns.psiElement().inFile(PlatformPatterns.psiFile()).and(PlatformPatterns.psiElement().withSuperParent(2, PlatformPatterns.psiFile()))
+fun inFile() = PlatformPatterns.psiElement().inFile(PlatformPatterns.psiFile())
+    .and(PlatformPatterns.psiElement().withSuperParent(2, PlatformPatterns.psiFile()))
 
 fun funModifiers() = PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(VyperTypes.DECORATOR))
-
-fun stateVarInsideContract() =
-    PlatformPatterns.psiElement(VyperTypes.IDENTIFIER)
-        .inside(PlatformPatterns.psiElement(VyperFunctionDefinition::class.java))
-        .inside(VyperFile::class.java)
 
 fun baseTypes() = PlatformPatterns.psiElement().inside(PlatformPatterns.psiElement(VyperType::class.java))

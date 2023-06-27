@@ -6,7 +6,10 @@ import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiElement
 import com.vyperplugin.psi.VyperTypes.*
 import com.vyperplugin.psi.impl.VyperCallExpressionImpl
-import com.vyperplugin.references.*
+import com.vyperplugin.references.VyperCallReference
+import com.vyperplugin.references.VyperMemberAccessReference
+import com.vyperplugin.references.VyperReference
+import com.vyperplugin.references.VyperVarLiteralReference
 
 abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperVarLiteral {
 
@@ -101,5 +104,5 @@ abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node
     override val isConstructor: Boolean
         get() = name == "__init__"
 
-    override fun getIcon(flags: Int) = IconLoader.getIcon("/icons/jar-gray.png")
+    override fun getIcon(flags: Int) = IconLoader.getIcon("/icons/jar-gray.png", javaClass)
 }
