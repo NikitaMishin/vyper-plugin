@@ -104,5 +104,5 @@ abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node
     override val isConstructor: Boolean
         get() = name == "__init__"
 
-    override fun getIcon(flags: Int) = IconLoader.getIcon("/icons/jar-gray.png", javaClass)
+    override fun getIcon(flags: Int) = IconLoader.getIcon("/icons/VyperFile.svg", javaClass)
 }

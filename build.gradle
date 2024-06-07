@@ -58,21 +58,7 @@ kotlin {
     jvmToolchain(17)
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = 17
-}
-
-compileTestKotlin {
-    kotlinOptions.jvmTarget = 17
-}
-
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-}
-
-tasks {
-    wrapper {
-        gradleVersion = '8.7'
-    }
 }

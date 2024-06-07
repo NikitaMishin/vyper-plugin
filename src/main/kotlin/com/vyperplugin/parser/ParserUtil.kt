@@ -34,8 +34,6 @@ class ParserUtil : GeneratedParserUtilBase() {
 
         fun getSpacesLeft() = getPrecedingWhiteSpace().length
 
-        fun getSpacesRight() = getFollowingWhiteSpace().length
-
         fun getTokenIndent(): Int {
 
             val tokenStart = builder.currentOffset
