@@ -26,11 +26,10 @@ intellij {
 dependencies {
 
     // https://mvnrepository.com/artifact/com.github.docker-java/docker-java
-    implementation group: 'com.github.docker-java', name: 'docker-java', version: '3.2.12'
+    implementation group: 'com.github.docker-java', name: 'docker-java', version: '3.3.6'
 
     // https://mvnrepository.com/artifact/com.github.docker-java/docker-java-transport-httpclient5
-    implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.2.13'
-
+    implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.3.6'
 
     // https://mvnrepository.com/artifact/com.github.kittinunf.fuel/fuel-coroutines
     implementation group: 'com.github.kittinunf.fuel', name: 'fuel-coroutines', version: '2.3.1'
@@ -39,7 +38,7 @@ dependencies {
     implementation group: 'com.github.kittinunf.fuel', name: 'fuel', version: '2.3.1'
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.8'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
 
     // https://mvnrepository.com/artifact/junit/junit
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
