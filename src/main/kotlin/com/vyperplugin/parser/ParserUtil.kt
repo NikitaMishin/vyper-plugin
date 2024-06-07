@@ -7,22 +7,14 @@ import com.intellij.openapi.util.Key
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
-import com.intellij.util.containers.IntIntHashMap
 
 
 class ParserUtil : GeneratedParserUtilBase() {
 
     class ParserState(builder_: PsiBuilder) {
-
-        enum class PrimaryMode {
-            NORMAL
-        }
-
         private var builder: PsiBuilder = builder_
         var currentIndent: Int = 0
-        private var primaryMode: PrimaryMode = PrimaryMode.NORMAL
-
-        private val tokIndentCache = IntIntHashMap()
+        private val tokenIndentCache = hashMapOf<Int, Int>()
 
         private fun getPrecedingWhiteSpace(): String {
             var wsOffset = 0
@@ -47,8 +39,8 @@ class ParserUtil : GeneratedParserUtilBase() {
         fun getTokenIndent(): Int {
 
             val tokenStart = builder.currentOffset
-            if (tokIndentCache.containsKey(tokenStart)) {
-                return tokIndentCache.get(tokenStart)
+            if (tokenIndentCache.containsKey(tokenStart)) {
+                return tokenIndentCache[tokenStart]!!
             }
 
             var indent = -1
@@ -57,7 +49,7 @@ class ParserUtil : GeneratedParserUtilBase() {
             if (nlPos != -1) {
                 indent = ws.length - nlPos - 1
             }
-            tokIndentCache[tokenStart] = indent
+            tokenIndentCache[tokenStart] = indent
             return indent
         }
     }
@@ -131,7 +123,6 @@ class ParserUtil : GeneratedParserUtilBase() {
             val psiBuilder = GeneratedParserUtilBase.adapt_builder_(root, builder_, parser, extendsSet)
             val state = ParserState(builder_)
             psiBuilder.putUserData(parserStateKey, state)
-
             return psiBuilder
         }
 
