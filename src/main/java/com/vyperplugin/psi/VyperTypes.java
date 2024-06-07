@@ -15,7 +15,6 @@ public interface VyperTypes {
   IElementType CALL_EXPRESSION = new VyperElementType("CALL_EXPRESSION");
   IElementType CLEAR_EXPRESSION = new VyperElementType("CLEAR_EXPRESSION");
   IElementType COMP_EXPRESSION = new VyperElementType("COMP_EXPRESSION");
-  IElementType CUSTOM_UNIT_TYPE = new VyperElementType("CUSTOM_UNIT_TYPE");
   IElementType EMIT_STATEMENT = new VyperElementType("EMIT_STATEMENT");
   IElementType EQ_EXPRESSION = new VyperElementType("EQ_EXPRESSION");
   IElementType EVENT_DECLARATION = new VyperElementType("EVENT_DECLARATION");
@@ -60,7 +59,6 @@ public interface VyperTypes {
   IElementType UNARY_EXPRESSION = new VyperElementType("UNARY_EXPRESSION");
   IElementType UNIQUE_KEY = new VyperElementType("UNIQUE_KEY");
   IElementType UNITS_DEFINITION = new VyperElementType("UNITS_DEFINITION");
-  IElementType UNIT_TYPE = new VyperElementType("UNIT_TYPE");
   IElementType USER_DEFINED_CONSTANTS_EXPRESSION = new VyperElementType("USER_DEFINED_CONSTANTS_EXPRESSION");
   IElementType VALUE_TYPE = new VyperElementType("VALUE_TYPE");
   IElementType VAR_LITERAL = new VyperElementType("VAR_LITERAL");
@@ -83,7 +81,6 @@ public interface VyperTypes {
   IElementType COMMENT = new VyperTokenType("comment");
   IElementType CONSTANT = new VyperTokenType("constant");
   IElementType CONTINUE = new VyperTokenType("continue");
-  IElementType CONTRACT = new VyperTokenType("contract");
   IElementType DECIMALNUMBER = new VyperTokenType("decimalNumber");
   IElementType DECORATOR = new VyperTokenType("@");
   IElementType DEF = new VyperTokenType("def");
@@ -92,7 +89,6 @@ public interface VyperTypes {
   IElementType DOT = new VyperTokenType(".");
   IElementType ELIF = new VyperTokenType("elif");
   IElementType ELSE = new VyperTokenType("else");
-  IElementType EMPTY_BYTES32 = new VyperTokenType("EMPTY_BYTES32");
   IElementType EQ = new VyperTokenType("==");
   IElementType EVENT = new VyperTokenType("event");
   IElementType EXPONENT = new VyperTokenType("**");
@@ -110,6 +106,7 @@ public interface VyperTypes {
   IElementType IMPORT = new VyperTokenType("import");
   IElementType IN = new VyperTokenType("in");
   IElementType INT128 = new VyperTokenType("int128");
+  IElementType INTERFACE = new VyperTokenType("interface");
   IElementType INTERNAL = new VyperTokenType("internal");
   IElementType LBRACE = new VyperTokenType("{");
   IElementType LBRACKET = new VyperTokenType("[");
@@ -119,20 +116,15 @@ public interface VyperTypes {
   IElementType LPAREN = new VyperTokenType("(");
   IElementType LSHIFT = new VyperTokenType("<<");
   IElementType MAP = new VyperTokenType("map");
-  IElementType MAX_DECIMAL = new VyperTokenType("MAX_DECIMAL");
-  IElementType MAX_INT128 = new VyperTokenType("MAX_INT128");
-  IElementType MAX_UINT256 = new VyperTokenType("MAX_UINT256");
   IElementType MINUS = new VyperTokenType("-");
   IElementType MINUS_ASSIGN = new VyperTokenType("-=");
-  IElementType MIN_DECIMAL = new VyperTokenType("MIN_DECIMAL");
-  IElementType MIN_INT128 = new VyperTokenType("MIN_INT128");
-  IElementType MODIFYING = new VyperTokenType("modifying");
   IElementType MORE = new VyperTokenType(">");
   IElementType MOREEQ = new VyperTokenType(">=");
   IElementType MULT = new VyperTokenType("*");
   IElementType MULTILINESTRINGTOKEN = new VyperTokenType("MultiLineStringToken");
   IElementType MULT_ASSIGN = new VyperTokenType("*=");
   IElementType NEQ = new VyperTokenType("!=");
+  IElementType NONPAYABLE = new VyperTokenType("nonpayable");
   IElementType NONREENTRANT = new VyperTokenType("nonreentrant");
   IElementType NOT = new VyperTokenType("not");
   IElementType OR = new VyperTokenType("or");
@@ -168,7 +160,6 @@ public interface VyperTypes {
   IElementType UINT256 = new VyperTokenType("uint256");
   IElementType UNITS = new VyperTokenType("units");
   IElementType VIEW = new VyperTokenType("view");
-  IElementType ZERO_ADDRESS = new VyperTokenType("ZERO_ADDRESS");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -193,9 +184,6 @@ public interface VyperTypes {
       }
       else if (type == COMP_EXPRESSION) {
         return new VyperCompExpressionImpl(node);
-      }
-      else if (type == CUSTOM_UNIT_TYPE) {
-        return new VyperCustomUnitTypeImpl(node);
       }
       else if (type == EMIT_STATEMENT) {
         return new VyperEmitStatementImpl(node);
@@ -325,9 +313,6 @@ public interface VyperTypes {
       }
       else if (type == UNITS_DEFINITION) {
         return new VyperUnitsDefinitionImpl(node);
-      }
-      else if (type == UNIT_TYPE) {
-        return new VyperUnitTypeImpl(node);
       }
       else if (type == USER_DEFINED_CONSTANTS_EXPRESSION) {
         return new VyperUserDefinedConstantsExpressionImpl(node);

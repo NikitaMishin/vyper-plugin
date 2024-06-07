@@ -35,12 +35,6 @@ public class VyperListTypeImpl extends ASTWrapperPsiElement implements VyperList
 
   @Override
   @Nullable
-  public VyperUnitType getUnitType() {
-    return findChildByClass(VyperUnitType.class);
-  }
-
-  @Override
-  @Nullable
   public VyperValueType getValueType() {
     return findChildByClass(VyperValueType.class);
   }

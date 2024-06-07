@@ -47,12 +47,6 @@ public class VyperTypeImpl extends ASTWrapperPsiElement implements VyperType {
 
   @Override
   @Nullable
-  public VyperUnitType getUnitType() {
-    return findChildByClass(VyperUnitType.class);
-  }
-
-  @Override
-  @Nullable
   public VyperValueType getValueType() {
     return findChildByClass(VyperValueType.class);
   }

@@ -64,13 +64,12 @@ tokens = [
    LSHIFT='<<'
    RSHIFT='>>'
 
-
     hexLiteral='regexp:hex"([0-9a-fA-F]+)"'
     stringLiteralDouble='regexp:("([^"\r\n\\]|\\.)*")'
     stringLiteralDoubleB='regexp:(b"([^"\r\n\\]|\\.)*")'
     stringLiteralSingle="regexp:('([^'\r\n\\]|\\.)*')"
     stringLiteralSingleB="regexp:(b'([^'\r\n\\]|\\.)*')"
-    MultiLineStringToken =  'regexp:"""[\d\D]*?"""'
+    MultiLineStringToken = 'regexp:("""([^"]|"[^"]|""[^"])*""")'
 
     decimalNumber='regexp:([0-9][_0-9]*)'
     fixedNumber='regexp:(([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*)*\.([0-9][_0-9]*))'
@@ -78,13 +77,14 @@ tokens = [
     scientificNumber='regexp:((([0-9][_0-9]*)+|([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*|[0-9])*\.[_0-9]+)[Ee][+-]?[_0-9]+)'
     hexNumber='regexp:(0[xX][_0-9a-fA-F]+)'
 
-    constant='constant'
     public='public'
     private='private'
     nonreentrant='nonreentrant'
     payable='payable'
+    nonpayable='nonpayable'
     external='external'
-    modifying='modifying'
+    view='view'
+    pure='pure'
     event='event'
     range = 'range'
 
@@ -111,10 +111,7 @@ external INDGT ::= indGt
 external INDNONE ::= indNone
 external OPTIND ::= indOpt
 
-
-
-
-// : External contract and struct declarations must come before event declarations, global declarations,
+// : External interface and struct declarations must come before event declarations, global declarations,
 // and function definitions
 private SourceUnit ::= ( ImportDirective
                         | UserDefinedConstantsExpression
@@ -144,7 +141,7 @@ private UnitsDefinitionPrefix ::= units  (&INDNONE ':') (&INDNONE '{')
   {
 pin = 1
 recoverWhile = unitsRecover
-//программно чекать до след newLine наверное чтобы дать возможность дальше парситиь
+//programmatically check for trace newLine, probably to enable further parsing
 }
 //will consume all the file if '}' not found
 private unitsRecover::=!('}')
@@ -171,15 +168,14 @@ pin=1
 }
 
 // external interfaces ok
-ExternalInterfaces ::= contract &INDNONE Identifier &INDNONE ':'
+ExternalInterfaces ::= interface &INDNONE Identifier &INDNONE ':'
                         <<indented (ExternalInterfaceBody+) >>
                 {pin=1}
 
 private ExternalInterfaceBody ::= ( def &INDNONE Identifier &INDNONE '('
 ( FunctionArgs)? ')' (&INDNONE '->' &INDNONE TYPE)? &INDNONE ':' &INDNONE ExternalFunStatus )
 {pin = 1}
-private ExternalFunStatus ::= modifying | constant
-
+private ExternalFunStatus ::= pure | view | nonpayable | payable
 
 FunctionArgs ::= ParamDef  (',' ParamDef )*
 
@@ -203,11 +199,6 @@ private StructLocalVariableDefinition ::= LocalVariableDefinition | BadStatement
 //private recoverINDEQ ::=!(&INDEQ)
 private structRecover ::= !(&INDEQ | &INDLT |<<eof>>)
 private recoverStruct ::= !(&INDLT | &INDEQ)
-
-
-//ContractDefinition ::= ContractDefinition_+
-//private ContractDefinition_ ::= (EventDeclaration | StateVariableDeclaration | FunctionDefinition)
-//                                {recoverWhile=structRecover}
 
 //ok
 //Events must all come before global declarations and function definitions
@@ -270,7 +261,7 @@ FunctionDefinition ::=
 
 //FunctionModifier ::= (&INDEQ FunctionModifierOptional)* (&INDEQ FunctionModifierMandatory) (&INDEQ FunctionModifierOptional)*
 //private FunctionModifierMandatory ::= DECORATOR ((&INDNONE public) | (&INDNONE private)) {pin = 1}
-FunctionModifier ::=  (DECORATOR (&INDNONE (public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))))
+FunctionModifier ::=  (DECORATOR (&INDNONE (public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))))
                       {pin = 1}
 
 UNIQUE_KEY ::=  stringLiteralSingle | stringLiteralDouble
@@ -444,33 +435,19 @@ PrimaryExpression ::=
                   | NumberLiteral
                   | HexLiteral
                   | StringLiteral
-                  | Constants
                   //type??
                   | TYPE
-                  {
-                    name = "blyaaaaaaa"
-                  }
 
 VarLiteral ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
                            mixin = "com.vyperplugin.psi.VyperVarLiteralMixin"
                            name = "variable"
                            }
 
-//BuiltIn ::= 'concat' | 'sha3'
-
+//BuiltIn ::= 'bitwise_and' | 'bitwise_not' | 'bitwise_or' | 'bitwise_xor' | 'shift' | 'create_minimal_proxy_to' | 'create_copy_of' | 'create_from_blueprint' | 'raw_call' | 'raw_log' | 'raw_revert' | 'selfdestruct' | 'send' | 'ecadd' | 'ecmul' | 'ecrecover' | 'keccak256' | 'sha256' | 'concat' | 'convert' | 'uint2str' | 'extract32' | 'slice' | 'abs' | 'ceil' | 'epsilon' | 'floor' | 'max' | 'max_value' | 'min' | 'min_value' | 'pow_mod256' | 'sqrt' | 'isqrt' | 'uint256_addmod' | 'uint256_mulmod' | 'unsafe_add' | 'unsafe_sub' | 'unsafe_mul' | 'unsafe_div' | 'as_wei_value' | 'blockhash' | 'empty' | 'len' | 'method_id' | '_abi_encode' | '_abi_decode' | 'print'
 
 
 // TYPES seems okay
-TYPE ::=  ReferenceType
-          | UnitType
-          | ValueType
-          | StructType
-
-UnitType ::= Timestamp | Timedelta | Wei_value | CustomUnitType
-CustomUnitType ::= (int128|uint256) &INDNONE '(' Expression ')'
-private Timestamp ::= 'timestamp'
-private Timedelta ::= 'timedelta'
-private Wei_value ::= 'wei_value'
+TYPE ::=  ReferenceType | ValueType | StructType
 
 ValueType ::= int128 | uint256| bytes32 | address
              | (bytes32 | bytes) &INDNONE '[' (DecimalNumber | Identifier) ']' | fixed | bool |
@@ -478,28 +455,21 @@ ValueType ::= int128 | uint256| bytes32 | address
 
 private ReferenceType ::= ListType  | MapType
 
-ListType ::= (UnitType| ValueType|StructType) &INDNONE '[' (DecimalNumber | Identifier) ']'
+ListType ::= ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier) ']'
                     (&INDNONE '[' (DecimalNumber | Identifier) ']')*
 StructType ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
                                                      mixin = "com.vyperplugin.psi.VyperStructTypeMixin"}
 
-MapType ::= (map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')') |
- (HashMap &INDNONE '[' (ValueType|UnitType) ',' (ReferenceType |  UnitType|ValueType| StructType  ) ']')
+MapType ::= ( map  &INDNONE '(' ValueType  ',' ( ReferenceType |  ValueType | StructType  ) ')' ) |
+ ( HashMap &INDNONE '[' ValueType ',' ( ReferenceType |  ValueType | StructType  ) ']' )
  {
 pin=1
 }
 
-
 private BooleanLiteral ::= booleanLiteral
-
-
 private NumberLiteral ::= HexNumber | DecimalNumber |FixedNumber
 private StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB|MultiLineString
 private DecimalNumber ::= decimalNumber
 private HexNumber ::= hexNumber
 private HexLiteral ::= hexLiteral
 private  FixedNumber ::=fixedNumber
-
-//Builtin Constants
-private Constants ::= ZERO_ADDRESS | EMPTY_BYTES32 | MAX_INT128 | MIN_INT128
-             | MAX_DECIMAL | MIN_DECIMAL | MAX_UINT256

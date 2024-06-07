@@ -35,10 +35,6 @@ public class VyperVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitCustomUnitType(@NotNull VyperCustomUnitType o) {
-    visitElement(o);
-  }
-
   public void visitEmitStatement(@NotNull VyperEmitStatement o) {
     visitElement(o);
   }
@@ -209,10 +205,6 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitUnaryExpression(@NotNull VyperUnaryExpression o) {
     visitExpression(o);
-  }
-
-  public void visitUnitType(@NotNull VyperUnitType o) {
-    visitElement(o);
   }
 
   public void visitUnitsDefinition(@NotNull VyperUnitsDefinition o) {

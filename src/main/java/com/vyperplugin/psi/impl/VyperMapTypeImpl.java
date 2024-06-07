@@ -47,12 +47,6 @@ public class VyperMapTypeImpl extends ASTWrapperPsiElement implements VyperMapTy
 
   @Override
   @NotNull
-  public List<VyperUnitType> getUnitTypeList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperUnitType.class);
-  }
-
-  @Override
-  @NotNull
   public List<VyperValueType> getValueTypeList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperValueType.class);
   }

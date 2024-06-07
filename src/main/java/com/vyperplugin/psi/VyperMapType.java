@@ -17,9 +17,6 @@ public interface VyperMapType extends VyperElement {
   VyperStructType getStructType();
 
   @NotNull
-  List<VyperUnitType> getUnitTypeList();
-
-  @NotNull
   List<VyperValueType> getValueTypeList();
 
 }

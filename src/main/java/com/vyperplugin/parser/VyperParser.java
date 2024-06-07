@@ -194,60 +194,9 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ZERO_ADDRESS | EMPTY_BYTES32 | MAX_INT128 | MIN_INT128
-  //              | MAX_DECIMAL | MIN_DECIMAL | MAX_UINT256
-  static boolean Constants(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Constants")) return false;
-    boolean r;
-    r = consumeToken(b, ZERO_ADDRESS);
-    if (!r) r = consumeToken(b, EMPTY_BYTES32);
-    if (!r) r = consumeToken(b, MAX_INT128);
-    if (!r) r = consumeToken(b, MIN_INT128);
-    if (!r) r = consumeToken(b, MAX_DECIMAL);
-    if (!r) r = consumeToken(b, MIN_DECIMAL);
-    if (!r) r = consumeToken(b, MAX_UINT256);
-    return r;
-  }
-
-  /* ********************************************************** */
   // continue
   static boolean Continue(PsiBuilder b, int l) {
     return consumeToken(b, CONTINUE);
-  }
-
-  /* ********************************************************** */
-  // (int128|uint256) &INDNONE '(' Expression ')'
-  public static boolean CustomUnitType(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CustomUnitType")) return false;
-    if (!nextTokenIs(b, "<custom unit type>", INT128, UINT256)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, CUSTOM_UNIT_TYPE, "<custom unit type>");
-    r = CustomUnitType_0(b, l + 1);
-    r = r && CustomUnitType_1(b, l + 1);
-    r = r && consumeToken(b, LPAREN);
-    r = r && Expression(b, l + 1, -1);
-    r = r && consumeToken(b, RPAREN);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // int128|uint256
-  private static boolean CustomUnitType_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CustomUnitType_0")) return false;
-    boolean r;
-    r = consumeToken(b, INT128);
-    if (!r) r = consumeToken(b, UINT256);
-    return r;
-  }
-
-  // &INDNONE
-  private static boolean CustomUnitType_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CustomUnitType_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
   }
 
   /* ********************************************************** */
@@ -568,13 +517,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // modifying | constant
+  // pure | view | nonpayable | payable
   static boolean ExternalFunStatus(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ExternalFunStatus")) return false;
-    if (!nextTokenIs(b, "", CONSTANT, MODIFYING)) return false;
     boolean r;
-    r = consumeToken(b, MODIFYING);
-    if (!r) r = consumeToken(b, CONSTANT);
+    r = consumeToken(b, PURE);
+    if (!r) r = consumeToken(b, VIEW);
+    if (!r) r = consumeToken(b, NONPAYABLE);
+    if (!r) r = consumeToken(b, PAYABLE);
     return r;
   }
 
@@ -701,14 +651,14 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // contract &INDNONE Identifier &INDNONE ':'
+  // interface &INDNONE Identifier &INDNONE ':'
   //                         <<indented (ExternalInterfaceBody+) >>
   public static boolean ExternalInterfaces(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ExternalInterfaces")) return false;
-    if (!nextTokenIs(b, CONTRACT)) return false;
+    if (!nextTokenIs(b, INTERFACE)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, EXTERNAL_INTERFACES, null);
-    r = consumeToken(b, CONTRACT);
+    r = consumeToken(b, INTERFACE);
     p = r; // pin = 1
     r = r && report_error_(b, ExternalInterfaces_1(b, l + 1));
     r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
@@ -1462,7 +1412,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DECORATOR (&INDNONE (public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')))
+  // DECORATOR (&INDNONE (public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')))
   public static boolean FunctionModifier(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionModifier")) return false;
     if (!nextTokenIs(b, DECORATOR)) return false;
@@ -1475,7 +1425,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // &INDNONE (public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))
+  // &INDNONE (public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))
   private static boolean FunctionModifier_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionModifier_1")) return false;
     boolean r;
@@ -1496,7 +1446,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')
+  // public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')
   private static boolean FunctionModifier_1_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionModifier_1_1")) return false;
     boolean r;
@@ -1507,7 +1457,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, PURE);
     if (!r) r = consumeToken(b, EXTERNAL);
     if (!r) r = consumeToken(b, PRIVATE);
-    if (!r) r = consumeToken(b, CONSTANT);
+    if (!r) r = consumeToken(b, NONPAYABLE);
     if (!r) r = consumeToken(b, PAYABLE);
     if (!r) r = FunctionModifier_1_1_8(b, l + 1);
     exit_section_(b, m, null, r);
@@ -1917,7 +1867,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (UnitType| ValueType|StructType) &INDNONE '[' (DecimalNumber | Identifier) ']'
+  // ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier) ']'
   //                     (&INDNONE '[' (DecimalNumber | Identifier) ']')*
   public static boolean ListType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ListType")) return false;
@@ -1933,12 +1883,11 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // UnitType| ValueType|StructType
+  // ValueType | StructType
   private static boolean ListType_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ListType_0")) return false;
     boolean r;
-    r = UnitType(b, l + 1);
-    if (!r) r = ValueType(b, l + 1);
+    r = ValueType(b, l + 1);
     if (!r) r = StructType(b, l + 1);
     return r;
   }
@@ -2110,8 +2059,8 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')') |
-  //  (HashMap &INDNONE '[' (ValueType|UnitType) ',' (ReferenceType |  UnitType|ValueType| StructType  ) ']')
+  // ( map  &INDNONE '(' ValueType  ',' ( ReferenceType |  ValueType | StructType  ) ')' ) |
+  //  ( HashMap &INDNONE '[' ValueType ',' ( ReferenceType |  ValueType | StructType  ) ']' )
   public static boolean MapType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType")) return false;
     if (!nextTokenIs(b, "<map type>", HASHMAP, MAP)) return false;
@@ -2123,7 +2072,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')'
+  // map  &INDNONE '(' ValueType  ',' ( ReferenceType |  ValueType | StructType  ) ')'
   private static boolean MapType_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType_0")) return false;
     boolean r;
@@ -2131,7 +2080,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, MAP);
     r = r && MapType_0_1(b, l + 1);
     r = r && consumeToken(b, LPAREN);
-    r = r && MapType_0_3(b, l + 1);
+    r = r && ValueType(b, l + 1);
     r = r && consumeToken(b, COMMA);
     r = r && MapType_0_5(b, l + 1);
     r = r && consumeToken(b, RPAREN);
@@ -2149,27 +2098,17 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ValueType|UnitType
-  private static boolean MapType_0_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MapType_0_3")) return false;
-    boolean r;
-    r = ValueType(b, l + 1);
-    if (!r) r = UnitType(b, l + 1);
-    return r;
-  }
-
-  // ReferenceType |  UnitType|ValueType| StructType
+  // ReferenceType |  ValueType | StructType
   private static boolean MapType_0_5(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType_0_5")) return false;
     boolean r;
     r = ReferenceType(b, l + 1);
-    if (!r) r = UnitType(b, l + 1);
     if (!r) r = ValueType(b, l + 1);
     if (!r) r = StructType(b, l + 1);
     return r;
   }
 
-  // HashMap &INDNONE '[' (ValueType|UnitType) ',' (ReferenceType |  UnitType|ValueType| StructType  ) ']'
+  // HashMap &INDNONE '[' ValueType ',' ( ReferenceType |  ValueType | StructType  ) ']'
   private static boolean MapType_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType_1")) return false;
     boolean r;
@@ -2177,7 +2116,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, HASHMAP);
     r = r && MapType_1_1(b, l + 1);
     r = r && consumeToken(b, LBRACKET);
-    r = r && MapType_1_3(b, l + 1);
+    r = r && ValueType(b, l + 1);
     r = r && consumeToken(b, COMMA);
     r = r && MapType_1_5(b, l + 1);
     r = r && consumeToken(b, RBRACKET);
@@ -2195,21 +2134,11 @@ public class VyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ValueType|UnitType
-  private static boolean MapType_1_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MapType_1_3")) return false;
-    boolean r;
-    r = ValueType(b, l + 1);
-    if (!r) r = UnitType(b, l + 1);
-    return r;
-  }
-
-  // ReferenceType |  UnitType|ValueType| StructType
+  // ReferenceType |  ValueType | StructType
   private static boolean MapType_1_5(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType_1_5")) return false;
     boolean r;
     r = ReferenceType(b, l + 1);
-    if (!r) r = UnitType(b, l + 1);
     if (!r) r = ValueType(b, l + 1);
     if (!r) r = StructType(b, l + 1);
     return r;
@@ -2736,32 +2665,16 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ReferenceType
-  //           | UnitType
-  //           | ValueType
-  //           | StructType
+  // ReferenceType | ValueType | StructType
   public static boolean TYPE(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "TYPE")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, TYPE, "<type>");
     r = ReferenceType(b, l + 1);
-    if (!r) r = UnitType(b, l + 1);
     if (!r) r = ValueType(b, l + 1);
     if (!r) r = StructType(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
-  }
-
-  /* ********************************************************** */
-  // 'timedelta'
-  static boolean Timedelta(PsiBuilder b, int l) {
-    return consumeToken(b, "timedelta");
-  }
-
-  /* ********************************************************** */
-  // 'timestamp'
-  static boolean Timestamp(PsiBuilder b, int l) {
-    return consumeToken(b, "timestamp");
   }
 
   /* ********************************************************** */
@@ -2773,20 +2686,6 @@ public class VyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, UNIQUE_KEY, "<unique key>");
     r = consumeToken(b, STRINGLITERALSINGLE);
     if (!r) r = consumeToken(b, STRINGLITERALDOUBLE);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // Timestamp | Timedelta | Wei_value | CustomUnitType
-  public static boolean UnitType(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "UnitType")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, UNIT_TYPE, "<unit type>");
-    r = Timestamp(b, l + 1);
-    if (!r) r = Timedelta(b, l + 1);
-    if (!r) r = Wei_value(b, l + 1);
-    if (!r) r = CustomUnitType(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -3165,12 +3064,6 @@ public class VyperParser implements PsiParser, LightPsiParser {
     r = indEq(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
-  }
-
-  /* ********************************************************** */
-  // 'wei_value'
-  static boolean Wei_value(PsiBuilder b, int l) {
-    return consumeToken(b, "wei_value");
   }
 
   /* ********************************************************** */
@@ -4108,20 +4001,18 @@ public class VyperParser implements PsiParser, LightPsiParser {
   //                   | NumberLiteral
   //                   | HexLiteral
   //                   | StringLiteral
-  //                   | Constants
   //                   //type??
   //                   | TYPE
   public static boolean PrimaryExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PrimaryExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, PRIMARY_EXPRESSION, "<blyaaaaaaa>");
+    Marker m = enter_section_(b, l, _NONE_, PRIMARY_EXPRESSION, "<primary expression>");
     r = consumeTokenSmart(b, PRIMARYEXPRESSION_0_0);
     if (!r) r = VarLiteral(b, l + 1);
     if (!r) r = BooleanLiteral(b, l + 1);
     if (!r) r = NumberLiteral(b, l + 1);
     if (!r) r = HexLiteral(b, l + 1);
     if (!r) r = StringLiteral(b, l + 1);
-    if (!r) r = Constants(b, l + 1);
     if (!r) r = TYPE(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
