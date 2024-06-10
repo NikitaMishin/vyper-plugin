@@ -11,6 +11,15 @@ public interface VyperValueType extends VyperElement {
   PsiElement getIdentifier();
 
   @Nullable
+  PsiElement getBytesM();
+
+  @Nullable
   PsiElement getDecimalNumber();
+
+  @Nullable
+  PsiElement getIntM();
+
+  @Nullable
+  PsiElement getUintM();
 
 }

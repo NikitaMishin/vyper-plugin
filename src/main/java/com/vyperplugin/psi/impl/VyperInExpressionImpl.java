@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
 import com.vyperplugin.psi.*;
 
-public class VyperFunctionCallExpressionImpl extends VyperExpressionImpl implements VyperFunctionCallExpression {
+public class VyperInExpressionImpl extends VyperExpressionImpl implements VyperInExpression {
 
-  public VyperFunctionCallExpressionImpl(@NotNull ASTNode node) {
+  public VyperInExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitFunctionCallExpression(this);
+    visitor.visitInExpression(this);
   }
 
   @Override
@@ -31,12 +31,6 @@ public class VyperFunctionCallExpressionImpl extends VyperExpressionImpl impleme
   @NotNull
   public List<VyperExpression> getExpressionList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public VyperFunctionCallArguments getFunctionCallArguments() {
-    return findNotNullChildByClass(VyperFunctionCallArguments.class);
   }
 
 }

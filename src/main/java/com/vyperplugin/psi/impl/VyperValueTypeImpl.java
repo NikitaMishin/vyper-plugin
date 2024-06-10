@@ -35,8 +35,26 @@ public class VyperValueTypeImpl extends ASTWrapperPsiElement implements VyperVal
 
   @Override
   @Nullable
+  public PsiElement getBytesM() {
+    return findChildByType(BYTESM);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getDecimalNumber() {
     return findChildByType(DECIMALNUMBER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getIntM() {
+    return findChildByType(INTM);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getUintM() {
+    return findChildByType(UINTM);
   }
 
 }

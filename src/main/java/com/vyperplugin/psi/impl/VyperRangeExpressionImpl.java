@@ -33,4 +33,10 @@ public class VyperRangeExpressionImpl extends VyperExpressionImpl implements Vyp
     return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getIdentifier() {
+    return findChildByType(IDENTIFIER);
+  }
+
 }

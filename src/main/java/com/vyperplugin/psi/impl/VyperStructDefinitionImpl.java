@@ -29,20 +29,38 @@ public class VyperStructDefinitionImpl extends ASTWrapperPsiElement implements V
 
   @Override
   @Nullable
-  public VyperBadStatement getBadStatement() {
-    return findChildByClass(VyperBadStatement.class);
-  }
-
-  @Override
-  @Nullable
   public VyperLocalVariableDefinition getLocalVariableDefinition() {
     return findChildByClass(VyperLocalVariableDefinition.class);
   }
 
   @Override
   @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
+  public VyperMultiLineString getMultiLineString() {
+    return findChildByClass(VyperMultiLineString.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteralDouble() {
+    return findChildByType(STRINGLITERALDOUBLE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteralDoubleB() {
+    return findChildByType(STRINGLITERALDOUBLEB);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteralSingle() {
+    return findChildByType(STRINGLITERALSINGLE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteralSingleB() {
+    return findChildByType(STRINGLITERALSINGLEB);
   }
 
 }

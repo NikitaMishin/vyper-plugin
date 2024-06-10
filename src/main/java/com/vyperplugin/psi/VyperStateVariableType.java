@@ -5,15 +5,15 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperStateVariableDeclaration extends VyperNamedElement {
+public interface VyperStateVariableType extends VyperElement {
 
   @Nullable
-  VyperExpression getExpression();
+  VyperStateVariableModifier getStateVariableModifier();
 
-  @NotNull
+  @Nullable
   VyperStateVariableType getStateVariableType();
 
-  @NotNull
-  PsiElement getIdentifier();
+  @Nullable
+  VyperType getType();
 
 }

@@ -18,10 +18,6 @@ public class VyperVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitBadStatement(@NotNull VyperBadStatement o) {
-    visitElement(o);
-  }
-
   public void visitCallExpression(@NotNull VyperCallExpression o) {
     visitExpression(o);
     // visitReferenceElement(o);
@@ -75,6 +71,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitFunctionCallArgument(@NotNull VyperFunctionCallArgument o) {
+    visitElement(o);
+  }
+
   public void visitFunctionCallArguments(@NotNull VyperFunctionCallArguments o) {
     visitElement(o);
   }
@@ -101,6 +101,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitImplementsDirective(@NotNull VyperImplementsDirective o) {
     visitElement(o);
+  }
+
+  public void visitInExpression(@NotNull VyperInExpression o) {
+    visitExpression(o);
   }
 
   public void visitIndexAccessExpression(@NotNull VyperIndexAccessExpression o) {
@@ -183,6 +187,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitStateVariableType(@NotNull VyperStateVariableType o) {
+    visitElement(o);
+  }
+
   public void visitStatement(@NotNull VyperStatement o) {
     visitElement(o);
   }
@@ -205,10 +213,6 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitUnaryExpression(@NotNull VyperUnaryExpression o) {
     visitExpression(o);
-  }
-
-  public void visitUnitsDefinition(@NotNull VyperUnitsDefinition o) {
-    visitElement(o);
   }
 
   public void visitUserDefinedConstantsExpression(@NotNull VyperUserDefinedConstantsExpression o) {

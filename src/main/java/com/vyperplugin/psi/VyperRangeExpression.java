@@ -10,4 +10,7 @@ public interface VyperRangeExpression extends VyperExpression {
   @NotNull
   List<VyperExpression> getExpressionList();
 
+  @Nullable
+  PsiElement getIdentifier();
+
 }

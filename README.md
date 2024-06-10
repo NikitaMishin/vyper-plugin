@@ -29,3 +29,5 @@ to generate files for the plugin we use the [Grammar Kit](https://plugins.jetbra
 - Run the `Generate Parser Code` task in the `Vyper.bnf` file. That generates `VyperParser.java` file. However, the generator is not fully Kotlin compatible. We need to add a `Companion` call to `parseLight` manually.
 - Run the `Generate JFlex Lexer` task in the `Vyper.bnf` file. That generates `_VyperLexer.flex` file.
 - Run the `Run JFlex Generator` task in the `_VyperLexer.flex` file. That generates `VyperLexer.java` file.
+
+More documentation: [Grammar-Kit](https://github.com/JetBrains/Grammar-Kit/blob/master/README.md).

@@ -29,14 +29,14 @@ public class VyperStateVariableDeclarationImpl extends VyperNamedElementImpl imp
 
   @Override
   @Nullable
-  public VyperStateVariableModifier getStateVariableModifier() {
-    return findChildByClass(VyperStateVariableModifier.class);
+  public VyperExpression getExpression() {
+    return findChildByClass(VyperExpression.class);
   }
 
   @Override
   @NotNull
-  public VyperType getType() {
-    return findNotNullChildByClass(VyperType.class);
+  public VyperStateVariableType getStateVariableType() {
+    return findNotNullChildByClass(VyperStateVariableType.class);
   }
 
   @Override

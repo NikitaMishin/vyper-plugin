@@ -37,6 +37,9 @@ FIXEDNUMBER=(([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*)*\.([0-9][_0-9]*))
 BOOLEANLITERAL=True|False
 SCIENTIFICNUMBER=((([0-9][_0-9]*)+|([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*|[0-9])*\.[_0-9]+)[Ee][+-]?[_0-9]+)
 HEXNUMBER=(0[xX][_0-9a-fA-F]+)
+INTM=(int[0-9]+)
+UINTM=(uint[0-9]+)
+BYTESM=(bytes[0-9]+)
 NEWLINE=(\n|(\r\n))
 WHITE_SPACE=[ \t\n\x0B\f\r]+
 IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
@@ -85,7 +88,11 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "~"                          { return TILDE; }
   "<<"                         { return LSHIFT; }
   ">>"                         { return RSHIFT; }
+  "&"                          { return BITWISE_AND; }
+  "|"                          { return BITWISE_OR; }
   "public"                     { return PUBLIC; }
+  "immutable"                  { return IMMUTABLE; }
+  "constant"                   { return CONSTANT; }
   "private"                    { return PRIVATE; }
   "nonreentrant"               { return NONREENTRANT; }
   "payable"                    { return PAYABLE; }
@@ -95,9 +102,10 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "pure"                       { return PURE; }
   "event"                      { return EVENT; }
   "range"                      { return RANGE; }
-  "BAD_CHARACTER"              { return BAD_CHARACTER; }
-  "units"                      { return UNITS; }
-  "constant"                   { return CONSTANT; }
+  "string"                     { return STRING; }
+  "bytes"                      { return BYTES; }
+  "DynArray"                   { return DYNARRAY; }
+  "HashMap"                    { return HASHMAP; }
   "as"                         { return AS; }
   "implements"                 { return IMPLEMENTS; }
   "interface"                  { return INTERFACE; }
@@ -118,16 +126,8 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "TypeName"                   { return TYPENAME; }
   "clear"                      { return CLEAR; }
   "assert"                     { return ASSERT; }
-  "int128"                     { return INT128; }
-  "uint256"                    { return UINT256; }
-  "bytes32"                    { return BYTES32; }
   "address"                    { return ADDRESS; }
-  "bytes"                      { return BYTES; }
-  "fixed"                      { return FIXED; }
   "bool"                       { return BOOL; }
-  "string"                     { return STRING; }
-  "map"                        { return MAP; }
-  "HashMap"                    { return HASHMAP; }
 
   {COMMENT}                    { return COMMENT; }
   {HEXLITERAL}                 { return HEXLITERAL; }
@@ -141,6 +141,9 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   {BOOLEANLITERAL}             { return BOOLEANLITERAL; }
   {SCIENTIFICNUMBER}           { return SCIENTIFICNUMBER; }
   {HEXNUMBER}                  { return HEXNUMBER; }
+  {INTM}                       { return INTM; }
+  {UINTM}                      { return UINTM; }
+  {BYTESM}                     { return BYTESM; }
   {NEWLINE}                    { return NEWLINE; }
   {WHITE_SPACE}                { return WHITE_SPACE; }
   {IDENTIFIER}                 { return IDENTIFIER; }
