@@ -88,8 +88,8 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "~"                          { return TILDE; }
   "<<"                         { return LSHIFT; }
   ">>"                         { return RSHIFT; }
-  "&"                          { return BITWISE_AND; }
-  "|"                          { return BITWISE_OR; }
+  "&"                          { return INTERSECTION; }
+  "|"                          { return UNION; }
   "public"                     { return PUBLIC; }
   "immutable"                  { return IMMUTABLE; }
   "constant"                   { return CONSTANT; }

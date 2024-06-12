@@ -42,6 +42,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains:grammar-kit:2022.3.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.intellij.deps.jflex:jflex:1.9.2" level="project" />
     <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java:3.3.6" level="project" />
     <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-httpclient5:3.3.6" level="project" />
@@ -183,7 +184,6 @@
     <orderEntry type="library" name="Gradle: org.glassfish.hk2:hk2-api:2.6.1" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.hk2:hk2-utils:2.6.1" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.hk2.external:aopalliance-repackaged:2.6.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains:grammar-kit:v2022.3.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.4.10" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.4.10" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
