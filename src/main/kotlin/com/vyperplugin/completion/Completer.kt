@@ -79,7 +79,7 @@ object VyperCompleter {
     private fun Collection<VyperFunctionDefinition>.createFunDecLookups(icon: Icon): Array<LookupElement> {
         return map {
             LookupElementBuilder.create(it, it.name + "()")
-                .withIcon(icon).withTypeText("->${it.type?.text ?: "()"}")
+                .withIcon(icon).withTypeText("->${it.funTypeAnnotation?.text ?: "()"}")
         }.toTypedArray().map {
             PrioritizedLookupElement.withPriority(it, 15.0)
         }.toTypedArray()

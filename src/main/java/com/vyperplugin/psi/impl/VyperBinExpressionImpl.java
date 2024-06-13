@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
 import com.vyperplugin.psi.*;
 
-public class VyperRangeExpressionImpl extends VyperExpressionImpl implements VyperRangeExpression {
+public class VyperBinExpressionImpl extends VyperExpressionImpl implements VyperBinExpression {
 
-  public VyperRangeExpressionImpl(@NotNull ASTNode node) {
+  public VyperBinExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitRangeExpression(this);
+    visitor.visitBinExpression(this);
   }
 
   @Override
@@ -28,27 +28,9 @@ public class VyperRangeExpressionImpl extends VyperExpressionImpl implements Vyp
   }
 
   @Override
-  @Nullable
-  public VyperExpression getExpression() {
-    return findChildByClass(VyperExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getDecimalNumber() {
-    return findChildByType(DECIMALNUMBER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getFixedNumber() {
-    return findChildByType(FIXEDNUMBER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getHexNumber() {
-    return findChildByType(HEXNUMBER);
+  @NotNull
+  public List<VyperExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
   }
 
 }

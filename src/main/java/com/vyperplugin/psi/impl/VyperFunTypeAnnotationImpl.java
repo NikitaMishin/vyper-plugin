@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.vyperplugin.psi.*;
 
-public class VyperRangeExpressionImpl extends VyperExpressionImpl implements VyperRangeExpression {
+public class VyperFunTypeAnnotationImpl extends ASTWrapperPsiElement implements VyperFunTypeAnnotation {
 
-  public VyperRangeExpressionImpl(@NotNull ASTNode node) {
+  public VyperFunTypeAnnotationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitRangeExpression(this);
+    visitor.visitFunTypeAnnotation(this);
   }
 
   @Override
@@ -28,27 +28,9 @@ public class VyperRangeExpressionImpl extends VyperExpressionImpl implements Vyp
   }
 
   @Override
-  @Nullable
-  public VyperExpression getExpression() {
-    return findChildByClass(VyperExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getDecimalNumber() {
-    return findChildByType(DECIMALNUMBER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getFixedNumber() {
-    return findChildByType(FIXEDNUMBER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getHexNumber() {
-    return findChildByType(HEXNUMBER);
+  @NotNull
+  public List<VyperType> getTypeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperType.class);
   }
 
 }

@@ -801,7 +801,7 @@ public class _VyperLexer implements FlexLexer {
           // fall through
           case 102: break;
           case 5:
-            { return BITWISE_AND;
+            { return INTERSECTION;
             }
           // fall through
           case 103: break;
@@ -911,7 +911,7 @@ public class _VyperLexer implements FlexLexer {
           // fall through
           case 124: break;
           case 27:
-            { return BITWISE_OR;
+            { return UNION;
             }
           // fall through
           case 125: break;

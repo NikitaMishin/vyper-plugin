@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface VyperFunctionDefinition extends VyperFunctionDefElement {
 
   @Nullable
+  VyperFunTypeAnnotation getFunTypeAnnotation();
+
+  @Nullable
   VyperFunctionArgs getFunctionArgs();
 
   @NotNull
@@ -15,9 +18,6 @@ public interface VyperFunctionDefinition extends VyperFunctionDefElement {
 
   @Nullable
   VyperStatement getStatement();
-
-  @Nullable
-  VyperType getType();
 
   @Nullable
   PsiElement getIdentifier();

@@ -18,6 +18,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitBinExpression(@NotNull VyperBinExpression o) {
+    visitExpression(o);
+  }
+
   public void visitCallExpression(@NotNull VyperCallExpression o) {
     visitExpression(o);
     // visitReferenceElement(o);
@@ -64,6 +68,10 @@ public class VyperVisitor extends PsiElementVisitor {
   }
 
   public void visitForStatement(@NotNull VyperForStatement o) {
+    visitElement(o);
+  }
+
+  public void visitFunTypeAnnotation(@NotNull VyperFunTypeAnnotation o) {
     visitElement(o);
   }
 
@@ -205,6 +213,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitType(@NotNull VyperType o) {
     visitElement(o);
+  }
+
+  public void visitTupleAssignmentExpression(@NotNull VyperTupleAssignmentExpression o) {
+    visitExpression(o);
   }
 
   public void visitUniqueKey(@NotNull VyperUniqueKey o) {

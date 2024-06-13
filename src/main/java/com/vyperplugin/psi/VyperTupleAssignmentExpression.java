@@ -5,18 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperRangeExpression extends VyperExpression {
+public interface VyperTupleAssignmentExpression extends VyperExpression {
 
   @Nullable
   VyperExpression getExpression();
-
-  @Nullable
-  PsiElement getDecimalNumber();
-
-  @Nullable
-  PsiElement getFixedNumber();
-
-  @Nullable
-  PsiElement getHexNumber();
 
 }

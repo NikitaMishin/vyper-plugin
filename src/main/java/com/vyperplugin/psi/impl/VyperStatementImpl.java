@@ -34,9 +34,9 @@ public class VyperStatementImpl extends ASTWrapperPsiElement implements VyperSta
   }
 
   @Override
-  @Nullable
-  public VyperExpression getExpression() {
-    return findChildByClass(VyperExpression.class);
+  @NotNull
+  public List<VyperExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
   }
 
   @Override

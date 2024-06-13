@@ -6,9 +6,6 @@ plugins {
 
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
     id 'org.jetbrains.kotlin.jvm' version '2.0.0'
-
-    // https://plugins.gradle.org/plugin/org.jetbrains.grammarkit
-    id 'org.jetbrains.grammarkit' version '2022.3'
 }
 
 
@@ -72,33 +69,4 @@ kotlin {
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-}
-
-grammarKit {
-    // https://github.com/JetBrains/intellij-deps-jflex/releases
-    jflexRelease.set("1.9.2")
-    // https://github.com/JetBrains/Grammar-Kit/releases
-    grammarKitRelease.set("2022.3.2")
-}
-
-
-tasks {
-    generateLexer {
-        sourceFile.set(file("src/main/kotlin/com/vyperplugin/grammar/_VyperLexer.flex"))
-        targetOutputDir.set(file("src/main/java/com/vyperplugin/lexer"))
-        targetClass.set("_VyperLexer")
-        purgeOldFiles.set(true)
-    }
-    generateParser {
-        sourceFile.set(file("src/main/kotlin/com/vyperplugin/grammar/_VyperLexer.flex"))
-        targetRootOutputDir.set(file("src/main"))
-        pathToParser.set("java/com/vyperplugin/parser/VyperParser.java")
-        pathToPsiRoot.set("java/com/vyperplugin/psi")
-        purgeOldFiles.set(true)
-//        classpath(project(":$grammarKitFakePsiDeps").sourceSets.main.get().runtimeClasspath)
-    }
-
-    compileKotlin {
-        dependsOn(generateLexer, generateParser)
-    }
 }

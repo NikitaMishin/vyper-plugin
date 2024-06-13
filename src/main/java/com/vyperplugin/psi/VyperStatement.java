@@ -10,8 +10,8 @@ public interface VyperStatement extends VyperElement {
   @Nullable
   VyperEmitStatement getEmitStatement();
 
-  @Nullable
-  VyperExpression getExpression();
+  @NotNull
+  List<VyperExpression> getExpressionList();
 
   @Nullable
   VyperForStatement getForStatement();

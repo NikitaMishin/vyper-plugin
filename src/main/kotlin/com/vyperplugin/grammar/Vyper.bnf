@@ -131,8 +131,8 @@ private Parenthesis ::= '(' &INDNONE ')'
 
 UserDefinedConstantsExpression ::= Identifier &INDNONE ':' &INDNONE constant &INDNONE'(' TYPE ')' &INDNONE'=' &INDNONE Expression  {
     pin=5
-    mixin = "com.vyperplugin.gen.psi.VyperNamedElementImpl"
-    implements = "com.vyperplugin.gen.psi.VyperNamedElement"
+    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+    implements = "com.vyperplugin.psi.VyperNamedElement"
 }
 
 private ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
@@ -156,8 +156,8 @@ private ExternalFunStatus ::= pure | view | nonpayable | payable
 FunctionArgs ::= '(' (ParamDef (',' (ParamDef | & ')'))*)? ')' {pin(".*")=1}
 
 ParamDef ::= Identifier ':' TYPE ('=' Expression)? {
-    mixin = "com.vyperplugin.gen.psi.VyperNamedElementImpl"
-    implements = "com.vyperplugin.gen.psi.VyperNamedElement"
+    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+    implements = "com.vyperplugin.psi.VyperNamedElement"
 }
 
 // could be default assignment
@@ -191,8 +191,8 @@ private IndexedType ::= 'indexed'
 StateVariableType ::= TYPE | StateVariableModifier &INDNONE '(' &INDNONE StateVariableType &INDNONE ')'
 StateVariableDeclaration ::= Identifier &INDNONE ':' StateVariableType (&INDNONE '=' &INDNONE Expression)?
 {
-    mixin = "com.vyperplugin.gen.psi.VyperNamedElementImpl"
-    implements = "com.vyperplugin.gen.psi.VyperNamedElement"
+    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+    implements = "com.vyperplugin.psi.VyperNamedElement"
 }
 
 // StateVariableModifier if omitted then it's private. () to not shadow private
@@ -202,8 +202,8 @@ StateVariableModifier ::= public | private | immutable | constant
 LocalVariableDefinition ::=  ( LocalVariableDeclaration (&INDNONE '=') (&INDNONE Expression) ) | LocalVariableDeclaration
 LocalVariableDeclaration ::= Identifier &INDNONE ':' &INDNONE TYPE
 {
-    mixin = "com.vyperplugin.gen.psi.VyperNamedElementImpl"
-    implements = "com.vyperplugin.gen.psi.VyperNamedElement"
+    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+    implements = "com.vyperplugin.psi.VyperNamedElement"
 }
 
 MultiLineString ::= MultiLineStringToken
@@ -219,8 +219,8 @@ FunTypeAnnotation ::= &INDNONE '->' &INDNONE ( TYPE | '(' TYPE (',' TYPE)* ')' )
 FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef FunBody
 {
     pin=1
-    implements = "com.vyperplugin.gen.psi.VyperFunctionDefElement"
-    mixin = "com.vyperplugin.gen.psi.VyperFunctionDefMixin"
+    implements = "com.vyperplugin.psi.VyperFunctionDefElement"
+    mixin = "com.vyperplugin.psi.VyperFunctionDefMixin"
 }
 
 
@@ -279,13 +279,13 @@ private Continue ::= continue
 
 private Break ::= break
 
-private Return ::= return (&INDNONE Expression)? {
-pin=1
+private Return ::= return (&INDNONE Expression (',' Expression)*)? {
+    pin=1
 }
 private Raise ::= raise
 
 EmitStatement ::= 'log.' &INDNONE FunctionCallExpression {
-pin=1
+    pin=1
 }
 
 private PassStatement ::= pass
@@ -305,7 +305,7 @@ Expression ::=
   | PlusMinExpression
   | MultDivExpression
   | ExponentExpression
-  | SetExpression
+  | BinExpression
   | UnaryExpression
   | ClearExpression
   | IndexAccessExpression
@@ -322,12 +322,9 @@ InExpression ::= Expression &INDNONE 'in' &INDNONE Expression
 
 //self function call?
 
-private RangeInterval ::= PrimaryExpression ',' PrimaryExpression ',' PrimaryExpression
-                         | PrimaryExpression ',' PrimaryExpression
-                         | PrimaryExpression
+private RangeInterval ::= (Identifier | NumberLiteral) (&INDNONE ',' &INDNONE Expression)?
 
-
-RangeExpression ::= range &INDNONE '(' (Expression | RangeInterval ) (',' 'bound' '=' Identifier)? ')'
+RangeExpression ::= range &INDNONE '(' RangeInterval (',' 'bound' '=' Identifier)? ')'
 
 NewExpression ::= Identifier (&INDNONE'(') '{' (  ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression)
                              (',' ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression))*)? '}' ')'
@@ -342,8 +339,8 @@ TupleAssignmentExpression ::= Identifier (',' Identifier)+ &INDNONE '=' Expressi
 CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
                   &INDNONE FunctionCallArguments (&INDNONE FunctionCallArguments)*
 {
-    implements = "com.vyperplugin.gen.psi.VyperReferenceElement"
-    mixin = "com.vyperplugin.gen.psi.VyperCallElement"
+    implements = "com.vyperplugin.psi.VyperReferenceElement"
+    mixin = "com.vyperplugin.psi.VyperCallElement"
 }
 
 //??
@@ -378,7 +375,7 @@ CompExpression ::= Expression ('<' | '>' | '<=' | '>=') Expression
 PlusMinExpression ::= Expression ('+' | '-') Expression
 MultDivExpression ::= Expression ('*' | '/' | '%') Expression
 ExponentExpression ::= Expression '**' Expression
-SetExpression ::= Expression ('|' | '&') Expression
+BinExpression ::= Expression (UNION | INTERSECTION | RSHIFT | LSHIFT) Expression
 
 AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {
     pin = 1
@@ -392,8 +389,8 @@ FunctionCallArguments ::= '(' (FunctionCallArgument (',' (FunctionCallArgument |
 PrimaryExpression ::= VarLiteral | BooleanLiteral | NumberLiteral | HexLiteral | StringLiteral
     | TYPE // type is accepted as parameter in some built-in functions
 
-VarLiteral ::= Identifier {implements = "com.vyperplugin.gen.psi.VyperReferenceElement"
-                           mixin = "com.vyperplugin.gen.psi.VyperVarLiteralMixin"
+VarLiteral ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
+                           mixin = "com.vyperplugin.psi.VyperVarLiteralMixin"
                            name = "variable"
                            }
 
@@ -410,8 +407,8 @@ ListType ::= ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier
 
 StructType ::= Identifier
 {
-    implements = "com.vyperplugin.gen.psi.VyperReferenceElement"
-    mixin = "com.vyperplugin.gen.psi.VyperStructTypeMixin"
+    implements = "com.vyperplugin.psi.VyperReferenceElement"
+    mixin = "com.vyperplugin.psi.VyperStructTypeMixin"
 }
 
 MapType ::= ( ( DynArray | HashMap ) &INDNONE '[' ValueType ',' TYPE ']' )

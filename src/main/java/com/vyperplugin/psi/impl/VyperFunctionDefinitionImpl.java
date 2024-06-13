@@ -29,6 +29,12 @@ public class VyperFunctionDefinitionImpl extends VyperFunctionDefMixin implement
 
   @Override
   @Nullable
+  public VyperFunTypeAnnotation getFunTypeAnnotation() {
+    return findChildByClass(VyperFunTypeAnnotation.class);
+  }
+
+  @Override
+  @Nullable
   public VyperFunctionArgs getFunctionArgs() {
     return findChildByClass(VyperFunctionArgs.class);
   }
@@ -43,12 +49,6 @@ public class VyperFunctionDefinitionImpl extends VyperFunctionDefMixin implement
   @Nullable
   public VyperStatement getStatement() {
     return findChildByClass(VyperStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public VyperType getType() {
-    return findChildByClass(VyperType.class);
   }
 
   @Override
