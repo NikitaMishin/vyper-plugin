@@ -55,7 +55,7 @@ class VyperParserDefinition : ParserDefinition {
     }
 
     companion object {
-        val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE)
+        val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE, VyperTypes.BREAK_LINE)
         val COMMENTS = TokenSet.create(VyperTypes.COMMENT)
         val FILE = IFileElementType(VyperLanguage)
     }

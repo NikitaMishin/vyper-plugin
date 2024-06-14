@@ -21,4 +21,8 @@ class TestExamples : BasePlatformTestCase() {
         myFixture.testHighlighting("test.vy")
     }
 
+    fun testBackslash() {
+        myFixture.testHighlighting("backslash.vy")
+    }
+
 }

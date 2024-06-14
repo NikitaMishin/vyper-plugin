@@ -94,9 +94,8 @@
         DynArray = 'DynArray'
         HashMap = 'HashMap'
 
-        newline = 'regexp:(\n|(\r\n))'
-        WHITE_SPACE = 'regexp:\s+'
-
+        newline = 'regexp:(\r?\n)'
+        BREAK_LINE = 'regexp:(\s*\\\s*\n)'
         Identifier='regexp:([A-Za-z_]\w*)'
         //add !@ etc.
     //    BadStatementString = 'regexp:(\w+)'

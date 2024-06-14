@@ -40,8 +40,8 @@ HEXNUMBER=(0[xX][_0-9a-fA-F]+)
 INTM=(int[0-9]+)
 UINTM=(uint[0-9]+)
 BYTESM=(bytes[0-9]+)
-NEWLINE=(\n|(\r\n))
-WHITE_SPACE=[ \t\n\x0B\f\r]+
+NEWLINE=(\r?\n)
+BREAK_LINE=([ \t\n\x0B\f\r]*\\[ \t\n\x0B\f\r]*\n)
 IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
 
 %%
@@ -145,7 +145,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   {UINTM}                      { return UINTM; }
   {BYTESM}                     { return BYTESM; }
   {NEWLINE}                    { return NEWLINE; }
-  {WHITE_SPACE}                { return WHITE_SPACE; }
+  {BREAK_LINE}                 { return BREAK_LINE; }
   {IDENTIFIER}                 { return IDENTIFIER; }
 
 }
