@@ -80,7 +80,7 @@
     <orderEntry type="module-library">
       <library name="Gradle: com.jetbrains:ideaIC:241.17011.79">
         <ANNOTATIONS>
-          <root url="jar://$MAVEN_REPOSITORY$/com/jetbrains/intellij/idea/ideaIU/241.17890.1/ideaIU-241.17890.1-annotations.zip!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/jetbrains/intellij/idea/ideaIU/241.18034.12-EAP-SNAPSHOT/ideaIU-241.18034.12-EAP-SNAPSHOT-annotations.zip!/" />
         </ANNOTATIONS>
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/241.17011.79/e09f76f10d23a686921c681f7df35f5607d507a0/ideaIC-241.17011.79/lib/app.jar!/" />
