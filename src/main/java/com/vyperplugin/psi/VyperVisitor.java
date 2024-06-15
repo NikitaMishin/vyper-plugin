@@ -215,6 +215,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitTernaryExpression(@NotNull VyperTernaryExpression o) {
+    visitExpression(o);
+  }
+
   public void visitTupleAssignmentExpression(@NotNull VyperTupleAssignmentExpression o) {
     visitExpression(o);
   }

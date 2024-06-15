@@ -25,19 +25,4 @@ public interface VyperStatement extends VyperElement {
   @Nullable
   VyperMultiLineString getMultiLineString();
 
-  @Nullable
-  PsiElement getIdentifier();
-
-  @Nullable
-  PsiElement getStringLiteralDouble();
-
-  @Nullable
-  PsiElement getStringLiteralDoubleB();
-
-  @Nullable
-  PsiElement getStringLiteralSingle();
-
-  @Nullable
-  PsiElement getStringLiteralSingleB();
-
 }

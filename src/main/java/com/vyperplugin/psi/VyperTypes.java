@@ -59,6 +59,7 @@ public interface VyperTypes {
   IElementType STATE_VARIABLE_TYPE = new VyperElementType("STATE_VARIABLE_TYPE");
   IElementType STRUCT_DEFINITION = new VyperElementType("STRUCT_DEFINITION");
   IElementType STRUCT_TYPE = new VyperElementType("STRUCT_TYPE");
+  IElementType TERNARY_EXPRESSION = new VyperElementType("TERNARY_EXPRESSION");
   IElementType TUPLE_ASSIGNMENT_EXPRESSION = new VyperElementType("TUPLE_ASSIGNMENT_EXPRESSION");
   IElementType TYPE = new VyperElementType("TYPE");
   IElementType UNARY_EXPRESSION = new VyperElementType("UNARY_EXPRESSION");
@@ -317,6 +318,9 @@ public interface VyperTypes {
       }
       else if (type == STRUCT_TYPE) {
         return new VyperStructTypeImpl(node);
+      }
+      else if (type == TERNARY_EXPRESSION) {
+        return new VyperTernaryExpressionImpl(node);
       }
       else if (type == TUPLE_ASSIGNMENT_EXPRESSION) {
         return new VyperTupleAssignmentExpressionImpl(node);

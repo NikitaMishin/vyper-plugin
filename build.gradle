@@ -6,11 +6,13 @@ plugins {
 
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
     id 'org.jetbrains.kotlin.jvm' version '2.0.0'
+
+    // https://plugins.gradle.org/plugin/org.jetbrains.kotlinx.kover
+    id 'org.jetbrains.kotlinx.kover' version '0.8.1'
 }
 
 
 repositories {
-//    maven { url "https://plugins.gradle.org/m2/" }
     maven { url "https://www.jetbrains.com/intellij-repository/snapshots" }
     maven { url "https://www.jetbrains.com/intellij-repository/releases" }
     mavenCentral()
@@ -30,7 +32,6 @@ intellij {
 }
 
 dependencies {
-
     // https://mvnrepository.com/artifact/com.github.docker-java/docker-java
     implementation group: 'com.github.docker-java', name: 'docker-java', version: '3.3.6'
 
@@ -69,4 +70,15 @@ kotlin {
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
+kover {
+    reports {
+        total {
+            xml {
+                onCheck = true
+            }
+        }
+    }
 }

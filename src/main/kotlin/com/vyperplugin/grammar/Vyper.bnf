@@ -241,8 +241,7 @@ Statement ::= PassStatement
               | Raise
               | EmitStatement
               | SimpleStatement
-              | Identifier
-              | StringLiteral
+              | MultiLineString // docstring
               {recoverWhile = recoverStatement}
 
 private recoverStatement ::= !(&INDEQ|&INDLT)
@@ -262,7 +261,6 @@ IfStatement ::= if &INDNONE CondStmt
                 (&INDEQ ElifStmt)*
                 (&INDEQ ElseStmt)?
                 {pin=1}
-
 
 private SimpleStatement ::= LocalVariableDefinition | ExpressionStatement
 private ExpressionStatement ::= Expression
@@ -290,7 +288,8 @@ EmitStatement ::= 'log.' &INDNONE FunctionCallExpression {
 private PassStatement ::= pass
 
 Expression ::=
-  AssignmentExpression
+  TernaryExpression
+  | AssignmentExpression
   | TupleAssignmentExpression
   | RangeExpression
   | ParenthesiziedExpression
@@ -318,6 +317,8 @@ Expression ::=
 EventLogExpression ::= log &INDNONE Identifier '(' Expression (',' Expression)* ')'
 
 InExpression ::= Expression &INDNONE 'in' &INDNONE Expression
+
+TernaryExpression ::= Expression &INDNONE if &INDNONE Expression &INDNONE else &INDNONE Expression { pin = 1 }
 
 //self function call?
 

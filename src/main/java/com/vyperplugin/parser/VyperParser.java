@@ -42,7 +42,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
       INDEX_ACCESS_EXPRESSION, INLINE_ARRAY_EXPRESSION, IN_EXPRESSION, MEMBER_ACCESS_EXPRESSION,
       MEMBER_INDEX_ACCESS, MULT_DIV_EXPRESSION, NEW_EXPRESSION, OR_EXPRESSION,
       PARENTHESIZIED_EXPRESSION, PLUS_MIN_EXPRESSION, PRIMARY_EXPRESSION, RANGE_EXPRESSION,
-      TUPLE_ASSIGNMENT_EXPRESSION, UNARY_EXPRESSION, USER_DEFINED_CONSTANTS_EXPRESSION),
+      TERNARY_EXPRESSION, TUPLE_ASSIGNMENT_EXPRESSION, UNARY_EXPRESSION, USER_DEFINED_CONSTANTS_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -2502,8 +2502,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
   //               | Raise
   //               | EmitStatement
   //               | SimpleStatement
-  //               | Identifier
-  //               | StringLiteral
+  //               | MultiLineString
   public static boolean Statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Statement")) return false;
     boolean r;
@@ -2517,8 +2516,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!r) r = Raise(b, l + 1);
     if (!r) r = EmitStatement(b, l + 1);
     if (!r) r = SimpleStatement(b, l + 1);
-    if (!r) r = consumeToken(b, IDENTIFIER);
-    if (!r) r = StringLiteral(b, l + 1);
+    if (!r) r = MultiLineString(b, l + 1);
     exit_section_(b, l, m, r, false, VyperParser::recoverStatement);
     return r;
   }
@@ -3027,30 +3025,31 @@ public class VyperParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // Expression root: Expression
   // Operator priority table:
-  // 0: BINARY(AssignmentExpression)
-  // 1: PREFIX(TupleAssignmentExpression)
-  // 2: ATOM(RangeExpression)
-  // 3: ATOM(ParenthesiziedExpression)
-  // 4: POSTFIX(CallExpression)
-  // 5: ATOM(NewExpression)
-  // 6: ATOM(AssertExpression)
-  // 7: BINARY(EqExpression)
-  // 8: BINARY(OrExpression)
-  // 9: BINARY(AndExpression)
-  // 10: BINARY(CompExpression)
-  // 11: BINARY(PlusMinExpression)
-  // 12: BINARY(MultDivExpression)
-  // 13: BINARY(ExponentExpression)
-  // 14: BINARY(BinExpression)
-  // 15: PREFIX(UnaryExpression)
-  // 16: ATOM(ClearExpression)
-  // 17: BINARY(IndexAccessExpression)
-  // 18: POSTFIX(MemberAccessExpression)
-  // 19: BINARY(MemberIndexAccess)
-  // 20: ATOM(InlineArrayExpression)
-  // 21: ATOM(PrimaryExpression)
-  // 22: ATOM(EventLogExpression)
-  // 23: BINARY(InExpression)
+  // 0: BINARY(TernaryExpression)
+  // 1: BINARY(AssignmentExpression)
+  // 2: PREFIX(TupleAssignmentExpression)
+  // 3: ATOM(RangeExpression)
+  // 4: ATOM(ParenthesiziedExpression)
+  // 5: POSTFIX(CallExpression)
+  // 6: ATOM(NewExpression)
+  // 7: ATOM(AssertExpression)
+  // 8: BINARY(EqExpression)
+  // 9: BINARY(OrExpression)
+  // 10: BINARY(AndExpression)
+  // 11: BINARY(CompExpression)
+  // 12: BINARY(PlusMinExpression)
+  // 13: BINARY(MultDivExpression)
+  // 14: BINARY(ExponentExpression)
+  // 15: BINARY(BinExpression)
+  // 16: PREFIX(UnaryExpression)
+  // 17: ATOM(ClearExpression)
+  // 18: BINARY(IndexAccessExpression)
+  // 19: POSTFIX(MemberAccessExpression)
+  // 20: BINARY(MemberIndexAccess)
+  // 21: ATOM(InlineArrayExpression)
+  // 22: ATOM(PrimaryExpression)
+  // 23: ATOM(EventLogExpression)
+  // 24: BINARY(InExpression)
   public static boolean Expression(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "Expression")) return false;
     addVariant(b, "<expression>");
@@ -3077,62 +3076,67 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r = true;
     while (true) {
       Marker m = enter_section_(b, l, _LEFT_, null);
-      if (g < 0 && AssignmentExpression_0(b, l + 1)) {
-        r = Expression(b, l, -1);
+      if (g < 0 && TernaryExpression_0(b, l + 1)) {
+        r = report_error_(b, Expression(b, l, 0));
+        r = TernaryExpression_1(b, l + 1) && r;
+        exit_section_(b, l, m, TERNARY_EXPRESSION, r, true, null);
+      }
+      else if (g < 1 && AssignmentExpression_0(b, l + 1)) {
+        r = Expression(b, l, 0);
         exit_section_(b, l, m, ASSIGNMENT_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && CallExpression_0(b, l + 1)) {
+      else if (g < 5 && CallExpression_0(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, CALL_EXPRESSION, r, true, null);
       }
-      else if (g < 7 && EqExpression_0(b, l + 1)) {
-        r = Expression(b, l, 7);
+      else if (g < 8 && EqExpression_0(b, l + 1)) {
+        r = Expression(b, l, 8);
         exit_section_(b, l, m, EQ_EXPRESSION, r, true, null);
       }
-      else if (g < 8 && consumeTokenSmart(b, OR)) {
-        r = Expression(b, l, 8);
+      else if (g < 9 && consumeTokenSmart(b, OR)) {
+        r = Expression(b, l, 9);
         exit_section_(b, l, m, OR_EXPRESSION, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, AND)) {
-        r = Expression(b, l, 9);
+      else if (g < 10 && consumeTokenSmart(b, AND)) {
+        r = Expression(b, l, 10);
         exit_section_(b, l, m, AND_EXPRESSION, r, true, null);
       }
-      else if (g < 10 && CompExpression_0(b, l + 1)) {
-        r = Expression(b, l, 10);
+      else if (g < 11 && CompExpression_0(b, l + 1)) {
+        r = Expression(b, l, 11);
         exit_section_(b, l, m, COMP_EXPRESSION, r, true, null);
       }
-      else if (g < 11 && PlusMinExpression_0(b, l + 1)) {
-        r = Expression(b, l, 11);
+      else if (g < 12 && PlusMinExpression_0(b, l + 1)) {
+        r = Expression(b, l, 12);
         exit_section_(b, l, m, PLUS_MIN_EXPRESSION, r, true, null);
       }
-      else if (g < 12 && MultDivExpression_0(b, l + 1)) {
-        r = Expression(b, l, 12);
+      else if (g < 13 && MultDivExpression_0(b, l + 1)) {
+        r = Expression(b, l, 13);
         exit_section_(b, l, m, MULT_DIV_EXPRESSION, r, true, null);
       }
-      else if (g < 13 && consumeTokenSmart(b, EXPONENT)) {
-        r = Expression(b, l, 13);
+      else if (g < 14 && consumeTokenSmart(b, EXPONENT)) {
+        r = Expression(b, l, 14);
         exit_section_(b, l, m, EXPONENT_EXPRESSION, r, true, null);
       }
-      else if (g < 14 && BinExpression_0(b, l + 1)) {
-        r = Expression(b, l, 14);
+      else if (g < 15 && BinExpression_0(b, l + 1)) {
+        r = Expression(b, l, 15);
         exit_section_(b, l, m, BIN_EXPRESSION, r, true, null);
       }
-      else if (g < 17 && IndexAccessExpression_0(b, l + 1)) {
-        r = report_error_(b, Expression(b, l, 17));
+      else if (g < 18 && IndexAccessExpression_0(b, l + 1)) {
+        r = report_error_(b, Expression(b, l, 18));
         r = consumeToken(b, RBRACKET) && r;
         exit_section_(b, l, m, INDEX_ACCESS_EXPRESSION, r, true, null);
       }
-      else if (g < 18 && MemberAccessExpression_0(b, l + 1)) {
+      else if (g < 19 && MemberAccessExpression_0(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, MEMBER_ACCESS_EXPRESSION, r, true, null);
       }
-      else if (g < 19 && MemberIndexAccess_0(b, l + 1)) {
-        r = report_error_(b, Expression(b, l, 19));
+      else if (g < 20 && MemberIndexAccess_0(b, l + 1)) {
+        r = report_error_(b, Expression(b, l, 20));
         r = MemberIndexAccess_1(b, l + 1) && r;
         exit_section_(b, l, m, MEMBER_INDEX_ACCESS, r, true, null);
       }
-      else if (g < 23 && InExpression_0(b, l + 1)) {
-        r = Expression(b, l, 23);
+      else if (g < 24 && InExpression_0(b, l + 1)) {
+        r = Expression(b, l, 24);
         exit_section_(b, l, m, IN_EXPRESSION, r, true, null);
       }
       else {
@@ -3140,6 +3144,71 @@ public class VyperParser implements PsiParser, LightPsiParser {
         break;
       }
     }
+    return r;
+  }
+
+  // &INDNONE if &INDNONE
+  private static boolean TernaryExpression_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TernaryExpression_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = TernaryExpression_0_0(b, l + 1);
+    r = r && consumeTokenSmart(b, IF);
+    r = r && TernaryExpression_0_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean TernaryExpression_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TernaryExpression_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean TernaryExpression_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TernaryExpression_0_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE else &INDNONE Expression
+  private static boolean TernaryExpression_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TernaryExpression_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = TernaryExpression_1_0(b, l + 1);
+    r = r && consumeToken(b, ELSE);
+    r = r && TernaryExpression_1_2(b, l + 1);
+    r = r && Expression(b, l + 1, -1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean TernaryExpression_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TernaryExpression_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean TernaryExpression_1_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TernaryExpression_1_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -3184,7 +3253,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = TupleAssignmentExpression_0(b, l + 1);
     p = r;
-    r = p && Expression(b, l, 1);
+    r = p && Expression(b, l, 2);
     exit_section_(b, l, m, TUPLE_ASSIGNMENT_EXPRESSION, r, p, null);
     return r || p;
   }
@@ -3663,7 +3732,7 @@ public class VyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = UnaryExpression_0(b, l + 1);
     p = r;
-    r = p && Expression(b, l, 15);
+    r = p && Expression(b, l, 16);
     exit_section_(b, l, m, UNARY_EXPRESSION, r, p, null);
     return r || p;
   }
