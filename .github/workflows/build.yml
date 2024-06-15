@@ -56,6 +56,14 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
+      # Set environment variables
+      - name: Export Properties
+        id: properties
+        shell: bash
+        run: |
+          echo "pluginVerifierHomeDir=~/.pluginVerifier" >> $GITHUB_OUTPUT
+          ./gradlew listProductsReleases # prepare list of IDEs for Plugin Verifier
+
       # Build plugin
       - name: Build plugin
         run: ./gradlew buildPlugin
