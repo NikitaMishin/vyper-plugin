@@ -10,7 +10,7 @@ public interface VyperFunctionCallExpression extends VyperExpression {
   @NotNull
   List<VyperExpression> getExpressionList();
 
-  @Nullable
+  @NotNull
   VyperFunctionCallArguments getFunctionCallArguments();
 
 }

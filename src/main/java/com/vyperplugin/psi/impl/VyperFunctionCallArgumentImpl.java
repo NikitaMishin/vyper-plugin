@@ -11,14 +11,14 @@ import static com.vyperplugin.psi.VyperTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.vyperplugin.psi.*;
 
-public class VyperBadStatementImpl extends ASTWrapperPsiElement implements VyperBadStatement {
+public class VyperFunctionCallArgumentImpl extends ASTWrapperPsiElement implements VyperFunctionCallArgument {
 
-  public VyperBadStatementImpl(@NotNull ASTNode node) {
+  public VyperFunctionCallArgumentImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitBadStatement(this);
+    visitor.visitFunctionCallArgument(this);
   }
 
   @Override
@@ -28,39 +28,15 @@ public class VyperBadStatementImpl extends ASTWrapperPsiElement implements Vyper
   }
 
   @Override
-  @Nullable
-  public VyperMultiLineString getMultiLineString() {
-    return findChildByClass(VyperMultiLineString.class);
+  @NotNull
+  public VyperExpression getExpression() {
+    return findNotNullChildByClass(VyperExpression.class);
   }
 
   @Override
   @Nullable
   public PsiElement getIdentifier() {
     return findChildByType(IDENTIFIER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getStringLiteralDouble() {
-    return findChildByType(STRINGLITERALDOUBLE);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getStringLiteralDoubleB() {
-    return findChildByType(STRINGLITERALDOUBLEB);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getStringLiteralSingle() {
-    return findChildByType(STRINGLITERALSINGLE);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getStringLiteralSingleB() {
-    return findChildByType(STRINGLITERALSINGLEB);
   }
 
 }

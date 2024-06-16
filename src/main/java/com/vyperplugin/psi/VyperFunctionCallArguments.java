@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface VyperFunctionCallArguments extends VyperElement {
 
   @NotNull
-  List<VyperExpression> getExpressionList();
+  List<VyperFunctionCallArgument> getFunctionCallArgumentList();
 
 }

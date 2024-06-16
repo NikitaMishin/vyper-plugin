@@ -7,7 +7,16 @@ import com.intellij.psi.PsiElement;
 
 public interface VyperRangeExpression extends VyperExpression {
 
-  @NotNull
-  List<VyperExpression> getExpressionList();
+  @Nullable
+  VyperExpression getExpression();
+
+  @Nullable
+  PsiElement getDecimalNumber();
+
+  @Nullable
+  PsiElement getFixedNumber();
+
+  @Nullable
+  PsiElement getHexNumber();
 
 }

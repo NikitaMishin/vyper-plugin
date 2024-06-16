@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.vyperplugin.psi.*;
 
-public class VyperCustomUnitTypeImpl extends ASTWrapperPsiElement implements VyperCustomUnitType {
+public class VyperInExpressionImpl extends VyperExpressionImpl implements VyperInExpression {
 
-  public VyperCustomUnitTypeImpl(@NotNull ASTNode node) {
+  public VyperInExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitCustomUnitType(this);
+    visitor.visitInExpression(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class VyperCustomUnitTypeImpl extends ASTWrapperPsiElement implements Vyp
 
   @Override
   @NotNull
-  public VyperExpression getExpression() {
-    return findNotNullChildByClass(VyperExpression.class);
+  public List<VyperExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
   }
 
 }

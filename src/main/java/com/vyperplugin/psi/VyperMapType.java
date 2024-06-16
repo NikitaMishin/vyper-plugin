@@ -8,18 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface VyperMapType extends VyperElement {
 
   @Nullable
-  VyperListType getListType();
+  VyperType getType();
 
   @Nullable
-  VyperMapType getMapType();
-
-  @Nullable
-  VyperStructType getStructType();
-
-  @NotNull
-  List<VyperUnitType> getUnitTypeList();
-
-  @NotNull
-  List<VyperValueType> getValueTypeList();
+  VyperValueType getValueType();
 
 }

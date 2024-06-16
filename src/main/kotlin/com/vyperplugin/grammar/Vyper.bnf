@@ -1,223 +1,185 @@
-
-
 {
+    parserClass="com.vyperplugin.parser.VyperParser"
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+    implements="com.vyperplugin.psi.VyperElement"
 
+    psiClassPrefix="Vyper"
+    psiImplClassSuffix="Impl"
+    psiPackage="com.vyperplugin.psi"
+    psiImplPackage="com.vyperplugin.psi.impl"
 
-  parserClass="com.vyperplugin.parser.VyperParser"
-  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
-  implements="com.vyperplugin.psi.VyperElement"
+    elementTypeHolderClass="com.vyperplugin.psi.VyperTypes"
+    elementTypeClass="com.vyperplugin.psi.VyperElementType"
+    tokenTypeClass="com.vyperplugin.psi.VyperTokenType"
 
-  psiClassPrefix="Vyper"
-  psiImplClassSuffix="Impl"
-  psiPackage="com.vyperplugin.psi"
-  psiImplPackage="com.vyperplugin.psi.impl"
+    parserUtilClass = "com.vyperplugin.parser.ParserUtil"
 
-  elementTypeHolderClass="com.vyperplugin.psi.VyperTypes"
-  elementTypeClass="com.vyperplugin.psi.VyperElementType"
-  tokenTypeClass="com.vyperplugin.psi.VyperTokenType"
+    tokens = [
+        DECORATOR = '@'
+        comment='regexp:(#.*)'
+        SEMICOLON=';'
+        COMMA=','
+        DOT='.'
+        COLON=':'
+        LBRACKET='['
+        RBRACKET=']'
+        LBRACE='{'
+        RBRACE='}'
+        LPAREN='('
+        RPAREN=')'
+        IMPORT = 'import'
+        FROM = 'from'
 
-  parserUtilClass = "com.vyperplugin.parser.ParserUtil"
+        PLUS='+'
+        MINUS='-'
+        MULT='*'
+        DIV='/'
+        EXPONENT='**'
+        NOT='not'
+        ASSIGN='='
+        TO='=>'
+        EQ='=='
+        NEQ='!='
+        PLUS_ASSIGN='+='
+        MINUS_ASSIGN='-='
+        MULT_ASSIGN='*='
+        DIV_ASSIGN='/='
+        PERCENT_ASSIGN='%='
+        LESS='<'
+        LESSEQ='<='
+        MORE='>'
+        MOREEQ='>='
+        CARET='^'
+        AND='and'
+        OR='or'
+        QUESTION='?'
+        PERCENT='%'
+        TILDE='~'
+        LSHIFT='<<'
+        RSHIFT='>>'
+        INTERSECTION='&'
+        UNION='|'
 
+        hexLiteral='regexp:hex"([0-9a-fA-F]+)"'
+        stringLiteralDouble='regexp:("([^"\r\n\\]|\\.)*")'
+        stringLiteralDoubleB='regexp:(b"([^"\r\n\\]|\\.)*")'
+        stringLiteralSingle="regexp:('([^'\r\n\\]|\\.)*')"
+        stringLiteralSingleB="regexp:(b'([^'\r\n\\]|\\.)*')"
+        MultiLineStringToken = 'regexp:("""([^"]|"[^"]|""[^"])*""")'
 
+        decimalNumber='regexp:([0-9][_0-9]*)'
+        fixedNumber='regexp:(([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*)*\.([0-9][_0-9]*))'
+        booleanLiteral='regexp:True|False'
+        scientificNumber='regexp:((([0-9][_0-9]*)+|([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*|[0-9])*\.[_0-9]+)[Ee][+-]?[_0-9]+)'
+        hexNumber='regexp:(0[xX][_0-9a-fA-F]+)'
 
-tokens = [
-   DECORATOR = '@'
-   comment='regexp:(#.*)'
-   SEMICOLON=';'
-   COMMA=','
-   DOT='.'
-   COLON=':'
-   LBRACKET='['
-   RBRACKET=']'
-   LBRACE='{'
-   RBRACE='}'
-   LPAREN='('
-   RPAREN=')'
-   IMPORT = 'import'
-   FROM = 'from'
+        public='public'
+        immutable='immutable'
+        constant='constant'
+        private='private'
+        nonreentrant='nonreentrant'
+        payable='payable'
+        nonpayable='nonpayable'
+        external='external'
+        view='view'
+        pure='pure'
+        event='event'
+        range = 'range'
 
-   PLUS='+'
-   MINUS='-'
-   MULT='*'
-   DIV='/'
-   EXPONENT='**'
-   NOT='not'
-   ASSIGN='='
-   TO='=>'
-   EQ='=='
-   NEQ='!='
-   PLUS_ASSIGN='+='
-   MINUS_ASSIGN='-='
-   MULT_ASSIGN='*='
-   DIV_ASSIGN='/='
-   PERCENT_ASSIGN='%='
-   LESS='<'
-   LESSEQ='<='
-   MORE='>'
-   MOREEQ='>='
-   CARET='^'
-   AND='and'
-   OR='or'
-   QUESTION='?'
-   PERCENT='%'
-   TILDE='~'
-   LSHIFT='<<'
-   RSHIFT='>>'
+        intM = 'regexp:(int[0-9]+)'
+        uintM = 'regexp:(uint[0-9]+)'
+        bytesM = 'regexp:(bytes[0-9]+)'
+        string = 'string'
+        bytes = 'bytes'
+        DynArray = 'DynArray'
+        HashMap = 'HashMap'
 
+        newline = 'regexp:(\r?\n)'
+        BREAK_LINE = 'regexp:(\s*\\\s*\n)'
+        Identifier='regexp:([A-Za-z_]\w*)'
+        //add !@ etc.
+    //    BadStatementString = 'regexp:(\w+)'
+        //ALL='regexp:[\^a-zA-Z_0-9.<>"]*' for preview
+    ]
 
-    hexLiteral='regexp:hex"([0-9a-fA-F]+)"'
-    stringLiteralDouble='regexp:("([^"\r\n\\]|\\.)*")'
-    stringLiteralDoubleB='regexp:(b"([^"\r\n\\]|\\.)*")'
-    stringLiteralSingle="regexp:('([^'\r\n\\]|\\.)*')"
-    stringLiteralSingleB="regexp:(b'([^'\r\n\\]|\\.)*')"
-    MultiLineStringToken =  'regexp:"""[\d\D]*?"""'
-
-    decimalNumber='regexp:([0-9][_0-9]*)'
-    fixedNumber='regexp:(([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*)*\.([0-9][_0-9]*))'
-    booleanLiteral='regexp:True|False'
-    scientificNumber='regexp:((([0-9][_0-9]*)+|([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*|[0-9])*\.[_0-9]+)[Ee][+-]?[_0-9]+)'
-    hexNumber='regexp:(0[xX][_0-9a-fA-F]+)'
-
-    constant='constant'
-    public='public'
-    private='private'
-    nonreentrant='nonreentrant'
-    payable='payable'
-    external='external'
-    modifying='modifying'
-    event='event'
-    range = 'range'
-
-    newline = 'regexp:(\n|(\r\n))'
-    WHITE_SPACE = 'regexp:\s+'
-
-    Identifier='regexp:([A-Za-z_]\w*)'
-    //add !@ etc.
-//    BadStatementString = 'regexp:(\w+)'
-    //ALL='regexp:[\^a-zA-Z_0-9.<>"]*' for preview
-]
-
-//to handle left recursion
-extends(".*Expression") = Expression
-
+    //to handle left recursion
+    extends(".*Expression") = Expression
 }
 
-VyperFile ::= ((!<<eof>> SourceUnit) (&INDEQ SourceUnit)*)?
+VyperFile ::= ((!<<eof>> MultiLineString? SourceUnit) (&INDEQ SourceUnit)*)?
 
 external INDEQ ::= indEq
-external INDEQNSP ::= indEqAndNoSpaces
 external INDLT ::= indLt
 external INDGT ::= indGt
 external INDNONE ::= indNone
-external OPTIND ::= indOpt
 
-
-
-
-// : External contract and struct declarations must come before event declarations, global declarations,
+// : External interface and struct declarations must come before event declarations, global declarations,
 // and function definitions
 private SourceUnit ::= ( ImportDirective
                         | UserDefinedConstantsExpression
                         | ImplementsDirective
                         | StructDefinition
-                        | UnitsDefinition
                         | ExternalInterfaces
                         | EventDeclaration
                         | FunctionDefinition
-                        | StateVariableDeclaration
-                        | BadStatement)
-                        {recoverWhile=structRecover}
+                        | StateVariableDeclaration)
+                        { recoverWhile = structRecover }
 
-
-BadStatement ::= Identifier | StringLiteral |BAD_CHARACTER
-private recoverINDLT ::= !(&INDLT)
-/*
-units: {
-    cm: "centimeter",
-    km: "kilometer"
-}
-*/
-UnitsDefinition ::= UnitsDefinitionPrefix '}'
-
-private UnitsDefinitionPrefix ::= units  (&INDNONE ':') (&INDNONE '{')
-     ( (Identifier ':' StringLiteral) ( ',' Identifier ':' StringLiteral)* )?
-  {
-pin = 1
-recoverWhile = unitsRecover
-//программно чекать до след newLine наверное чтобы дать возможность дальше парситиь
-}
-//will consume all the file if '}' not found
-private unitsRecover::=!('}')
-
+private Parenthesis ::= '(' &INDNONE ')'
 
 
 UserDefinedConstantsExpression ::= Identifier &INDNONE ':' &INDNONE constant &INDNONE'(' TYPE ')' &INDNONE'=' &INDNONE Expression  {
- pin=5
-
- mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
- implements = "com.vyperplugin.psi.VyperNamedElement"
+    pin=5
+    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+    implements = "com.vyperplugin.psi.VyperNamedElement"
 }
 
 private ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
-                   |( from  &INDNONE IMPORT_PATH &INDNONE import &INDNONE Identifier  )  {
-pin(".*")=1
+                   | ( from &INDNONE IMPORT_PATH &INDNONE import &INDNONE Identifier ) {
+    pin(".*")=1
 }
 
 IMPORT_PATH ::= Identifier  (&INDNONE '.' &INDNONE Identifier)*
 
 // implements statements
-ImplementsDirective ::=  implements &INDNONE ':' &INDNONE Identifier (&INDNONE ',' &INDNONE Identifier )* {
-pin=1
-}
+ImplementsDirective ::= implements &INDNONE ':' &INDNONE Identifier (&INDNONE ',' &INDNONE Identifier )* {pin=1}
 
 // external interfaces ok
-ExternalInterfaces ::= contract &INDNONE Identifier &INDNONE ':'
-                        <<indented (ExternalInterfaceBody+) >>
-                {pin=1}
+ExternalInterfaces ::= interface &INDNONE Identifier &INDNONE ':'
+                        <<indented (ExternalInterfaceBody+) >> {pin=1}
 
-private ExternalInterfaceBody ::= ( def &INDNONE Identifier &INDNONE '('
-( FunctionArgs)? ')' (&INDNONE '->' &INDNONE TYPE)? &INDNONE ':' &INDNONE ExternalFunStatus )
-{pin = 1}
-private ExternalFunStatus ::= modifying | constant
+private ExternalInterfaceBody ::= ( def &INDNONE Identifier FunctionArgs FunTypeAnnotation? &INDNONE ':' &INDNONE ExternalFunStatus ) {pin = 1}
 
+private ExternalFunStatus ::= pure | view | nonpayable | payable
 
-FunctionArgs ::= ParamDef  (',' ParamDef )*
+FunctionArgs ::= '(' (ParamDef (',' (ParamDef | & ')'))*)? ')' {pin(".*")=1}
 
 ParamDef ::= Identifier ':' TYPE ('=' Expression)? {
-            mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
-            implements = "com.vyperplugin.psi.VyperNamedElement"
+    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+    implements = "com.vyperplugin.psi.VyperNamedElement"
 }
+
 // could be default assignment
 StructDefinition ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
-pin = 1
+    pin = 1
 }
 
 private StructBody ::= StructSingleDef | <<indented (StructMultipleDef) >>
 private StructSingleDef ::= (&INDNONE StructLocalVariableDefinition)
 
 private StructMultipleDef ::= StructLocalVariableDefinition (&INDEQ StructLocalVariableDefinition )*
-//{recoverWhile=recoverStruct}
-private StructLocalVariableDefinition ::= LocalVariableDefinition | BadStatement
+private StructLocalVariableDefinition ::= LocalVariableDefinition | Identifier | StringLiteral
 {recoverWhile=structRecover}
 
-//private recoverINDEQ ::=!(&INDEQ)
 private structRecover ::= !(&INDEQ | &INDLT |<<eof>>)
-private recoverStruct ::= !(&INDLT | &INDEQ)
-
-
-//ContractDefinition ::= ContractDefinition_+
-//private ContractDefinition_ ::= (EventDeclaration | StateVariableDeclaration | FunctionDefinition)
-//                                {recoverWhile=structRecover}
 
 //ok
 //Events must all come before global declarations and function definitions
 EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProperty?) | (&INDNONE pass))  {
-pin=5
+    pin=5
 }
 
-EventProperty ::= Identifier ':'    (IndexedData | TYPE)
-                (Identifier ':' (IndexedData |TYPE))*
-
+EventProperty ::= Identifier ':' (IndexedData | TYPE) (Identifier ':' (IndexedData |TYPE))*
 IndexedData ::= IndexedType '(' TYPE ')'
 
 private IndexedType ::= 'indexed'
@@ -225,53 +187,47 @@ private IndexedType ::= 'indexed'
 // VARIABLES
 
 // state variables  May not assign value whilst defining type
-StateVariableDeclaration ::= Identifier &INDNONE ':' (  (&INDNONE StateVariableModifier &INDNONE '(' &INDNONE TYPE &INDNONE ')')
-| (&INDNONE TYPE ))
+StateVariableType ::= TYPE | StateVariableModifier &INDNONE '(' &INDNONE StateVariableType &INDNONE ')'
+StateVariableDeclaration ::= Identifier &INDNONE ':' StateVariableType (&INDNONE '=' &INDNONE Expression)?
 {
-mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
-implements = "com.vyperplugin.psi.VyperNamedElement"
+    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+    implements = "com.vyperplugin.psi.VyperNamedElement"
 }
-// StateVariableModifier if omitted then it's private. () to not shadow private
-StateVariableModifier ::= public | (private)
 
+// StateVariableModifier if omitted then it's private. () to not shadow private
+StateVariableModifier ::= public | private | immutable | constant
 
 // semantic : map could not be inside functions
-LocalVariableDefinition ::=  ( LocalVariableDeclaration (&INDNONE '=') (&INDNONE Expression) ) |
-                           LocalVariableDeclaration
-
-LocalVariableDeclaration ::= Identifier &INDNONE ':' &INDNONE TYPE {
-
-mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
-implements = "com.vyperplugin.psi.VyperNamedElement"
-
+LocalVariableDefinition ::=  ( LocalVariableDeclaration (&INDNONE '=') (&INDNONE Expression) ) | LocalVariableDeclaration
+LocalVariableDeclaration ::= Identifier &INDNONE ':' &INDNONE TYPE
+{
+    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
+    implements = "com.vyperplugin.psi.VyperNamedElement"
 }
 
-//Colon ::= (&INDNONE ':')
-//Type ::=  (&INDNONE TYPE)
-
-MultiLineString ::=  MultiLineStringToken
+MultiLineString ::= MultiLineStringToken
 
 // FUNCTIONS
+private FunDef ::= def (&INDNONE Identifier) FunctionArgs FunTypeAnnotation? (&INDNONE ':')
+{
+    pin = 1
+}
 
-private FunDef ::= def (&INDNONE Identifier) (&INDNONE '(') FunctionArgs?  ')' (&INDNONE '->' &INDNONE TYPE)? (&INDNONE ':')
-                   {pin = 1}
-private FunBody ::= (&INDNONE Statement)
-                    | <<indented ((MultiLineString)? &INDEQ Statement (&INDEQ Statement)*) >>
-FunctionDefinition ::=
-    FunctionModifier (&INDEQ FunctionModifier)*
-//    def &INDNONE Identifier &INDNONE '(' FunctionArgs?  ')' (&INDNONE '->' &INDNONE TYPE)? (&INDNONE ':')
-//    FunBody
-    FunDef
-    FunBody
-   {pin=1
-   implements = "com.vyperplugin.psi.VyperFunctionDefElement"
-   mixin = "com.vyperplugin.psi.VyperFunctionDefMixin"}
+private FunBody ::= (&INDNONE Statement) | <<indented ((MultiLineString)? &INDEQ Statement (&INDEQ Statement)*) >>
+FunTypeAnnotation ::= &INDNONE '->' &INDNONE ( TYPE | '(' TYPE (',' TYPE)* ')' )
+FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef FunBody
+{
+    pin=1
+    implements = "com.vyperplugin.psi.VyperFunctionDefElement"
+    mixin = "com.vyperplugin.psi.VyperFunctionDefMixin"
+}
 
 
 //FunctionModifier ::= (&INDEQ FunctionModifierOptional)* (&INDEQ FunctionModifierMandatory) (&INDEQ FunctionModifierOptional)*
 //private FunctionModifierMandatory ::= DECORATOR ((&INDNONE public) | (&INDNONE private)) {pin = 1}
-FunctionModifier ::=  (DECORATOR (&INDNONE (public | internal | view | pure | external | private |constant | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')'))))
-                      {pin = 1}
+FunctionModifier ::=  (DECORATOR (&INDNONE (public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')))) {
+    pin = 1
+}
 
 UNIQUE_KEY ::=  stringLiteralSingle | stringLiteralDouble
 
@@ -285,7 +241,7 @@ Statement ::= PassStatement
               | Raise
               | EmitStatement
               | SimpleStatement
-              | BadStatement
+              | MultiLineString // docstring
               {recoverWhile = recoverStatement}
 
 private recoverStatement ::= !(&INDEQ|&INDLT)
@@ -306,14 +262,13 @@ IfStatement ::= if &INDNONE CondStmt
                 (&INDEQ ElseStmt)?
                 {pin=1}
 
-
 private SimpleStatement ::= LocalVariableDefinition | ExpressionStatement
 private ExpressionStatement ::= Expression
 
 ForStatement ::= for &INDNONE Identifier &INDNONE in &INDNONE Expression &INDNONE ':'
-                    (&INDNONE Statement
-                    | <<indented (Statement (&INDEQ Statement)*)>>){
-pin=1
+                    (&INDNONE Statement | <<indented (Statement (&INDEQ Statement)*)>>)
+{
+    pin=1
 }
 
 
@@ -321,21 +276,22 @@ private Continue ::= continue
 
 private Break ::= break
 
-private Return ::= return (&INDNONE Expression)? {
-pin=1
+private Return ::= return (&INDNONE Expression (',' Expression)*)? {
+    pin=1
 }
 private Raise ::= raise
 
 EmitStatement ::= 'log.' &INDNONE FunctionCallExpression {
-pin=1
+    pin=1
 }
 
 private PassStatement ::= pass
 
 Expression ::=
-  AssignmentExpression
+  TernaryExpression
+  | AssignmentExpression
+  | TupleAssignmentExpression
   | RangeExpression
-//  | FunctionCallExpression
   | ParenthesiziedExpression
   | CallExpression
   | NewExpression
@@ -347,34 +303,28 @@ Expression ::=
   | PlusMinExpression
   | MultDivExpression
   | ExponentExpression
+  | BinExpression
   | UnaryExpression
   | ClearExpression
   | IndexAccessExpression
-//  | SelfAccessExpression
-//  | SelfFunctionCall
   | MemberAccessExpression
   | MemberIndexAccess
   | InlineArrayExpression
   | PrimaryExpression
   | EventLogExpression
+  | InExpression
 
 EventLogExpression ::= log &INDNONE Identifier '(' Expression (',' Expression)* ')'
 
+InExpression ::= Expression &INDNONE 'in' &INDNONE Expression
+
+TernaryExpression ::= Expression &INDNONE if &INDNONE Expression &INDNONE else &INDNONE Expression { pin = 1 }
 
 //self function call?
 
-private RangeInterval ::= PrimaryExpression ',' PrimaryExpression ',' PrimaryExpression
-                         | PrimaryExpression ',' PrimaryExpression
-                         | PrimaryExpression
+private RangeInterval ::= (Identifier | NumberLiteral) (&INDNONE ',' &INDNONE Expression)?
 
-
-RangeExpression ::= range &INDNONE '(' (Expression | RangeInterval ) ')'
-
-
-//SelfAccessExpression ::= self (&INDNONE '.') (&INDNONE Expression)
-
-
-//SelfFunctionCall ::= self &INDNONE '.' Identifier &INDNONE '(' (FunctionArgs)? ')'
+RangeExpression ::= range &INDNONE '(' RangeInterval (',' 'bound' '=' Identifier)? ')'
 
 NewExpression ::= Identifier (&INDNONE'(') '{' (  ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression)
                              (',' ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression))*)? '}' ')'
@@ -382,22 +332,22 @@ NewExpression ::= Identifier (&INDNONE'(') '{' (  ((Identifier &INDNONE ':' &IND
 AssignmentExpression ::=
     Expression (&INDNONE ('=' | '+=' | '-=' | '*=' | '/=' | '%='))
     Expression { rightAssociative=true  }
-//??
-CallExpression ::= Expression
-//&INDNONE '.' Identifier ) |
-                 (   &INDNONE '[' Expression ']'  )*
-                  &INDNONE '(' FunctionCallArguments? ')' (&INDNONE '(' FunctionCallArguments? ')')*
-                  {
-                  implements = "com.vyperplugin.psi.VyperReferenceElement"
-                  mixin = "com.vyperplugin.psi.VyperCallElement"
 
-                  }
+TupleAssignmentExpression ::= Identifier (',' Identifier)+ &INDNONE '=' Expression
 
 //??
-FunctionCallExpression ::= (Identifier &INDNONE '(' FunctionCallArguments? ')') |
+CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
+                  &INDNONE FunctionCallArguments (&INDNONE FunctionCallArguments)*
+{
+    implements = "com.vyperplugin.psi.VyperReferenceElement"
+    mixin = "com.vyperplugin.psi.VyperCallElement"
+}
+
+//??
+FunctionCallExpression ::= (Identifier &INDNONE FunctionCallArguments) |
                            ( ( PrimaryExpression | NewExpression | TypeName  )
                            ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )*
-                                     &INDNONE '(' FunctionCallArguments? ')' )  {
+                                     &INDNONE FunctionCallArguments )  {
    //implements and mixin
 }
 
@@ -425,81 +375,51 @@ CompExpression ::= Expression ('<' | '>' | '<=' | '>=') Expression
 PlusMinExpression ::= Expression ('+' | '-') Expression
 MultDivExpression ::= Expression ('*' | '/' | '%') Expression
 ExponentExpression ::= Expression '**' Expression
+BinExpression ::= Expression (UNION | INTERSECTION | RSHIFT | LSHIFT) Expression
 
-//multistring??
 AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {
     pin = 1
     name = "assert expression"
 }
-private AssertMessage ::= ',' (stringLiteralDouble| stringLiteralSingle | MultiLineString)
+private AssertMessage ::= ',' ( stringLiteralDouble | stringLiteralSingle | MultiLineString )
 
-FunctionCallArguments ::= Expression? ( &INDNONE ',' Expression )*
+FunctionCallArgument ::= Expression | ( Identifier '=' Expression )
+FunctionCallArguments ::= '(' (FunctionCallArgument (',' (FunctionCallArgument | &')'))*)? ')' {pin(".*")=1}
 
-
-
-
-PrimaryExpression ::=
-                  | VarLiteral
-                  | BooleanLiteral
-                  | NumberLiteral
-                  | HexLiteral
-                  | StringLiteral
-                  | Constants
-                  //type??
-                  | TYPE
-                  {
-                    name = "blyaaaaaaa"
-                  }
+PrimaryExpression ::= VarLiteral | BooleanLiteral | NumberLiteral | HexLiteral | StringLiteral
+    | TYPE // type is accepted as parameter in some built-in functions
 
 VarLiteral ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
                            mixin = "com.vyperplugin.psi.VyperVarLiteralMixin"
                            name = "variable"
                            }
 
-//BuiltIn ::= 'concat' | 'sha3'
-
+//BuiltIn ::= 'bitwise_and' | 'bitwise_not' | 'bitwise_or' | 'bitwise_xor' | 'shift' | 'create_minimal_proxy_to' | 'create_copy_of' | 'create_from_blueprint' | 'raw_call' | 'raw_log' | 'raw_revert' | 'selfdestruct' | 'send' | 'ecadd' | 'ecmul' | 'ecrecover' | 'keccak256' | 'sha256' | 'concat' | 'convert' | 'uint2str' | 'extract32' | 'slice' | 'abs' | 'ceil' | 'epsilon' | 'floor' | 'max' | 'max_value' | 'min' | 'min_value' | 'pow_mod256' | 'sqrt' | 'isqrt' | 'uint256_addmod' | 'uint256_mulmod' | 'unsafe_add' | 'unsafe_sub' | 'unsafe_mul' | 'unsafe_div' | 'as_wei_value' | 'blockhash' | 'empty' | 'len' | 'method_id' | '_abi_encode' | '_abi_decode' | 'print'
 
 
 // TYPES seems okay
-TYPE ::=  ReferenceType
-          | UnitType
-          | ValueType
-          | StructType
+TYPE ::=  ListType | MapType | ValueType | StructType
 
-UnitType ::= Timestamp | Timedelta | Wei_value | CustomUnitType
-CustomUnitType ::= (int128|uint256) &INDNONE '(' Expression ')'
-private Timestamp ::= 'timestamp'
-private Timedelta ::= 'timedelta'
-private Wei_value ::= 'wei_value'
+ValueType ::= intM | uintM | bytesM | address | bool | ((string | bytes) &INDNONE '[' ( DecimalNumber | Identifier ) ']')
 
-ValueType ::= int128 | uint256| bytes32 | address
-             | (bytes32 | bytes) &INDNONE '[' (DecimalNumber | Identifier) ']' | fixed | bool |
-                string   &INDNONE '[' (DecimalNumber | Identifier) ']'
-
-private ReferenceType ::= ListType  | MapType
-
-ListType ::= (UnitType| ValueType|StructType) &INDNONE '[' (DecimalNumber | Identifier) ']'
+ListType ::= ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier) ']'
                     (&INDNONE '[' (DecimalNumber | Identifier) ']')*
-StructType ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
-                                                     mixin = "com.vyperplugin.psi.VyperStructTypeMixin"}
 
-MapType ::= (map  &INDNONE '(' (ValueType|UnitType)  ',' (ReferenceType |  UnitType|ValueType| StructType  ) ')') |
- (HashMap &INDNONE '[' (ValueType|UnitType) ',' (ReferenceType |  UnitType|ValueType| StructType  ) ']')
- {
-pin=1
+StructType ::= Identifier
+{
+    implements = "com.vyperplugin.psi.VyperReferenceElement"
+    mixin = "com.vyperplugin.psi.VyperStructTypeMixin"
 }
 
+MapType ::= ( ( DynArray | HashMap ) &INDNONE '[' ValueType ',' TYPE ']' )
+{
+    pin=1
+}
 
 private BooleanLiteral ::= booleanLiteral
-
-
 private NumberLiteral ::= HexNumber | DecimalNumber |FixedNumber
 private StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB|MultiLineString
 private DecimalNumber ::= decimalNumber
 private HexNumber ::= hexNumber
 private HexLiteral ::= hexLiteral
-private  FixedNumber ::=fixedNumber
-
-//Builtin Constants
-private Constants ::= ZERO_ADDRESS | EMPTY_BYTES32 | MAX_INT128 | MIN_INT128
-             | MAX_DECIMAL | MIN_DECIMAL | MAX_UINT256
+private FixedNumber ::=fixedNumber

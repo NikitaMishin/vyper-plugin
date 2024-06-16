@@ -18,8 +18,8 @@ public class VyperVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitBadStatement(@NotNull VyperBadStatement o) {
-    visitElement(o);
+  public void visitBinExpression(@NotNull VyperBinExpression o) {
+    visitExpression(o);
   }
 
   public void visitCallExpression(@NotNull VyperCallExpression o) {
@@ -33,10 +33,6 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitCompExpression(@NotNull VyperCompExpression o) {
     visitExpression(o);
-  }
-
-  public void visitCustomUnitType(@NotNull VyperCustomUnitType o) {
-    visitElement(o);
   }
 
   public void visitEmitStatement(@NotNull VyperEmitStatement o) {
@@ -75,7 +71,15 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitFunTypeAnnotation(@NotNull VyperFunTypeAnnotation o) {
+    visitElement(o);
+  }
+
   public void visitFunctionArgs(@NotNull VyperFunctionArgs o) {
+    visitElement(o);
+  }
+
+  public void visitFunctionCallArgument(@NotNull VyperFunctionCallArgument o) {
     visitElement(o);
   }
 
@@ -105,6 +109,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitImplementsDirective(@NotNull VyperImplementsDirective o) {
     visitElement(o);
+  }
+
+  public void visitInExpression(@NotNull VyperInExpression o) {
+    visitExpression(o);
   }
 
   public void visitIndexAccessExpression(@NotNull VyperIndexAccessExpression o) {
@@ -187,6 +195,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitStateVariableType(@NotNull VyperStateVariableType o) {
+    visitElement(o);
+  }
+
   public void visitStatement(@NotNull VyperStatement o) {
     visitElement(o);
   }
@@ -203,20 +215,20 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitTernaryExpression(@NotNull VyperTernaryExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitTupleAssignmentExpression(@NotNull VyperTupleAssignmentExpression o) {
+    visitExpression(o);
+  }
+
   public void visitUniqueKey(@NotNull VyperUniqueKey o) {
     visitElement(o);
   }
 
   public void visitUnaryExpression(@NotNull VyperUnaryExpression o) {
     visitExpression(o);
-  }
-
-  public void visitUnitType(@NotNull VyperUnitType o) {
-    visitElement(o);
-  }
-
-  public void visitUnitsDefinition(@NotNull VyperUnitsDefinition o) {
-    visitElement(o);
   }
 
   public void visitUserDefinedConstantsExpression(@NotNull VyperUserDefinedConstantsExpression o) {

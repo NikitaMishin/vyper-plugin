@@ -2,9 +2,9 @@
 initial_distribution:constant(int128) = 100
 
 creator : address
-address_to_tokens : map(address,int128)
+address_to_tokens : HashMap[address,int128]
 
-address_is_vote : map(address,bool)
+address_is_vote : HashMap[address,bool]
 
 current_proposal : bytes[100]
 

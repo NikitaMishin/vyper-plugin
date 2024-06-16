@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.vyperplugin.psi.*;
 
-public class VyperUnitsDefinitionImpl extends ASTWrapperPsiElement implements VyperUnitsDefinition {
+public class VyperTupleAssignmentExpressionImpl extends VyperExpressionImpl implements VyperTupleAssignmentExpression {
 
-  public VyperUnitsDefinitionImpl(@NotNull ASTNode node) {
+  public VyperTupleAssignmentExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitUnitsDefinition(this);
+    visitor.visitTupleAssignmentExpression(this);
   }
 
   @Override
@@ -28,9 +28,9 @@ public class VyperUnitsDefinitionImpl extends ASTWrapperPsiElement implements Vy
   }
 
   @Override
-  @NotNull
-  public List<VyperMultiLineString> getMultiLineStringList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperMultiLineString.class);
+  @Nullable
+  public VyperExpression getExpression() {
+    return findChildByClass(VyperExpression.class);
   }
 
 }

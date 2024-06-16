@@ -11,14 +11,14 @@ import static com.vyperplugin.psi.VyperTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.vyperplugin.psi.*;
 
-public class VyperUnitTypeImpl extends ASTWrapperPsiElement implements VyperUnitType {
+public class VyperStateVariableTypeImpl extends ASTWrapperPsiElement implements VyperStateVariableType {
 
-  public VyperUnitTypeImpl(@NotNull ASTNode node) {
+  public VyperStateVariableTypeImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitUnitType(this);
+    visitor.visitStateVariableType(this);
   }
 
   @Override
@@ -29,8 +29,20 @@ public class VyperUnitTypeImpl extends ASTWrapperPsiElement implements VyperUnit
 
   @Override
   @Nullable
-  public VyperCustomUnitType getCustomUnitType() {
-    return findChildByClass(VyperCustomUnitType.class);
+  public VyperStateVariableModifier getStateVariableModifier() {
+    return findChildByClass(VyperStateVariableModifier.class);
+  }
+
+  @Override
+  @Nullable
+  public VyperStateVariableType getStateVariableType() {
+    return findChildByClass(VyperStateVariableType.class);
+  }
+
+  @Override
+  @Nullable
+  public VyperType getType() {
+    return findChildByClass(VyperType.class);
   }
 
 }

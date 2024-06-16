@@ -17,9 +17,6 @@ public interface VyperType extends VyperElement {
   VyperStructType getStructType();
 
   @Nullable
-  VyperUnitType getUnitType();
-
-  @Nullable
   VyperValueType getValueType();
 
 }

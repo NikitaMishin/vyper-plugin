@@ -31,126 +31,122 @@ STRINGLITERALDOUBLE=(\"([^\"\r\n\\]|\\.)*\")
 STRINGLITERALDOUBLEB=(b\"([^\"\r\n\\]|\\.)*\")
 STRINGLITERALSINGLE=('([^'\r\n\\]|\\.)*')
 STRINGLITERALSINGLEB=(b'([^'\r\n\\]|\\.)*')
-MULTILINESTRINGTOKEN=\"\"\"[\d\D]*?\"\"\"
+MULTILINESTRINGTOKEN=(\"\"\"([^\"]|\"[^\"]|\"\"[^\"])*\"\"\")
 DECIMALNUMBER=([0-9][_0-9]*)
 FIXEDNUMBER=(([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*)*\.([0-9][_0-9]*))
 BOOLEANLITERAL=True|False
 SCIENTIFICNUMBER=((([0-9][_0-9]*)+|([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*|[0-9])*\.[_0-9]+)[Ee][+-]?[_0-9]+)
 HEXNUMBER=(0[xX][_0-9a-fA-F]+)
-NEWLINE=(\n|(\r\n))
-WHITE_SPACE=[ \t\n\x0B\f\r]+
+INTM=(int[0-9]+)
+UINTM=(uint[0-9]+)
+BYTESM=(bytes[0-9]+)
+NEWLINE=(\r?\n)
+BREAK_LINE=([ \t\n\x0B\f\r]*\\[ \t\n\x0B\f\r]*\n)
 IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
 
 %%
 <YYINITIAL> {
-  {WHITE_SPACE}               { return WHITE_SPACE; }
+  {WHITE_SPACE}                { return WHITE_SPACE; }
 
-  "@"                         { return DECORATOR; }
-  ";"                         { return SEMICOLON; }
-  ","                         { return COMMA; }
-  "."                         { return DOT; }
-  ":"                         { return COLON; }
-  "["                         { return LBRACKET; }
-  "]"                         { return RBRACKET; }
-  "{"                         { return LBRACE; }
-  "}"                         { return RBRACE; }
-  "("                         { return LPAREN; }
-  ")"                         { return RPAREN; }
-  "import"                    { return IMPORT; }
-  "from"                      { return FROM; }
-  "+"                         { return PLUS; }
-  "-"                         { return MINUS; }
-  "*"                         { return MULT; }
-  "/"                         { return DIV; }
-  "**"                        { return EXPONENT; }
-  "not"                       { return NOT; }
-  "="                         { return ASSIGN; }
-  "=>"                        { return TO; }
-  "=="                        { return EQ; }
-  "!="                        { return NEQ; }
-  "+="                        { return PLUS_ASSIGN; }
-  "-="                        { return MINUS_ASSIGN; }
-  "*="                        { return MULT_ASSIGN; }
-  "/="                        { return DIV_ASSIGN; }
-  "%="                        { return PERCENT_ASSIGN; }
-  "<"                         { return LESS; }
-  "<="                        { return LESSEQ; }
-  ">"                         { return MORE; }
-  ">="                        { return MOREEQ; }
-  "^"                         { return CARET; }
-  "and"                       { return AND; }
-  "or"                        { return OR; }
-  "?"                         { return QUESTION; }
-  "%"                         { return PERCENT; }
-  "~"                         { return TILDE; }
-  "<<"                        { return LSHIFT; }
-  ">>"                        { return RSHIFT; }
-  "constant"                  { return CONSTANT; }
-  "public"                    { return PUBLIC; }
-  "private"                   { return PRIVATE; }
-  "nonreentrant"              { return NONREENTRANT; }
-  "payable"                   { return PAYABLE; }
-  "external"                  { return EXTERNAL; }
-  "modifying"                 { return MODIFYING; }
-  "event"                     { return EVENT; }
-  "range"                     { return RANGE; }
-  "BAD_CHARACTER"             { return BAD_CHARACTER; }
-  "units"                     { return UNITS; }
-  "as"                        { return AS; }
-  "implements"                { return IMPLEMENTS; }
-  "contract"                  { return CONTRACT; }
-  "def"                       { return DEF; }
-  "struct"                    { return STRUCT; }
-  "pass"                      { return PASS; }
-  "internal"                  { return INTERNAL; }
-  "view"                      { return VIEW; }
-  "pure"                      { return PURE; }
-  "elif"                      { return ELIF; }
-  "else"                      { return ELSE; }
-  "if"                        { return IF; }
-  "for"                       { return FOR; }
-  "in"                        { return IN; }
-  "continue"                  { return CONTINUE; }
-  "break"                     { return BREAK; }
-  "return"                    { return RETURN; }
-  "raise"                     { return RAISE; }
-  "log"                       { return LOG; }
-  "TypeName"                  { return TYPENAME; }
-  "clear"                     { return CLEAR; }
-  "assert"                    { return ASSERT; }
-  "int128"                    { return INT128; }
-  "uint256"                   { return UINT256; }
-  "bytes32"                   { return BYTES32; }
-  "address"                   { return ADDRESS; }
-  "bytes"                     { return BYTES; }
-  "fixed"                     { return FIXED; }
-  "bool"                      { return BOOL; }
-  "string"                    { return STRING; }
-  "map"                       { return MAP; }
-  "HashMap"                   { return HASHMAP; }
-  "ZERO_ADDRESS"              { return ZERO_ADDRESS; }
-  "EMPTY_BYTES32"             { return EMPTY_BYTES32; }
-  "MAX_INT128"                { return MAX_INT128; }
-  "MIN_INT128"                { return MIN_INT128; }
-  "MAX_DECIMAL"               { return MAX_DECIMAL; }
-  "MIN_DECIMAL"               { return MIN_DECIMAL; }
-  "MAX_UINT256"               { return MAX_UINT256; }
+  "@"                          { return DECORATOR; }
+  ";"                          { return SEMICOLON; }
+  ","                          { return COMMA; }
+  "."                          { return DOT; }
+  ":"                          { return COLON; }
+  "["                          { return LBRACKET; }
+  "]"                          { return RBRACKET; }
+  "{"                          { return LBRACE; }
+  "}"                          { return RBRACE; }
+  "("                          { return LPAREN; }
+  ")"                          { return RPAREN; }
+  "import"                     { return IMPORT; }
+  "from"                       { return FROM; }
+  "+"                          { return PLUS; }
+  "-"                          { return MINUS; }
+  "*"                          { return MULT; }
+  "/"                          { return DIV; }
+  "**"                         { return EXPONENT; }
+  "not"                        { return NOT; }
+  "="                          { return ASSIGN; }
+  "=>"                         { return TO; }
+  "=="                         { return EQ; }
+  "!="                         { return NEQ; }
+  "+="                         { return PLUS_ASSIGN; }
+  "-="                         { return MINUS_ASSIGN; }
+  "*="                         { return MULT_ASSIGN; }
+  "/="                         { return DIV_ASSIGN; }
+  "%="                         { return PERCENT_ASSIGN; }
+  "<"                          { return LESS; }
+  "<="                         { return LESSEQ; }
+  ">"                          { return MORE; }
+  ">="                         { return MOREEQ; }
+  "^"                          { return CARET; }
+  "and"                        { return AND; }
+  "or"                         { return OR; }
+  "?"                          { return QUESTION; }
+  "%"                          { return PERCENT; }
+  "~"                          { return TILDE; }
+  "<<"                         { return LSHIFT; }
+  ">>"                         { return RSHIFT; }
+  "&"                          { return INTERSECTION; }
+  "|"                          { return UNION; }
+  "public"                     { return PUBLIC; }
+  "immutable"                  { return IMMUTABLE; }
+  "constant"                   { return CONSTANT; }
+  "private"                    { return PRIVATE; }
+  "nonreentrant"               { return NONREENTRANT; }
+  "payable"                    { return PAYABLE; }
+  "nonpayable"                 { return NONPAYABLE; }
+  "external"                   { return EXTERNAL; }
+  "view"                       { return VIEW; }
+  "pure"                       { return PURE; }
+  "event"                      { return EVENT; }
+  "range"                      { return RANGE; }
+  "string"                     { return STRING; }
+  "bytes"                      { return BYTES; }
+  "DynArray"                   { return DYNARRAY; }
+  "HashMap"                    { return HASHMAP; }
+  "as"                         { return AS; }
+  "implements"                 { return IMPLEMENTS; }
+  "interface"                  { return INTERFACE; }
+  "def"                        { return DEF; }
+  "struct"                     { return STRUCT; }
+  "pass"                       { return PASS; }
+  "internal"                   { return INTERNAL; }
+  "elif"                       { return ELIF; }
+  "else"                       { return ELSE; }
+  "if"                         { return IF; }
+  "for"                        { return FOR; }
+  "in"                         { return IN; }
+  "continue"                   { return CONTINUE; }
+  "break"                      { return BREAK; }
+  "return"                     { return RETURN; }
+  "raise"                      { return RAISE; }
+  "log"                        { return LOG; }
+  "TypeName"                   { return TYPENAME; }
+  "clear"                      { return CLEAR; }
+  "assert"                     { return ASSERT; }
+  "address"                    { return ADDRESS; }
+  "bool"                       { return BOOL; }
 
-  {COMMENT}                   { return COMMENT; }
-  {HEXLITERAL}                { return HEXLITERAL; }
-  {STRINGLITERALDOUBLE}       { return STRINGLITERALDOUBLE; }
-  {STRINGLITERALDOUBLEB}      { return STRINGLITERALDOUBLEB; }
-  {STRINGLITERALSINGLE}       { return STRINGLITERALSINGLE; }
-  {STRINGLITERALSINGLEB}      { return STRINGLITERALSINGLEB; }
-  {MULTILINESTRINGTOKEN}      { return MULTILINESTRINGTOKEN; }
-  {DECIMALNUMBER}             { return DECIMALNUMBER; }
-  {FIXEDNUMBER}               { return FIXEDNUMBER; }
-  {BOOLEANLITERAL}            { return BOOLEANLITERAL; }
-  {SCIENTIFICNUMBER}          { return SCIENTIFICNUMBER; }
-  {HEXNUMBER}                 { return HEXNUMBER; }
-  {NEWLINE}                   { return NEWLINE; }
-  {WHITE_SPACE}               { return WHITE_SPACE; }
-  {IDENTIFIER}                { return IDENTIFIER; }
+  {COMMENT}                    { return COMMENT; }
+  {HEXLITERAL}                 { return HEXLITERAL; }
+  {STRINGLITERALDOUBLE}        { return STRINGLITERALDOUBLE; }
+  {STRINGLITERALDOUBLEB}       { return STRINGLITERALDOUBLEB; }
+  {STRINGLITERALSINGLE}        { return STRINGLITERALSINGLE; }
+  {STRINGLITERALSINGLEB}       { return STRINGLITERALSINGLEB; }
+  {MULTILINESTRINGTOKEN}       { return MULTILINESTRINGTOKEN; }
+  {DECIMALNUMBER}              { return DECIMALNUMBER; }
+  {FIXEDNUMBER}                { return FIXEDNUMBER; }
+  {BOOLEANLITERAL}             { return BOOLEANLITERAL; }
+  {SCIENTIFICNUMBER}           { return SCIENTIFICNUMBER; }
+  {HEXNUMBER}                  { return HEXNUMBER; }
+  {INTM}                       { return INTM; }
+  {UINTM}                      { return UINTM; }
+  {BYTESM}                     { return BYTESM; }
+  {NEWLINE}                    { return NEWLINE; }
+  {BREAK_LINE}                 { return BREAK_LINE; }
+  {IDENTIFIER}                 { return IDENTIFIER; }
 
 }
 

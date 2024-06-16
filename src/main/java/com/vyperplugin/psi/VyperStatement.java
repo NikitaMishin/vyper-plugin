@@ -8,13 +8,10 @@ import com.intellij.psi.PsiElement;
 public interface VyperStatement extends VyperElement {
 
   @Nullable
-  VyperBadStatement getBadStatement();
-
-  @Nullable
   VyperEmitStatement getEmitStatement();
 
-  @Nullable
-  VyperExpression getExpression();
+  @NotNull
+  List<VyperExpression> getExpressionList();
 
   @Nullable
   VyperForStatement getForStatement();
@@ -24,5 +21,8 @@ public interface VyperStatement extends VyperElement {
 
   @Nullable
   VyperLocalVariableDefinition getLocalVariableDefinition();
+
+  @Nullable
+  VyperMultiLineString getMultiLineString();
 
 }

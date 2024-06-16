@@ -14,7 +14,6 @@ class VyperHighlighterFactory : SingleLazyInstanceSyntaxHighlighterFactory() {
 class VyperHighlighter : SyntaxHighlighterBase() {
     override fun getHighlightingLexer() = VyperLexerAdapter()
 
-
     override fun getTokenHighlights(tokenType: IElementType): Array<out TextAttributesKey> {
         return pack(tokenMapping[tokenType])
     }
@@ -29,15 +28,16 @@ class VyperHighlighter : SyntaxHighlighterBase() {
             TextAttributesKey.createTextAttributesKey("VYPER_NUMBER_LITERAL", Defaults.NUMBER)
         private val VYPER_IDENTIFIER =
             TextAttributesKey.createTextAttributesKey("VYPER_IDENTIFIER", Defaults.IDENTIFIER)
-        private val VYPER_MODIFICATOR = TextAttributesKey.createTextAttributesKey("VYPER_MODIFICATOR", Defaults.KEYWORD)
+        private val VYPER_MODIFICATOR = TextAttributesKey.createTextAttributesKey("VYPER_MODIFICATOR", Defaults.FUNCTION_CALL)
         private val VYPER_BOOLEAN_LITERAL =
             TextAttributesKey.createTextAttributesKey("VYPER_BOOLEAN_LITERAL", Defaults.KEYWORD)
         private val VYPER_CONSTANT = TextAttributesKey.createTextAttributesKey("VYPER_CONSTANT")
-        private val VYPER_UNIT_TYPE = TextAttributesKey.createTextAttributesKey("VYPER_UNIT_TYPE", Defaults.KEYWORD)
         private val VYPER_REFERENCE_TYPE =
             TextAttributesKey.createTextAttributesKey("VYPER_REFERENCE_TYPE", Defaults.KEYWORD)
         private val VYPER_VALUE_TYPE = TextAttributesKey.createTextAttributesKey("VYPER_VALUE_TYPE", Defaults.KEYWORD)
         private val VYPER_COMMENT = TextAttributesKey.createTextAttributesKey("VYPER_COMMENT", Defaults.LINE_COMMENT)
+        private val VYPER_MULTILINE_STRING =
+            TextAttributesKey.createTextAttributesKey("VYPER_MULTILINE_STRING", Defaults.DOC_COMMENT)
 
         private val tokenMapping: MutableMap<IElementType, TextAttributesKey> =
             HashMap<IElementType, TextAttributesKey>()
@@ -45,21 +45,20 @@ class VyperHighlighter : SyntaxHighlighterBase() {
                 .plus(constants().map { it to VYPER_CONSTANT })
                 .plus(valueTypes().map { it to VYPER_VALUE_TYPE })
                 .plus(referenceTypes().map { it to VYPER_REFERENCE_TYPE })
-                .plus(unitTypes().map { it to VYPER_UNIT_TYPE })
                 .plus(boolLiteral().map { it to VYPER_BOOLEAN_LITERAL })
                 .plus(stringLiterals().map { it to VYPER_STRING_LITERAL })
+                .plus(multilineStringLiteral().map { it to VYPER_MULTILINE_STRING })
                 .plus(numericLiterals().map { it to VYPER_NUMBER_LITERAL })
                 .plus(operators().map { it to VYPER_OPERATOR })
                 .plus(keywords().map { it to VYPER_KEYWORD })
                 .plus(identifier().map { it to VYPER_IDENTIFIER })
                 .plus(comment().map { it to VYPER_COMMENT }).toMutableMap()
 
-
+        // todo: min, max, empty, constant, range are built-in functions
         private fun keywords() = setOf<IElementType>(
-            IMPORT, FROM, AS, CONTRACT, IMPLEMENTS,
-            STRUCT, DEF, UNITS,
+            IMPORT, FROM, AS, INTERFACE, IMPLEMENTS, STRUCT, DEF,
             IF, ELSE, FOR, BREAK, CONTINUE, RAISE, RETURN,
-            MAP, ELIF, EVENT, PASS, ASSERT, CLEAR, RANGE, LOG
+            ELIF, EVENT, PASS, ASSERT, CLEAR, RANGE, LOG
         )
 
         private fun boolLiteral() = setOf<IElementType>(BOOLEANLITERAL)
@@ -69,39 +68,31 @@ class VyperHighlighter : SyntaxHighlighterBase() {
         )
 
         private fun stringLiterals() = setOf<IElementType>(
-            MULTILINESTRINGTOKEN, STRINGLITERALDOUBLE, STRINGLITERALDOUBLEB,
+            STRINGLITERALDOUBLE, STRINGLITERALDOUBLEB,
             STRINGLITERALSINGLE, STRINGLITERALSINGLEB
         )
 
-
         private fun modificators() = setOf<IElementType>(
-            PUBLIC, PRIVATE, PAYABLE, NONREENTRANT, MODIFYING, CONSTANT, EXTERNAL, VIEW, INTERNAL, PURE
+            PUBLIC, PRIVATE, NONREENTRANT, EXTERNAL, INTERNAL, VIEW, PURE, IMMUTABLE, CONSTANT,
+            // todo: the following are (also) for interfaces
+            PAYABLE, NONPAYABLE, VIEW, PURE,
         )
 
-
-        private fun constants() = setOf<IElementType>(
-            MAX_INT128, MAX_DECIMAL, MAX_UINT256, MIN_DECIMAL, MIN_INT128, ZERO_ADDRESS, EMPTY_BYTES32
-        )
-
+        private fun constants() = setOf<IElementType>()
 
         private fun valueTypes() = setOf<IElementType>(
-            INT128, UINT256, BYTES32, ADDRESS, FIXED, BOOL, STRING, INDEXED_DATA
+            INTM, UINTM, BYTESM, ADDRESS, BOOL, STRING, BYTES,
         )
 
         private fun referenceTypes() = setOf<IElementType>(
-            STRUCT_TYPE // map and list not here because already would be higlighted
-        )
-
-        private fun unitTypes() = setOf<IElementType>(
-            UNIT_TYPE //u sure? TIMESTAMP, TIMEDLTA, and so on
+            HASHMAP, DYNARRAY, STRUCT_TYPE,
         )
 
         private fun operators() = setOf<IElementType>(
             NOT, ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MULT_ASSIGN, DIV_ASSIGN, PERCENT_ASSIGN,
             PLUS, MINUS, MULT, DIV, EXPONENT,
             LESS, MORE, LESSEQ, MOREEQ,
-            AND, OR,
-            EQ, NEQ, TO, PERCENT
+            AND, OR, EQ, NEQ, TO, PERCENT, IN,
         )
 
         private fun identifier() = setOf<IElementType>(
@@ -112,5 +103,8 @@ class VyperHighlighter : SyntaxHighlighterBase() {
             COMMENT
         )
 
+        private fun multilineStringLiteral() = setOf<IElementType>(
+            MULTILINESTRINGTOKEN
+        )
     }
 }

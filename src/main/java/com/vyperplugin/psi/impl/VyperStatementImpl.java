@@ -29,20 +29,14 @@ public class VyperStatementImpl extends ASTWrapperPsiElement implements VyperSta
 
   @Override
   @Nullable
-  public VyperBadStatement getBadStatement() {
-    return findChildByClass(VyperBadStatement.class);
-  }
-
-  @Override
-  @Nullable
   public VyperEmitStatement getEmitStatement() {
     return findChildByClass(VyperEmitStatement.class);
   }
 
   @Override
-  @Nullable
-  public VyperExpression getExpression() {
-    return findChildByClass(VyperExpression.class);
+  @NotNull
+  public List<VyperExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
   }
 
   @Override
@@ -61,6 +55,12 @@ public class VyperStatementImpl extends ASTWrapperPsiElement implements VyperSta
   @Nullable
   public VyperLocalVariableDefinition getLocalVariableDefinition() {
     return findChildByClass(VyperLocalVariableDefinition.class);
+  }
+
+  @Override
+  @Nullable
+  public VyperMultiLineString getMultiLineString() {
+    return findChildByClass(VyperMultiLineString.class);
   }
 
 }

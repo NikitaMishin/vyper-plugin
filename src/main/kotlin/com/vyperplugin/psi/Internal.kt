@@ -17,7 +17,7 @@ class VyperInternalTypeFactory(project: Project) {
             msg = psiFactory.createStruct(
                 """struct Msg:
         |   sender : address
-        |   value : wei_value
+        |   value : uint256
         |   gas : uint256
     """.trimMargin()
             )

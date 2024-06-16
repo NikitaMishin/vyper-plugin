@@ -29,8 +29,8 @@ public class VyperFunctionCallArgumentsImpl extends ASTWrapperPsiElement impleme
 
   @Override
   @NotNull
-  public List<VyperExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
+  public List<VyperFunctionCallArgument> getFunctionCallArgumentList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperFunctionCallArgument.class);
   }
 
 }

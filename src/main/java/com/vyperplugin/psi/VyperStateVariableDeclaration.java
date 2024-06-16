@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 public interface VyperStateVariableDeclaration extends VyperNamedElement {
 
   @Nullable
-  VyperStateVariableModifier getStateVariableModifier();
+  VyperExpression getExpression();
 
   @NotNull
-  VyperType getType();
+  VyperStateVariableType getStateVariableType();
 
   @NotNull
   PsiElement getIdentifier();

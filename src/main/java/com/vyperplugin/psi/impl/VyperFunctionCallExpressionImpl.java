@@ -34,9 +34,9 @@ public class VyperFunctionCallExpressionImpl extends VyperExpressionImpl impleme
   }
 
   @Override
-  @Nullable
+  @NotNull
   public VyperFunctionCallArguments getFunctionCallArguments() {
-    return findChildByClass(VyperFunctionCallArguments.class);
+    return findNotNullChildByClass(VyperFunctionCallArguments.class);
   }
 
 }

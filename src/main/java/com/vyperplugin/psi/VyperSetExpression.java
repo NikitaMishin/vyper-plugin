@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperUnitType extends VyperElement {
+public interface VyperSetExpression extends VyperExpression {
 
-  @Nullable
-  VyperCustomUnitType getCustomUnitType();
+  @NotNull
+  List<VyperExpression> getExpressionList();
 
 }

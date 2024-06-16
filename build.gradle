@@ -1,7 +1,14 @@
 plugins {
     id 'java'
+
+    // https://plugins.gradle.org/plugin/org.jetbrains.intellij
     id 'org.jetbrains.intellij' version '1.17.3'
+
+    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
     id 'org.jetbrains.kotlin.jvm' version '2.0.0'
+
+    // https://plugins.gradle.org/plugin/org.jetbrains.kotlinx.kover
+    id 'org.jetbrains.kotlinx.kover' version '0.8.1'
 }
 
 
@@ -19,12 +26,12 @@ group 'com.vyperplugin'
 version '2.2.0'
 
 intellij {
+    // https://mvnrepository.com/artifact/com.jetbrains.intellij.java/java-plugin
     plugins = ['com.intellij.java']
     version = "241.17011.79"
 }
 
 dependencies {
-
     // https://mvnrepository.com/artifact/com.github.docker-java/docker-java
     implementation group: 'com.github.docker-java', name: 'docker-java', version: '3.3.6'
 
@@ -42,6 +49,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/junit/junit
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
 }
 
 configurations {
@@ -60,4 +70,15 @@ kotlin {
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
+kover {
+    reports {
+        total {
+            xml {
+                onCheck = true
+            }
+        }
+    }
 }

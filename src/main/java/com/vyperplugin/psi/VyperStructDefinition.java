@@ -8,12 +8,21 @@ import com.intellij.psi.PsiElement;
 public interface VyperStructDefinition extends VyperElement {
 
   @Nullable
-  VyperBadStatement getBadStatement();
-
-  @Nullable
   VyperLocalVariableDefinition getLocalVariableDefinition();
 
   @Nullable
-  PsiElement getIdentifier();
+  VyperMultiLineString getMultiLineString();
+
+  @Nullable
+  PsiElement getStringLiteralDouble();
+
+  @Nullable
+  PsiElement getStringLiteralDoubleB();
+
+  @Nullable
+  PsiElement getStringLiteralSingle();
+
+  @Nullable
+  PsiElement getStringLiteralSingleB();
 
 }

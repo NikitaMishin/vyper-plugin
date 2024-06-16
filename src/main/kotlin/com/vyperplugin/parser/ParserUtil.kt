@@ -73,12 +73,18 @@ class ParserUtil : GeneratedParserUtilBase() {
             return false
         }
 
+        /**
+         * Indentation is equal to the current indentation level
+         */
         @JvmStatic
         fun indEq(builder_: PsiBuilder, level: Int): Boolean {
             val state = getParserState(builder_)!!
             return state.getTokenIndent() == state.currentIndent
         }
 
+        /**
+         * Indentation is equal to the current indentation level and there are no spaces between the token and the indentation
+         */
         @JvmStatic
         fun indEqAndNoSpaces(builder_: PsiBuilder, level: Int): Boolean {
             val state = getParserState(builder_)!!
@@ -86,12 +92,18 @@ class ParserUtil : GeneratedParserUtilBase() {
             return state.getTokenIndent() == state.currentIndent || spaces
         }
 
+        /**
+         * Indentation is greater than the current indentation level
+         */
         @JvmStatic
         fun indGt(builder_: PsiBuilder, level: Int): Boolean {
             val state = getParserState(builder_)!!
             return state.getTokenIndent() > state.currentIndent
         }
 
+        /**
+         * Indentation is less than the current indentation level
+         */
         @JvmStatic
         fun indLt(builder_: PsiBuilder, level: Int): Boolean {
             val state = getParserState(builder_)!!
@@ -99,12 +111,18 @@ class ParserUtil : GeneratedParserUtilBase() {
             return tokenIndent >= 0 && tokenIndent < state.currentIndent
         }
 
+        /**
+         * Indentation is not allowed
+         */
         @JvmStatic
         fun indNone(builder_: PsiBuilder, level: Int): Boolean {
             val state = getParserState(builder_)!!
             return state.getTokenIndent() == -1
         }
 
+        /**
+         * Indentation is optional if the token is at the beginning of the line
+         */
         @JvmStatic
         fun indOpt(builder_: PsiBuilder, level: Int): Boolean {
             val state = getParserState(builder_)!!

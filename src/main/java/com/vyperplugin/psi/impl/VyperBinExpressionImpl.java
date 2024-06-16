@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.vyperplugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.vyperplugin.psi.*;
 
-public class VyperTypeImpl extends ASTWrapperPsiElement implements VyperType {
+public class VyperBinExpressionImpl extends VyperExpressionImpl implements VyperBinExpression {
 
-  public VyperTypeImpl(@NotNull ASTNode node) {
+  public VyperBinExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitType(this);
+    visitor.visitBinExpression(this);
   }
 
   @Override
@@ -28,27 +28,9 @@ public class VyperTypeImpl extends ASTWrapperPsiElement implements VyperType {
   }
 
   @Override
-  @Nullable
-  public VyperListType getListType() {
-    return findChildByClass(VyperListType.class);
-  }
-
-  @Override
-  @Nullable
-  public VyperMapType getMapType() {
-    return findChildByClass(VyperMapType.class);
-  }
-
-  @Override
-  @Nullable
-  public VyperStructType getStructType() {
-    return findChildByClass(VyperStructType.class);
-  }
-
-  @Override
-  @Nullable
-  public VyperValueType getValueType() {
-    return findChildByClass(VyperValueType.class);
+  @NotNull
+  public List<VyperExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
   }
 
 }

@@ -11,14 +11,14 @@ import static com.vyperplugin.psi.VyperTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.vyperplugin.psi.*;
 
-public class VyperTypeImpl extends ASTWrapperPsiElement implements VyperType {
+public class VyperFunTypeAnnotationImpl extends ASTWrapperPsiElement implements VyperFunTypeAnnotation {
 
-  public VyperTypeImpl(@NotNull ASTNode node) {
+  public VyperFunTypeAnnotationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitType(this);
+    visitor.visitFunTypeAnnotation(this);
   }
 
   @Override
@@ -28,27 +28,9 @@ public class VyperTypeImpl extends ASTWrapperPsiElement implements VyperType {
   }
 
   @Override
-  @Nullable
-  public VyperListType getListType() {
-    return findChildByClass(VyperListType.class);
-  }
-
-  @Override
-  @Nullable
-  public VyperMapType getMapType() {
-    return findChildByClass(VyperMapType.class);
-  }
-
-  @Override
-  @Nullable
-  public VyperStructType getStructType() {
-    return findChildByClass(VyperStructType.class);
-  }
-
-  @Override
-  @Nullable
-  public VyperValueType getValueType() {
-    return findChildByClass(VyperValueType.class);
+  @NotNull
+  public List<VyperType> getTypeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperType.class);
   }
 
 }
