@@ -1,4 +1,4 @@
-package com.vyperplugin.settings
+package org.vyperlang.plugin.settings
 
 import com.intellij.util.messages.Topic
 

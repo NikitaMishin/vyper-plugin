@@ -1,18 +1,18 @@
 {
-    parserClass="com.vyperplugin.parser.VyperParser"
+    parserClass="org.vyperlang.plugin.parser.VyperParser"
     extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
-    implements="com.vyperplugin.psi.VyperElement"
+    implements="org.vyperlang.plugin.psi.VyperElement"
 
     psiClassPrefix="Vyper"
     psiImplClassSuffix="Impl"
-    psiPackage="com.vyperplugin.psi"
-    psiImplPackage="com.vyperplugin.psi.impl"
+    psiPackage="org.vyperlang.plugin.psi"
+    psiImplPackage="org.vyperlang.plugin.psi.impl"
 
-    elementTypeHolderClass="com.vyperplugin.psi.VyperTypes"
-    elementTypeClass="com.vyperplugin.psi.VyperElementType"
-    tokenTypeClass="com.vyperplugin.psi.VyperTokenType"
+    elementTypeHolderClass="org.vyperlang.plugin.psi.VyperTypes"
+    elementTypeClass="org.vyperlang.plugin.psi.VyperElementType"
+    tokenTypeClass="org.vyperlang.plugin.psi.VyperTokenType"
 
-    parserUtilClass = "com.vyperplugin.parser.ParserUtil"
+    parserUtilClass = "org.vyperlang.plugin.parser.ParserUtil"
 
     tokens = [
         DECORATOR = '@'
@@ -130,8 +130,8 @@ private Parenthesis ::= '(' &INDNONE ')'
 
 UserDefinedConstantsExpression ::= Identifier &INDNONE ':' &INDNONE constant &INDNONE'(' TYPE ')' &INDNONE'=' &INDNONE Expression  {
     pin=5
-    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
-    implements = "com.vyperplugin.psi.VyperNamedElement"
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
 private ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
@@ -155,8 +155,8 @@ private ExternalFunStatus ::= pure | view | nonpayable | payable
 FunctionArgs ::= '(' (ParamDef (',' (ParamDef | & ')'))*)? ')' {pin(".*")=1}
 
 ParamDef ::= Identifier ':' TYPE ('=' Expression)? {
-    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
-    implements = "com.vyperplugin.psi.VyperNamedElement"
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
 // could be default assignment
@@ -190,8 +190,8 @@ private IndexedType ::= 'indexed'
 StateVariableType ::= TYPE | StateVariableModifier &INDNONE '(' &INDNONE StateVariableType &INDNONE ')'
 StateVariableDeclaration ::= Identifier &INDNONE ':' StateVariableType (&INDNONE '=' &INDNONE Expression)?
 {
-    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
-    implements = "com.vyperplugin.psi.VyperNamedElement"
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
 // StateVariableModifier if omitted then it's private. () to not shadow private
@@ -201,8 +201,8 @@ StateVariableModifier ::= public | private | immutable | constant
 LocalVariableDefinition ::=  ( LocalVariableDeclaration (&INDNONE '=') (&INDNONE Expression) ) | LocalVariableDeclaration
 LocalVariableDeclaration ::= Identifier &INDNONE ':' &INDNONE TYPE
 {
-    mixin = "com.vyperplugin.psi.VyperNamedElementImpl"
-    implements = "com.vyperplugin.psi.VyperNamedElement"
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
 MultiLineString ::= MultiLineStringToken
@@ -218,8 +218,8 @@ FunTypeAnnotation ::= &INDNONE '->' &INDNONE ( TYPE | '(' TYPE (',' TYPE)* ')' )
 FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef FunBody
 {
     pin=1
-    implements = "com.vyperplugin.psi.VyperFunctionDefElement"
-    mixin = "com.vyperplugin.psi.VyperFunctionDefMixin"
+    implements = "org.vyperlang.plugin.psi.VyperFunctionDefElement"
+    mixin = "org.vyperlang.plugin.psi.VyperFunctionDefMixin"
 }
 
 
@@ -339,8 +339,8 @@ TupleAssignmentExpression ::= Identifier (',' Identifier)+ &INDNONE '=' Expressi
 CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
                   &INDNONE FunctionCallArguments (&INDNONE FunctionCallArguments)*
 {
-    implements = "com.vyperplugin.psi.VyperReferenceElement"
-    mixin = "com.vyperplugin.psi.VyperCallElement"
+    implements = "org.vyperlang.plugin.psi.VyperReferenceElement"
+    mixin = "org.vyperlang.plugin.psi.VyperCallElement"
 }
 
 //??
@@ -389,8 +389,8 @@ FunctionCallArguments ::= '(' (FunctionCallArgument (',' (FunctionCallArgument |
 PrimaryExpression ::= VarLiteral | BooleanLiteral | NumberLiteral | HexLiteral | StringLiteral
     | TYPE // type is accepted as parameter in some built-in functions
 
-VarLiteral ::= Identifier {implements = "com.vyperplugin.psi.VyperReferenceElement"
-                           mixin = "com.vyperplugin.psi.VyperVarLiteralMixin"
+VarLiteral ::= Identifier {implements = "org.vyperlang.plugin.psi.VyperReferenceElement"
+                           mixin = "org.vyperlang.plugin.psi.VyperVarLiteralMixin"
                            name = "variable"
                            }
 
@@ -407,8 +407,8 @@ ListType ::= ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier
 
 StructType ::= Identifier
 {
-    implements = "com.vyperplugin.psi.VyperReferenceElement"
-    mixin = "com.vyperplugin.psi.VyperStructTypeMixin"
+    implements = "org.vyperlang.plugin.psi.VyperReferenceElement"
+    mixin = "org.vyperlang.plugin.psi.VyperStructTypeMixin"
 }
 
 MapType ::= ( ( DynArray | HashMap ) &INDNONE '[' ValueType ',' TYPE ']' )

@@ -1,4 +1,4 @@
-package com.vyperplugin
+package org.vyperlang.plugin
 
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationListener

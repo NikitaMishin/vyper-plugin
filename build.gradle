@@ -1,3 +1,6 @@
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.changelog.ExtensionsKt;
+
 plugins {
     id 'java'
 
@@ -9,8 +12,10 @@ plugins {
 
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlinx.kover
     id 'org.jetbrains.kotlinx.kover' version '0.8.1'
-}
 
+    // https://plugins.gradle.org/plugin/org.jetbrains.changelog
+    id "org.jetbrains.changelog" version "2.2.0"
+}
 
 repositories {
     maven { url "https://www.jetbrains.com/intellij-repository/snapshots" }
@@ -22,13 +27,22 @@ buildSearchableOptions {
     enabled = false
 }
 
-group 'com.vyperplugin'
-version '2.2.0'
+def properties = { String key -> providers.gradleProperty(key) }
+def environment = { String key -> providers.environmentVariable(key) }
+
+group 'org.vyperlang.plugin'
+version properties("pluginVersion")
 
 intellij {
     // https://mvnrepository.com/artifact/com.jetbrains.intellij.java/java-plugin
     plugins = ['com.intellij.java']
     version = "241.17011.79"
+}
+
+// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+    groups.empty()
+    repositoryUrl = "https://github.com/DanielSchiavini/vyper-plugin"
 }
 
 dependencies {
@@ -59,10 +73,6 @@ configurations {
     compile.exclude module: "slf4j-api"
 }
 
-patchPluginXml {
-    sinceBuild = '241'
-}
-
 kotlin {
     jvmToolchain(17)
 }
@@ -80,5 +90,50 @@ kover {
                 onCheck = true
             }
         }
+    }
+}
+
+tasks {
+
+    patchPluginXml {
+        version = properties("pluginVersion")
+        sinceBuild = '241'
+        untilBuild = '242.*'
+
+        // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
+        pluginDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
+            def start = "<!-- Plugin description -->"
+            def end = "<!-- Plugin description end -->"
+            def lines = it.readLines();
+            if (!lines.containsAll([start, end])) {
+                throw new GradleException("Plugin description section not found in README.md:\n$start ... $end")
+            }
+            def text = lines.subList(lines.indexOf(start) + 1, lines.indexOf(end)).join("\n")
+            return ExtensionsKt.markdownToHTML(text, "\n")
+        }
+        changeNotes = provider {
+            changelog.renderItem(
+                    changelog
+                            .getUnreleased()
+                            .withHeader(false)
+                            .withEmptySections(false),
+                    Changelog.OutputType.HTML
+            )
+        }
+    }
+
+    signPlugin {
+        certificateChain = environment("CERTIFICATE_CHAIN")
+        privateKey = environment("PRIVATE_KEY")
+        password = environment("PRIVATE_KEY_PASSWORD")
+    }
+
+    publishPlugin {
+        dependsOn("patchChangelog")
+        token = environment("PUBLISH_TOKEN")
+        // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
+        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
+        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+        channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 }

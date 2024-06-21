@@ -1,4 +1,4 @@
-package com.vyperplugin.settings
+package org.vyperlang.plugin.settings
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent

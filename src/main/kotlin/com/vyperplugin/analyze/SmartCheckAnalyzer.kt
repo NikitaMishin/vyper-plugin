@@ -1,11 +1,11 @@
-package com.vyperplugin.analyze
+package org.vyperlang.plugin.analyze
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.vyperplugin.VyperMessageProcessor
-import com.vyperplugin.docker.SmartCheckDocker
-import com.vyperplugin.docker.StatusDocker
-import com.vyperplugin.toolWindow.VyperWindow
+import org.vyperlang.plugin.VyperMessageProcessor
+import org.vyperlang.plugin.docker.SmartCheckDocker
+import org.vyperlang.plugin.docker.StatusDocker
+import org.vyperlang.plugin.toolWindow.VyperWindow
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
 

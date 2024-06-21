@@ -1,4 +1,4 @@
-package com.vyperplugin.parser
+package org.vyperlang.plugin.parser
 
 import com.intellij.lang.PsiBuilder
 import com.intellij.lang.PsiParser

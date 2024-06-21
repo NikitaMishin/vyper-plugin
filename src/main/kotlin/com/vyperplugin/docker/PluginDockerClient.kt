@@ -1,4 +1,4 @@
-package com.vyperplugin.docker
+package org.vyperlang.plugin.docker
 
 import com.github.dockerjava.api.DockerClient
 import com.github.dockerjava.core.DefaultDockerClientConfig

@@ -1,11 +1,11 @@
-package com.vyperplugin.annotators
+package org.vyperlang.plugin.annotators
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
-import com.vyperplugin.psi.VyperElement
-import com.vyperplugin.psi.VyperVarLiteral
+import org.vyperlang.plugin.psi.VyperElement
+import org.vyperlang.plugin.psi.VyperVarLiteral
 
 
 class VyperColorAnnotator : Annotator {

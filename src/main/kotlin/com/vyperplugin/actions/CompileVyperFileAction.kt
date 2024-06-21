@@ -1,4 +1,4 @@
-package com.vyperplugin.actions
+package org.vyperlang.plugin.actions
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
@@ -7,10 +7,10 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.vyperplugin.compile.VyperCompiler
-import com.vyperplugin.compile.VyperParameters
-import com.vyperplugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
-import com.vyperplugin.settings.VyperSettings
+import org.vyperlang.plugin.compile.VyperCompiler
+import org.vyperlang.plugin.compile.VyperParameters
+import org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
+import org.vyperlang.plugin.settings.VyperSettings
 
 
 class CompileVyperFileAction : VyperAction() {

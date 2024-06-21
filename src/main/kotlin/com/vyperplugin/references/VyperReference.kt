@@ -1,8 +1,8 @@
-package com.vyperplugin.references
+package org.vyperlang.plugin.references
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiPolyVariantReference
-import com.vyperplugin.psi.VyperElement
+import org.vyperlang.plugin.psi.VyperElement
 
 interface VyperReference : PsiPolyVariantReference {
 

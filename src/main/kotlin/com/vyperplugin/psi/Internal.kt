@@ -1,9 +1,9 @@
-package com.vyperplugin.psi
+package org.vyperlang.plugin.psi
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
-import com.vyperplugin.annotators.VyperCompilerListener
-import com.vyperplugin.annotators.VyperSmartCheckListener
+import org.vyperlang.plugin.annotators.VyperCompilerListener
+import org.vyperlang.plugin.annotators.VyperSmartCheckListener
 
 class VyperInternalTypeFactory(project: Project) {
 

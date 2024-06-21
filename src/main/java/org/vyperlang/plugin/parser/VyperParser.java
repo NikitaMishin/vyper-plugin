@@ -1,10 +1,10 @@
 // This is a generated file. Not intended for manual editing.
-package com.vyperplugin.parser;
+package org.vyperlang.plugin.parser;
 
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
-import static com.vyperplugin.psi.VyperTypes.*;
-import static com.vyperplugin.parser.ParserUtil.*;
+import static org.vyperlang.plugin.psi.VyperTypes.*;
+import static org.vyperlang.plugin.parser.ParserUtil.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;

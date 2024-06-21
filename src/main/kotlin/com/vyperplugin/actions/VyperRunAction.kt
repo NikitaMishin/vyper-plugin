@@ -1,4 +1,4 @@
-package com.vyperplugin.actions
+package org.vyperlang.plugin.actions
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
@@ -7,10 +7,10 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.vyperplugin.gui.VyperRunContractMultiple
-import com.vyperplugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
-import com.vyperplugin.run.VyperRun
-import com.vyperplugin.run.VyperTestParameters
+import org.vyperlang.plugin.gui.VyperRunContractMultiple
+import org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
+import org.vyperlang.plugin.run.VyperRun
+import org.vyperlang.plugin.run.VyperTestParameters
 
 class VyperRunAction : VyperAction() {
     override fun actionPerformed(e: AnActionEvent) {

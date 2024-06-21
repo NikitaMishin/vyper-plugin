@@ -1,4 +1,4 @@
-package com.vyperplugin.actions
+package org.vyperlang.plugin.actions
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent

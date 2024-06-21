@@ -1,11 +1,11 @@
-package com.vyperplugin.psi
+package org.vyperlang.plugin.psi
 
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.util.PsiTreeUtil
-import com.vyperplugin.VyperFileType
-import com.vyperplugin.VyperLanguage
+import org.vyperlang.plugin.VyperFileType
+import org.vyperlang.plugin.VyperLanguage
 
 class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, VyperLanguage) {
 

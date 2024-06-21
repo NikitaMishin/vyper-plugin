@@ -1,4 +1,4 @@
-package com.vyperplugin.annotators
+package org.vyperlang.plugin.annotators
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
@@ -17,6 +17,6 @@ enum class VyperColor(humanName: String, default: TextAttributesKey) {
     KEYWORD("Keyword", DefaultLanguageHighlighterColors.KEYWORD),
     ;
 
-    val textAttributesKey = TextAttributesKey.createTextAttributesKey("com.vyperplugin.vyper.$name", default)
+    val textAttributesKey = TextAttributesKey.createTextAttributesKey("org.vyperlang.plugin.vyper.$name", default)
     val attributesDescriptor = AttributesDescriptor(humanName, textAttributesKey)
 }

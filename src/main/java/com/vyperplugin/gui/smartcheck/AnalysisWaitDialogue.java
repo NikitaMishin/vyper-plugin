@@ -1,4 +1,4 @@
-package com.vyperplugin.gui.smartcheck;
+package org.vyperlang.plugin.gui.smartcheck;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;

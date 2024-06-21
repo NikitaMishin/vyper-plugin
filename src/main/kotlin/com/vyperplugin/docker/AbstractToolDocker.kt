@@ -1,11 +1,11 @@
-package com.vyperplugin.docker
+package org.vyperlang.plugin.docker
 
 import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.exception.DockerException
 import com.github.dockerjava.api.model.PullResponseItem
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.project.Project
-import com.vyperplugin.VyperMessageProcessor
+import org.vyperlang.plugin.VyperMessageProcessor
 import javax.swing.event.HyperlinkEvent
 
 

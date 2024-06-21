@@ -1,12 +1,12 @@
-package com.vyperplugin.references
+package org.vyperlang.plugin.references
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
-import com.vyperplugin.psi.VyperElement
-import com.vyperplugin.psi.VyperReferenceElement
+import org.vyperlang.plugin.psi.VyperElement
+import org.vyperlang.plugin.psi.VyperReferenceElement
 
 abstract class VyperReferenceBase<T : VyperReferenceElement>(element: T) : PsiPolyVariantReferenceBase<T>(element),
     VyperReference {

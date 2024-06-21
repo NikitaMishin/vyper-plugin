@@ -1,4 +1,4 @@
-package com.vyperplugin.commenter
+package org.vyperlang.plugin.commenter
 
 import com.intellij.lang.Commenter
 
