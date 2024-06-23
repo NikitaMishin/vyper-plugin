@@ -27,11 +27,11 @@ buildSearchableOptions {
     enabled = false
 }
 
-def properties = { String key -> providers.gradleProperty(key) }
+def property = { String key -> providers.gradleProperty(key) }
 def environment = { String key -> providers.environmentVariable(key) }
 
 group 'org.vyperlang.plugin'
-version properties("pluginVersion")
+version property("pluginVersion").get()
 
 intellij {
     // https://mvnrepository.com/artifact/com.jetbrains.intellij.java/java-plugin
@@ -96,7 +96,7 @@ kover {
 tasks {
 
     patchPluginXml {
-        version = properties("pluginVersion")
+        version = property("pluginVersion").get()
         sinceBuild = '241'
         untilBuild = '242.*'
 
@@ -134,6 +134,6 @@ tasks {
         // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+        channels = property("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 }
