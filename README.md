@@ -1,5 +1,9 @@
 # Vyper smart contracts programming language plugin for IntelliJ Platform
 
+<!-- Plugin description -->
+Provides support for Vyper smart contract programming language.
+<!-- Plugin description end -->
+
 ## Features:
 * Syntax assistance with specified language grammar that facilitates *navigation*, *completion* and *highlighting*;
 * Development tools integration that includes: *Vyper compiler*, *SmartCheck static analyzer*, *MythX* with *projection* onto editor;

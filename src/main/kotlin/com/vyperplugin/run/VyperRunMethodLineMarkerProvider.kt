@@ -1,4 +1,4 @@
-package com.vyperplugin.run
+package org.vyperlang.plugin.run
 
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler
 import com.intellij.codeInsight.daemon.LineMarkerInfo
@@ -12,9 +12,9 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.psi.PsiElement
-import com.vyperplugin.gui.VyperRunContractCase
-import com.vyperplugin.gui.VyperRunMenuSingle
-import com.vyperplugin.psi.VyperFunctionDefinition
+import org.vyperlang.plugin.gui.VyperRunContractCase
+import org.vyperlang.plugin.gui.VyperRunMenuSingle
+import org.vyperlang.plugin.psi.VyperFunctionDefinition
 import java.awt.event.MouseEvent
 import java.util.function.Supplier
 

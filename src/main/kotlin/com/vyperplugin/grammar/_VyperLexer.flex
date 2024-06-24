@@ -1,11 +1,11 @@
-package com.vyperplugin.grammar;
+package org.vyperlang.plugin.grammar;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
-import static com.vyperplugin.psi.VyperTypes.*;
+import static org.vyperlang.plugin.psi.VyperTypes.*;
 
 %%
 

@@ -1,4 +1,4 @@
-package com.vyperplugin
+package org.vyperlang.plugin
 
 
 import com.intellij.lang.ASTNode
@@ -12,9 +12,9 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import com.vyperplugin.parser.VyperParser
-import com.vyperplugin.psi.VyperFile
-import com.vyperplugin.psi.VyperTypes
+import org.vyperlang.plugin.parser.VyperParser
+import org.vyperlang.plugin.psi.VyperFile
+import org.vyperlang.plugin.psi.VyperTypes
 
 class VyperParserDefinition : ParserDefinition {
 

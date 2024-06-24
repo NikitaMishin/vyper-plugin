@@ -1,13 +1,13 @@
-package com.vyperplugin.annotators
+package org.vyperlang.plugin.annotators
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
-import com.vyperplugin.psi.VyperFile
-import com.vyperplugin.psi.VyperFunctionDefinition
-import com.vyperplugin.psi.VyperStateVariableDeclaration
-import com.vyperplugin.psi.file
+import org.vyperlang.plugin.psi.VyperFile
+import org.vyperlang.plugin.psi.VyperFunctionDefinition
+import org.vyperlang.plugin.psi.VyperStateVariableDeclaration
+import org.vyperlang.plugin.psi.file
 
 //Events must be declared before global declarations and function definitions.
 

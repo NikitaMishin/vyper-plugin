@@ -1,4 +1,4 @@
-package com.vyperplugin.psi
+package org.vyperlang.plugin.psi
 
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange

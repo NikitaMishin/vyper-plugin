@@ -1,4 +1,4 @@
-package com.vyperplugin.actions
+package org.vyperlang.plugin.actions
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
@@ -7,11 +7,11 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.vfs.VirtualFile
-import com.vyperplugin.VyperMessageProcessor
-import com.vyperplugin.analyze.MythXAnalyzer
-import com.vyperplugin.docker.StatusDocker
-import com.vyperplugin.docker.VyperCompilerDocker
-import com.vyperplugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
+import org.vyperlang.plugin.VyperMessageProcessor
+import org.vyperlang.plugin.analyze.MythXAnalyzer
+import org.vyperlang.plugin.docker.StatusDocker
+import org.vyperlang.plugin.docker.VyperCompilerDocker
+import org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
 
 
 class MythXAnalyzeAction : VyperAction() {

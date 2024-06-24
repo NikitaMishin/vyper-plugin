@@ -1,4 +1,4 @@
-package com.vyperplugin
+package org.vyperlang.plugin
 
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
@@ -10,7 +10,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
-import com.vyperplugin.settings.VyperSettings
+import org.vyperlang.plugin.settings.VyperSettings
 import java.io.File
 
 

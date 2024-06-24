@@ -1,4 +1,4 @@
-package com.vyperplugin.actions
+package org.vyperlang.plugin.actions
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
@@ -7,8 +7,8 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.vfs.VirtualFile
-import com.vyperplugin.analyze.SmartCheckAnalyzer
-import com.vyperplugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
+import org.vyperlang.plugin.analyze.SmartCheckAnalyzer
+import org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
 
 
 class SmartCheckAnalyzeAction : VyperAction() {

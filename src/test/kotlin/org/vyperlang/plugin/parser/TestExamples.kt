@@ -1,9 +1,9 @@
-package com.vyperplugin.parser
+package org.vyperlang.plugin.parser
 
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.vyperplugin.psi.VyperElement
-import com.vyperplugin.psi.childOfType
+import org.vyperlang.plugin.psi.VyperElement
+import org.vyperlang.plugin.psi.childOfType
 
 @TestDataPath("\$CONTENT_ROOT/src/examples")
 class TestExamples : BasePlatformTestCase() {

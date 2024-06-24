@@ -1,4 +1,4 @@
-package com.vyperplugin.internalApi.mythx
+package org.vyperlang.plugin.internalApi.mythx
 
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.FuelError

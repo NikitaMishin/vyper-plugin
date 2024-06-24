@@ -1,10 +1,10 @@
-package com.vyperplugin.references
+package org.vyperlang.plugin.references
 
 import com.intellij.psi.PsiElement
-import com.vyperplugin.completion.VyperCompleter
-import com.vyperplugin.psi.VyperCallElement
-import com.vyperplugin.psi.VyperMemberAccessExpression
-import com.vyperplugin.psi.VyperVarLiteral
+import org.vyperlang.plugin.completion.VyperCompleter
+import org.vyperlang.plugin.psi.VyperCallElement
+import org.vyperlang.plugin.psi.VyperMemberAccessExpression
+import org.vyperlang.plugin.psi.VyperVarLiteral
 
 class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element),
     VyperReference {

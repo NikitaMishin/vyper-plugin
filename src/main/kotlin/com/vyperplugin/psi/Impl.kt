@@ -1,11 +1,11 @@
-package com.vyperplugin.psi
+package org.vyperlang.plugin.psi
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
-import com.vyperplugin.psi.VyperTypes.IDENTIFIER
-import com.vyperplugin.references.VyperReference
+import org.vyperlang.plugin.psi.VyperTypes.IDENTIFIER
+import org.vyperlang.plugin.references.VyperReference
 
 abstract class VyperElementImpl(node: ASTNode) : ASTWrapperPsiElement(node), VyperElement {
     override fun getReference(): VyperReference? = null

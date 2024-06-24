@@ -1,4 +1,4 @@
-package com.vyperplugin
+package org.vyperlang.plugin
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon

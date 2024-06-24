@@ -1,10 +1,10 @@
-package com.vyperplugin.psi
+package org.vyperlang.plugin.psi
 
 import com.intellij.psi.NavigatablePsiElement
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiReference
-import com.vyperplugin.references.VyperReference
+import org.vyperlang.plugin.references.VyperReference
 
 interface VyperElement : PsiElement {
     override fun getReference(): PsiReference?

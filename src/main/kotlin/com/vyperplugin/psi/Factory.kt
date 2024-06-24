@@ -1,8 +1,8 @@
-package com.vyperplugin.psi
+package org.vyperlang.plugin.psi
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
-import com.vyperplugin.VyperFileType
+import org.vyperlang.plugin.VyperFileType
 
 
 class VyperPsiFactory(val project: Project) {

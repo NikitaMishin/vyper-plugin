@@ -1,4 +1,4 @@
-package com.vyperplugin.compile
+package org.vyperlang.plugin.compile
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
@@ -6,11 +6,11 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.vyperplugin.VyperMessageProcessor
-import com.vyperplugin.VyperStubGenerator
-import com.vyperplugin.docker.StatusDocker
-import com.vyperplugin.docker.VyperCompilerDocker
-import com.vyperplugin.toolWindow.VyperWindow
+import org.vyperlang.plugin.VyperMessageProcessor
+import org.vyperlang.plugin.VyperStubGenerator
+import org.vyperlang.plugin.docker.StatusDocker
+import org.vyperlang.plugin.docker.VyperCompilerDocker
+import org.vyperlang.plugin.toolWindow.VyperWindow
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
 

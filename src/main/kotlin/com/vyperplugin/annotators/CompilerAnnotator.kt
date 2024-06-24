@@ -1,4 +1,4 @@
-package com.vyperplugin.annotators
+package org.vyperlang.plugin.annotators
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.lang.annotation.AnnotationHolder
@@ -10,8 +10,8 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import com.vyperplugin.compile.VyperCompiler
-import com.vyperplugin.psi.VyperFile
+import org.vyperlang.plugin.compile.VyperCompiler
+import org.vyperlang.plugin.psi.VyperFile
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 

@@ -1,10 +1,10 @@
-package com.vyperplugin.editorActions
+package org.vyperlang.plugin.editorActions
 
 import com.intellij.lang.BracePair
 import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
-import com.vyperplugin.psi.VyperTypes
+import org.vyperlang.plugin.psi.VyperTypes
 
 class PairedBraceMatcherVyper : PairedBraceMatcher {
     override fun isPairedBracesAllowedBeforeType(

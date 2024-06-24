@@ -1,4 +1,4 @@
-package com.vyperplugin.completion
+package org.vyperlang.plugin.completion
 
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
@@ -6,11 +6,11 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.DumbAware
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
-import com.vyperplugin.VyperIcons
-import com.vyperplugin.psi.*
-import com.vyperplugin.references.VyperResolver
-import com.vyperplugin.references.VyperResolver.resolveMemberAccess
-import com.vyperplugin.references.VyperResolver.resolveSelfAccessVarLiteralRec
+import org.vyperlang.plugin.VyperIcons
+import org.vyperlang.plugin.psi.*
+import org.vyperlang.plugin.references.VyperResolver
+import org.vyperlang.plugin.references.VyperResolver.resolveMemberAccess
+import org.vyperlang.plugin.references.VyperResolver.resolveSelfAccessVarLiteralRec
 import javax.swing.Icon
 
 object VyperCompleter {

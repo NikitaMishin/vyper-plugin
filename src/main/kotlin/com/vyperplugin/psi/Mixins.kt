@@ -1,15 +1,15 @@
-package com.vyperplugin.psi
+package org.vyperlang.plugin.psi
 
 
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiElement
-import com.vyperplugin.psi.VyperTypes.*
-import com.vyperplugin.psi.impl.VyperCallExpressionImpl
-import com.vyperplugin.references.VyperCallReference
-import com.vyperplugin.references.VyperMemberAccessReference
-import com.vyperplugin.references.VyperReference
-import com.vyperplugin.references.VyperVarLiteralReference
+import org.vyperlang.plugin.psi.VyperTypes.*
+import org.vyperlang.plugin.psi.impl.VyperCallExpressionImpl
+import org.vyperlang.plugin.references.VyperCallReference
+import org.vyperlang.plugin.references.VyperMemberAccessReference
+import org.vyperlang.plugin.references.VyperReference
+import org.vyperlang.plugin.references.VyperVarLiteralReference
 
 abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperVarLiteral {
 

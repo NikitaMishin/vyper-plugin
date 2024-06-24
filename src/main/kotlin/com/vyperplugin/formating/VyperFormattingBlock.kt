@@ -1,4 +1,4 @@
-package com.vyperplugin.formating
+package org.vyperlang.plugin.formating
 
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
@@ -7,11 +7,11 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.TokenType
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.formatter.FormatterUtil
-import com.vyperplugin.psi.VyperFunctionDefinition
-import com.vyperplugin.psi.VyperLocalVariableDefinition
-import com.vyperplugin.psi.VyperStatement
-import com.vyperplugin.psi.VyperStructDefinition
-import com.vyperplugin.psi.VyperTypes.*
+import org.vyperlang.plugin.psi.VyperFunctionDefinition
+import org.vyperlang.plugin.psi.VyperLocalVariableDefinition
+import org.vyperlang.plugin.psi.VyperStatement
+import org.vyperlang.plugin.psi.VyperStructDefinition
+import org.vyperlang.plugin.psi.VyperTypes.*
 import java.util.*
 
 class VyperFormattingBlock(

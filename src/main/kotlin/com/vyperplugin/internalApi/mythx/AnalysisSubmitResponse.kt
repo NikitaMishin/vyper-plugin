@@ -1,4 +1,4 @@
-package com.vyperplugin.internalApi.mythx
+package org.vyperlang.plugin.internalApi.mythx
 
 
 data class AnalysisSubmitResponse(

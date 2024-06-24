@@ -1,12 +1,12 @@
-package com.vyperplugin.analyze
+package org.vyperlang.plugin.analyze
 
 
 import com.intellij.openapi.project.Project
-import com.vyperplugin.VyperMessageProcessor
-import com.vyperplugin.internalApi.mythx.APIMythX
-import com.vyperplugin.internalApi.mythx.DetectedIssue
-import com.vyperplugin.settings.VyperSettings
-import com.vyperplugin.toolWindow.VyperWindow
+import org.vyperlang.plugin.VyperMessageProcessor
+import org.vyperlang.plugin.internalApi.mythx.APIMythX
+import org.vyperlang.plugin.internalApi.mythx.DetectedIssue
+import org.vyperlang.plugin.settings.VyperSettings
+import org.vyperlang.plugin.toolWindow.VyperWindow
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay

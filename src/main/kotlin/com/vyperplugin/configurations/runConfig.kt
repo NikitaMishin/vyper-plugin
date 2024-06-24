@@ -1,4 +1,4 @@
-package com.vyperplugin.configurations
+package org.vyperlang.plugin.configurations
 
 //
 //

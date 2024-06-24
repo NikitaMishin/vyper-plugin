@@ -1,4 +1,4 @@
-package com.vyperplugin.annotators
+package org.vyperlang.plugin.annotators
 
 //class SelfAccessUnresolvedReferenceAnnotator : Annotator {
 //    override fun annotate(element: PsiElement, holder: AnnotationHolder) {

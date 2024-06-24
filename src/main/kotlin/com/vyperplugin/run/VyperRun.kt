@@ -1,13 +1,13 @@
-package com.vyperplugin.run
+package org.vyperlang.plugin.run
 
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.vyperplugin.VyperMessageProcessor
-import com.vyperplugin.docker.StatusDocker
-import com.vyperplugin.docker.ToolResult
-import com.vyperplugin.docker.VyperRunDocker
-import com.vyperplugin.toolWindow.VyperWindow
+import org.vyperlang.plugin.VyperMessageProcessor
+import org.vyperlang.plugin.docker.StatusDocker
+import org.vyperlang.plugin.docker.ToolResult
+import org.vyperlang.plugin.docker.VyperRunDocker
+import org.vyperlang.plugin.toolWindow.VyperWindow
 
 
 /**

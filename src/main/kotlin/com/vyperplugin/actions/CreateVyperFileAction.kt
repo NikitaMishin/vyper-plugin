@@ -1,11 +1,11 @@
-package com.vyperplugin.actions
+package org.vyperlang.plugin.actions
 
 
 import com.intellij.ide.actions.CreateFileFromTemplateAction
 import com.intellij.ide.actions.CreateFileFromTemplateDialog
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
-import com.vyperplugin.VyperIcons
+import org.vyperlang.plugin.VyperIcons
 
 private const val name = "Create empty Vyper file"
 private const val description = "Empty Vyper file"

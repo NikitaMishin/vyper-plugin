@@ -1,6 +1,6 @@
-package com.vyperplugin.psi
+package org.vyperlang.plugin.psi
 
 import com.intellij.psi.tree.IElementType
-import com.vyperplugin.VyperLanguage
+import org.vyperlang.plugin.VyperLanguage
 
 class VyperElementType(debugName: String) : IElementType(debugName, VyperLanguage)

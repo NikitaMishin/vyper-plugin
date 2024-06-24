@@ -1,4 +1,4 @@
-package com.vyperplugin.editorActions
+package org.vyperlang.plugin.editorActions
 
 import com.intellij.openapi.compiler.CompilationStatusListener
 

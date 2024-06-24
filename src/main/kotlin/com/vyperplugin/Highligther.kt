@@ -1,10 +1,10 @@
-package com.vyperplugin
+package org.vyperlang.plugin
 
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
-import com.vyperplugin.psi.VyperTypes.*
+import org.vyperlang.plugin.psi.VyperTypes.*
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors as Defaults
 
 class VyperHighlighterFactory : SingleLazyInstanceSyntaxHighlighterFactory() {

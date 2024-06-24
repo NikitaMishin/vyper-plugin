@@ -1,9 +1,9 @@
-package com.vyperplugin.references
+package org.vyperlang.plugin.references
 
 import com.intellij.psi.PsiElement
 import com.intellij.util.containers.toMutableSmartList
-import com.vyperplugin.psi.*
-import com.vyperplugin.psi.VyperTypes.VAR_LITERAL
+import org.vyperlang.plugin.psi.*
+import org.vyperlang.plugin.psi.VyperTypes.VAR_LITERAL
 
 
 object VyperResolver {
