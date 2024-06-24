@@ -29,6 +29,7 @@ buildSearchableOptions {
 
 def property = { String key -> providers.gradleProperty(key) }
 def environment = { String key -> providers.environmentVariable(key) }
+def versionRegex = ~/-([^.]*)/
 
 group 'org.vyperlang.plugin'
 version property("pluginVersion").get()
@@ -134,6 +135,8 @@ tasks {
         // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels = property("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+        channels = property("pluginVersion").map {
+            it ==~ versionRegex ? (it =~ versionRegex)[0][1] : "default"
+        }
     }
 }
