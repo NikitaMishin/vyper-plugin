@@ -11,14 +11,14 @@ import static org.vyperlang.plugin.psi.VyperTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperFunctionModifierImpl extends ASTWrapperPsiElement implements VyperFunctionModifier {
+public class VyperFunctionDecoratorImpl extends ASTWrapperPsiElement implements VyperFunctionDecorator {
 
-  public VyperFunctionModifierImpl(@NotNull ASTNode node) {
+  public VyperFunctionDecoratorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitFunctionModifier(this);
+    visitor.visitFunctionDecorator(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class VyperFunctionModifierImpl extends ASTWrapperPsiElement implements V
 
   @Override
   @Nullable
-  public VyperFunctionDecorator getFunctionDecorator() {
-    return findChildByClass(VyperFunctionDecorator.class);
+  public VyperUniqueKey getUniqueKey() {
+    return findChildByClass(VyperUniqueKey.class);
   }
 
 }

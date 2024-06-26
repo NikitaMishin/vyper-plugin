@@ -13,11 +13,11 @@ public interface VyperFunctionDefinition extends VyperFunctionDefElement {
   @Nullable
   VyperFunctionArgs getFunctionArgs();
 
+  @Nullable
+  VyperFunctionBody getFunctionBody();
+
   @NotNull
   List<VyperFunctionModifier> getFunctionModifierList();
-
-  @Nullable
-  VyperStatement getStatement();
 
   @Nullable
   PsiElement getIdentifier();

@@ -29,6 +29,8 @@
         RPAREN=')'
         IMPORT = 'import'
         FROM = 'from'
+        PASS = 'pass'
+        ELLIPSIS='...'
 
         PLUS='+'
         MINUS='-'
@@ -175,7 +177,7 @@ private structRecover ::= !(&INDEQ | &INDLT |<<eof>>)
 
 //ok
 //Events must all come before global declarations and function definitions
-EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProperty?) | (&INDNONE pass))  {
+EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProperty?) | (&INDNONE PassStatement))  {
     pin=5
 }
 
@@ -213,9 +215,10 @@ private FunDef ::= def (&INDNONE Identifier) FunctionArgs FunTypeAnnotation? (&I
     pin = 1
 }
 
-private FunBody ::= (&INDNONE Statement) | <<indented ((MultiLineString)? &INDEQ Statement (&INDEQ Statement)*) >>
+FunctionImplementation ::= (&INDNONE Statement) | <<indented ((MultiLineString)? &INDEQ Statement (&INDEQ Statement)*) >>
+FunctionBody ::= (ELLIPSIS|FunctionImplementation)
 FunTypeAnnotation ::= &INDNONE '->' &INDNONE ( TYPE | '(' TYPE (',' TYPE)* ')' )
-FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef FunBody
+FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef FunctionBody
 {
     pin=1
     implements = "org.vyperlang.plugin.psi.VyperFunctionDefElement"
@@ -225,7 +228,8 @@ FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef FunBod
 
 //FunctionModifier ::= (&INDEQ FunctionModifierOptional)* (&INDEQ FunctionModifierMandatory) (&INDEQ FunctionModifierOptional)*
 //private FunctionModifierMandatory ::= DECORATOR ((&INDNONE public) | (&INDNONE private)) {pin = 1}
-FunctionModifier ::=  (DECORATOR (&INDNONE (public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')))) {
+FunctionDecorator ::= public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')
+FunctionModifier ::=  (DECORATOR (&INDNONE FunctionDecorator)) {
     pin = 1
 }
 
@@ -285,7 +289,7 @@ EmitStatement ::= 'log.' &INDNONE FunctionCallExpression {
     pin=1
 }
 
-private PassStatement ::= pass
+private PassStatement ::= PASS
 
 Expression ::=
   TernaryExpression

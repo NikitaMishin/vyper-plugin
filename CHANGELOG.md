@@ -4,11 +4,13 @@
 
 ## [Unreleased]
 
+- Add support for vyi files ([#17](https://github.com/NikitaMishin/vyper-plugin/issues/17))
+
 ## [0.2.0-alpha.2] - 2024-06-26
 
 ### Changed
 
-- Add support for PyCharm ([#22](https://github.com/NikitaMishin/vyper-plugin/pull/22))
+- Add support for PyCharm ([#22](https://github.com/NikitaMishin/vyper-plugin/issues/22))
 - Update platform to version [`2024.1.4`](https://blog.jetbrains.com/idea/2024/06/intellij-idea-2024-1-4/)
 
 ### Added

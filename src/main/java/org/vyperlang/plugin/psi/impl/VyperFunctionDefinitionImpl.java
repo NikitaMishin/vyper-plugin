@@ -40,15 +40,15 @@ public class VyperFunctionDefinitionImpl extends VyperFunctionDefMixin implement
   }
 
   @Override
-  @NotNull
-  public List<VyperFunctionModifier> getFunctionModifierList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperFunctionModifier.class);
+  @Nullable
+  public VyperFunctionBody getFunctionBody() {
+    return findChildByClass(VyperFunctionBody.class);
   }
 
   @Override
-  @Nullable
-  public VyperStatement getStatement() {
-    return findChildByClass(VyperStatement.class);
+  @NotNull
+  public List<VyperFunctionModifier> getFunctionModifierList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperFunctionModifier.class);
   }
 
   @Override

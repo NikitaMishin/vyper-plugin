@@ -42,9 +42,9 @@ object VyperResolver {
     private fun lexicalDeclarations(scope: PsiElement, place: PsiElement): List<VyperNamedElement> {
         return when (scope) {
 
-            is org.vyperlang.plugin.psi.VyperLocalVariableDeclaration -> listOf(scope)
+            is VyperLocalVariableDeclaration -> listOf(scope)
 
-            is org.vyperlang.plugin.psi.VyperStatement -> {
+            is VyperStatement -> {
                 val temp = mutableListOf<PsiElement>().apply {
                     var start = scope
                     while (start.prevSibling != null) {
@@ -52,7 +52,7 @@ object VyperResolver {
                         start = start.prevSibling
                     }
                 }
-                temp.filterIsInstance<org.vyperlang.plugin.psi.VyperStatement>().toList()
+                temp.filterIsInstance<VyperStatement>().toList()
                     .fold(emptyList()) { acc, elem ->
                         acc.plus(
                             lexicalDeclarations(elem.firstChild, place)
@@ -60,16 +60,16 @@ object VyperResolver {
                     }
             }
 
-            is VyperFile -> scope.getStatements().filter { it !is org.vyperlang.plugin.psi.VyperFunctionDefinition }
+            is VyperFile -> scope.getStatements().filter { it !is VyperFunctionDefinition }
                 .flatMap { lexicalDeclarations(it, place) }
 
-            is org.vyperlang.plugin.psi.VyperUserDefinedConstantsExpression -> listOf(scope)
+            is VyperUserDefinedConstantsExpression -> listOf(scope)
 
-            is org.vyperlang.plugin.psi.VyperLocalVariableDefinition -> lexicalDeclarations(scope.localVariableDeclaration, place)
+            is VyperLocalVariableDefinition -> lexicalDeclarations(scope.localVariableDeclaration, place)
 
-            is org.vyperlang.plugin.psi.VyperFunctionDefinition -> {
+            is VyperFunctionDefinition -> {
                 val params = scope.parameters?.paramDefList?.toTypedArray() ?: emptyArray()
-                val statements: MutableList<VyperNamedElement> = scope.statement
+                val statements: MutableList<VyperNamedElement> = scope.functionBody
                     ?.siblings
                     ?.toMutableList()
                     ?.flatMap { lexicalDeclarations(it, place) }?.toMutableSmartList() ?: mutableListOf()
@@ -82,22 +82,22 @@ object VyperResolver {
     }
 
 
-    fun resolveFunction(element: org.vyperlang.plugin.psi.VyperCallExpression): Collection<FunctionResolveResult> {
+    fun resolveFunction(element: VyperCallExpression): Collection<FunctionResolveResult> {
         return resolveFunRec(element).filter { it.name == element.referenceName }
             .map { FunctionResolveResult(it) }
     }
 
-    private fun resolveFunRec(element: org.vyperlang.plugin.psi.VyperCallExpression): List<org.vyperlang.plugin.psi.VyperFunctionDefinition> {
-        val res = mutableListOf<org.vyperlang.plugin.psi.VyperFunctionDefinition>()
+    private fun resolveFunRec(element: VyperCallExpression): List<VyperFunctionDefinition> {
+        val res = mutableListOf<VyperFunctionDefinition>()
         val ref: VyperElement = element
         return when {
-            ref.firstChild is org.vyperlang.plugin.psi.VyperPrimaryExpression -> emptyList()
-            ref.firstChild is org.vyperlang.plugin.psi.VyperMemberAccessExpression
-                    && (ref.firstChild.firstChild.firstChild as org.vyperlang.plugin.psi.VyperVarLiteral).name == "self" -> {
+            ref.firstChild is VyperPrimaryExpression -> emptyList()
+            ref.firstChild is VyperMemberAccessExpression
+                    && (ref.firstChild.firstChild.firstChild as VyperVarLiteral).name == "self" -> {
                 res.addAll((element.file as VyperFile)
                     .getStatements()
-                    .filter { it is org.vyperlang.plugin.psi.VyperFunctionDefinition }
-                    .map { it as org.vyperlang.plugin.psi.VyperFunctionDefinition })
+                    .filter { it is VyperFunctionDefinition }
+                    .map { it as VyperFunctionDefinition })
                 res
             }
             else -> emptyList()
@@ -108,20 +108,20 @@ object VyperResolver {
 
     }
 
-    fun resolveMemberAccess(element: org.vyperlang.plugin.psi.VyperMemberAccessExpression): List<VyperNamedElement> {
-        if (element.firstChild.firstChild is org.vyperlang.plugin.psi.VyperVarLiteral
-            && (element.firstChild.firstChild as org.vyperlang.plugin.psi.VyperVarLiteral).name == "msg"
+    fun resolveMemberAccess(element: VyperMemberAccessExpression): List<VyperNamedElement> {
+        if (element.firstChild.firstChild is VyperVarLiteral
+            && (element.firstChild.firstChild as VyperVarLiteral).name == "msg"
         ) {
-            val msg = VyperInternalTypeFactory.of(element.project).msg
-            return msg.children.filter { it is org.vyperlang.plugin.psi.VyperLocalVariableDefinition }.map { it as org.vyperlang.plugin.psi.VyperLocalVariableDefinition }
+            val msg = VyperInternalTypeFactory(element.project).msg
+            return msg.children.filter { it is VyperLocalVariableDefinition }.map { it as VyperLocalVariableDefinition }
                 .map { it.localVariableDeclaration }
         }
-        if (element.firstChild.firstChild is org.vyperlang.plugin.psi.VyperVarLiteral
-            && (element.firstChild.firstChild as org.vyperlang.plugin.psi.VyperVarLiteral).name == "self"
+        if (element.firstChild.firstChild is VyperVarLiteral
+            && (element.firstChild.firstChild as VyperVarLiteral).name == "self"
         ) {
             return resolveSelfAccessVarLiteral(
                 element,
-                findLastChildByType(VAR_LITERAL, element.node)!!.psi as org.vyperlang.plugin.psi.VyperVarLiteral
+                findLastChildByType(VAR_LITERAL, element.node)!!.psi as VyperVarLiteral
             )
 
         }
@@ -132,8 +132,8 @@ object VyperResolver {
     //now only for self.var
     //typechecking to be implemented
     fun resolveSelfAccessVarLiteral(
-        element: org.vyperlang.plugin.psi.VyperMemberAccessExpression,
-        id: org.vyperlang.plugin.psi.VyperVarLiteral
+        element: VyperMemberAccessExpression,
+        id: VyperVarLiteral
     ): List<VyperNamedElement> {
 //
         return resolveSelfAccessVarLiteralRec(element).plus(resolveSelfAccessFunction(element))
@@ -142,13 +142,13 @@ object VyperResolver {
     }
 
     //
-    fun resolveSelfAccessFunction(element: org.vyperlang.plugin.psi.VyperMemberAccessExpression): List<VyperNamedElement> {
-        return (element.file as VyperFile).getStatements().filter { it is org.vyperlang.plugin.psi.VyperFunctionDefinition }
+    fun resolveSelfAccessFunction(element: VyperMemberAccessExpression): List<VyperNamedElement> {
+        return (element.file as VyperFile).getStatements().filter { it is VyperFunctionDefinition }
             .map { it as VyperNamedElement }
     }
 
-    fun resolveSelfAccessVarLiteralRec(element: org.vyperlang.plugin.psi.VyperMemberAccessExpression): List<VyperNamedElement> {
-        return (element.file as VyperFile).getStatements().filter { it is org.vyperlang.plugin.psi.VyperStateVariableDeclaration }
+    fun resolveSelfAccessVarLiteralRec(element: VyperMemberAccessExpression): List<VyperNamedElement> {
+        return (element.file as VyperFile).getStatements().filter { it is VyperStateVariableDeclaration }
             .map { it as VyperNamedElement }
     }
 }

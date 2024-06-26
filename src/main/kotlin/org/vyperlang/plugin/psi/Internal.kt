@@ -26,12 +26,4 @@ class VyperInternalTypeFactory(project: Project) {
         VyperCompilerListener(project).listenAnalysis()
         VyperSmartCheckListener(project).listenAnalysis()
     }
-
-    companion object {
-        fun of(project: Project): VyperInternalTypeFactory {
-            return project.getComponent(VyperInternalTypeFactory::class.java)
-        }
-    }
-
-
 }

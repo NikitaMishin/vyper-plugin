@@ -5,7 +5,7 @@ import com.intellij.psi.tree.IElementType;
 
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
-import static psi.org.vyperlang.plugin.VyperTypes.*;
+import static org.vyperlang.plugin.psi.VyperTypes.*;
 
 %%
 
@@ -61,6 +61,8 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   ")"                          { return RPAREN; }
   "import"                     { return IMPORT; }
   "from"                       { return FROM; }
+  "pass"                       { return PASS; }
+  "..."                        { return ELLIPSIS; }
   "+"                          { return PLUS; }
   "-"                          { return MINUS; }
   "*"                          { return MULT; }
@@ -111,7 +113,6 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "interface"                  { return INTERFACE; }
   "def"                        { return DEF; }
   "struct"                     { return STRUCT; }
-  "pass"                       { return PASS; }
   "internal"                   { return INTERNAL; }
   "elif"                       { return ELIF; }
   "else"                       { return ELSE; }

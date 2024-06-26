@@ -11,11 +11,6 @@ val PsiElement.siblings: Sequence<PsiElement> get() = generateSequence(this) { i
 
 val PsiElement.file get() = this.containingFile
 
-fun PsiElement.rangeRelativeTo(ancestor: PsiElement): TextRange {
-    check(ancestor.textRange.contains(textRange))
-    return textRange.shiftRight(-ancestor.textRange.startOffset)
-}
-
 inline fun <reified T : PsiElement> PsiElement.childOfType(strict: Boolean = true): T? =
     PsiTreeUtil.findChildOfType(this, T::class.java, strict)
 

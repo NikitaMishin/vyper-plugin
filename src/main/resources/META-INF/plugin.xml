@@ -27,6 +27,8 @@
 
         <fileType name="Vyper file" implementationClass="org.vyperlang.plugin.VyperFileType"
                   fieldName="INSTANCE" language="Vyper" extensions="vy"/>
+        <fileType name="Vyper interface file" implementationClass="org.vyperlang.plugin.VyperInterfaceFileType"
+                  fieldName="INSTANCE" language="Vyper" extensions="vyi"/>
         <notificationGroup id = "COMPILER" displayType="BALLOON"/>
         <notificationGroup id = "RUN" displayType="BALLOON"/>
         <notificationGroup id = "COMMON" displayType="BALLOON"/>

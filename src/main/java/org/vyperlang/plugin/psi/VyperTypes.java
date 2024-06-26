@@ -25,10 +25,13 @@ public interface VyperTypes {
   IElementType EXTERNAL_INTERFACES = new VyperElementType("EXTERNAL_INTERFACES");
   IElementType FOR_STATEMENT = new VyperElementType("FOR_STATEMENT");
   IElementType FUNCTION_ARGS = new VyperElementType("FUNCTION_ARGS");
+  IElementType FUNCTION_BODY = new VyperElementType("FUNCTION_BODY");
   IElementType FUNCTION_CALL_ARGUMENT = new VyperElementType("FUNCTION_CALL_ARGUMENT");
   IElementType FUNCTION_CALL_ARGUMENTS = new VyperElementType("FUNCTION_CALL_ARGUMENTS");
   IElementType FUNCTION_CALL_EXPRESSION = new VyperElementType("FUNCTION_CALL_EXPRESSION");
+  IElementType FUNCTION_DECORATOR = new VyperElementType("FUNCTION_DECORATOR");
   IElementType FUNCTION_DEFINITION = new VyperElementType("FUNCTION_DEFINITION");
+  IElementType FUNCTION_IMPLEMENTATION = new VyperElementType("FUNCTION_IMPLEMENTATION");
   IElementType FUNCTION_MODIFIER = new VyperElementType("FUNCTION_MODIFIER");
   IElementType FUN_TYPE_ANNOTATION = new VyperElementType("FUN_TYPE_ANNOTATION");
   IElementType IF_STATEMENT = new VyperElementType("IF_STATEMENT");
@@ -94,6 +97,7 @@ public interface VyperTypes {
   IElementType DOT = new VyperTokenType(".");
   IElementType DYNARRAY = new VyperTokenType("DynArray");
   IElementType ELIF = new VyperTokenType("elif");
+  IElementType ELLIPSIS = new VyperTokenType("...");
   IElementType ELSE = new VyperTokenType("else");
   IElementType EQ = new VyperTokenType("==");
   IElementType EVENT = new VyperTokenType("event");
@@ -217,6 +221,9 @@ public interface VyperTypes {
       else if (type == FUNCTION_ARGS) {
         return new VyperFunctionArgsImpl(node);
       }
+      else if (type == FUNCTION_BODY) {
+        return new VyperFunctionBodyImpl(node);
+      }
       else if (type == FUNCTION_CALL_ARGUMENT) {
         return new VyperFunctionCallArgumentImpl(node);
       }
@@ -226,8 +233,14 @@ public interface VyperTypes {
       else if (type == FUNCTION_CALL_EXPRESSION) {
         return new VyperFunctionCallExpressionImpl(node);
       }
+      else if (type == FUNCTION_DECORATOR) {
+        return new VyperFunctionDecoratorImpl(node);
+      }
       else if (type == FUNCTION_DEFINITION) {
         return new VyperFunctionDefinitionImpl(node);
+      }
+      else if (type == FUNCTION_IMPLEMENTATION) {
+        return new VyperFunctionImplementationImpl(node);
       }
       else if (type == FUNCTION_MODIFIER) {
         return new VyperFunctionModifierImpl(node);
