@@ -35,9 +35,8 @@ group 'org.vyperlang.plugin'
 version property("pluginVersion").get()
 
 intellij {
-    // https://mvnrepository.com/artifact/com.jetbrains.intellij.java/java-plugin
-    plugins = ['com.intellij.java']
-    version = "241.17011.79"
+    plugins = []
+    version = "2024.1.4"
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin

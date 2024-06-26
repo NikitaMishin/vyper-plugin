@@ -20,8 +20,6 @@
     <change-notes>Troubleshooting compatibility issues.</change-notes>
 
     <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.java</depends>
-
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
