@@ -22,7 +22,7 @@ class VyperColorAnnotator : Annotator {
 
 
     private fun highlight(element: VyperElement): Pair<PsiElement, VyperColor>? {
-        return if (element is VyperVarLiteral && element.text == "self") {
+        return if (element is org.vyperlang.plugin.psi.VyperVarLiteral && element.text == "self") {
             element to VyperColor.KEYWORD
         } else null
     }

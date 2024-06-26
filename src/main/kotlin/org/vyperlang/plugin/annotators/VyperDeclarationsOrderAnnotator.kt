@@ -16,13 +16,13 @@ import org.vyperlang.plugin.psi.file
 class VyperDeclarationsOrderAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 
-        if (element is VyperStateVariableDeclaration) {
+        if (element is org.vyperlang.plugin.psi.VyperStateVariableDeclaration) {
 
             val declarations = (element.file as VyperFile).getStatements().takeWhile { it != element }
             loop@ for (dec in declarations) {
                 when (dec) {
 
-                    is VyperFunctionDefinition -> {
+                    is org.vyperlang.plugin.psi.VyperFunctionDefinition -> {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR, "Global variables must all come " +
                                     "before function definitions"

@@ -19,7 +19,7 @@ import java.awt.event.MouseEvent
 import java.util.function.Supplier
 
 
-class VyperMethodRunHandler(private val funcName: String, private val funcDef: VyperFunctionDefinition) :
+class VyperMethodRunHandler(private val funcName: String, private val funcDef: org.vyperlang.plugin.psi.VyperFunctionDefinition) :
     GutterIconNavigationHandler<PsiElement> {
     /**
      * when user clicks on run icon
@@ -63,7 +63,7 @@ class VyperMethodRunHandler(private val funcName: String, private val funcDef: V
     /**
      * return empty array if nothing
      */
-    private fun getArgsFromSignature(elt: VyperFunctionDefinition): Array<String> {
+    private fun getArgsFromSignature(elt: org.vyperlang.plugin.psi.VyperFunctionDefinition): Array<String> {
         //    val type = elt.functionArgs!!.typeList.map { it.text }
         if (elt.functionArgs == null) {
             return arrayOf()
@@ -74,11 +74,11 @@ class VyperMethodRunHandler(private val funcName: String, private val funcDef: V
     /**
      * return empty array if nothing
      */
-    private fun getInitArgsFromSignature(elt: VyperFunctionDefinition): Array<String> {
+    private fun getInitArgsFromSignature(elt: org.vyperlang.plugin.psi.VyperFunctionDefinition): Array<String> {
 
         val initMethod = elt.parent.children
-            .filter { (it is VyperFunctionDefinition) }
-            .map { it as VyperFunctionDefinition }
+            .filter { (it is org.vyperlang.plugin.psi.VyperFunctionDefinition) }
+            .map { it as org.vyperlang.plugin.psi.VyperFunctionDefinition }
             .filter { it.identifier!!.text == "__init__" }
         if (initMethod.isNotEmpty() && initMethod.first().functionArgs != null) {
             return initMethod.first().functionArgs!!.text.split(',').toTypedArray()
@@ -97,7 +97,7 @@ class VyperRunMethodLineMarkerProvider : LineMarkerProvider {
     ) {
         for (element in elements) {
             when (element) {
-                is VyperFunctionDefinition -> {
+                is org.vyperlang.plugin.psi.VyperFunctionDefinition -> {
                     element.identifier?.let { methodName ->
                         val func = { _: PsiElement -> "run ${methodName.text}" }
                         if (!(

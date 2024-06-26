@@ -6,7 +6,7 @@ import org.vyperlang.plugin.psi.VyperCallElement
 import org.vyperlang.plugin.psi.VyperMemberAccessExpression
 import org.vyperlang.plugin.psi.VyperVarLiteral
 
-class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element),
+class VyperVarLiteralReference(element: org.vyperlang.plugin.psi.VyperVarLiteral) : VyperReferenceBase<org.vyperlang.plugin.psi.VyperVarLiteral>(element),
     VyperReference {
 
     override fun multiResolve(): Collection<PsiElement> {
@@ -18,8 +18,8 @@ class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<Vy
     }
 }
 
-class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemberAccessExpression) :
-    VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+class VyperMemberAccessReference(element: org.vyperlang.plugin.psi.VyperVarLiteral, var member: org.vyperlang.plugin.psi.VyperMemberAccessExpression) :
+    VyperReferenceBase<org.vyperlang.plugin.psi.VyperVarLiteral>(element), VyperReference {
     override fun multiResolve(): Collection<PsiElement> {
         return VyperResolver.resolveMemberAccess(member)
     }

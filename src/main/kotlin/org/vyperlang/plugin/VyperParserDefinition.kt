@@ -51,12 +51,12 @@ class VyperParserDefinition : ParserDefinition {
     }
 
     override fun createElement(node: ASTNode): PsiElement {
-        return VyperTypes.Factory.createElement(node)
+        return org.vyperlang.plugin.psi.VyperTypes.Factory.createElement(node)
     }
 
     companion object {
-        val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE, VyperTypes.BREAK_LINE)
-        val COMMENTS = TokenSet.create(VyperTypes.COMMENT)
+        val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE, org.vyperlang.plugin.psi.VyperTypes.BREAK_LINE)
+        val COMMENTS = TokenSet.create(org.vyperlang.plugin.psi.VyperTypes.COMMENT)
         val FILE = IFileElementType(VyperLanguage)
     }
 

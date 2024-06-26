@@ -60,8 +60,8 @@ class VyperFormattingBlock(
                 FUNCTION_DEFINITION,
                 STRUCT_DEFINITION
             ) -> Indent.getNormalIndent()
-            childType is VyperStatement && type is VyperFunctionDefinition -> Indent.getNormalIndent()
-            childType is VyperLocalVariableDefinition && type is VyperStructDefinition -> Indent.getNormalIndent()
+            childType is org.vyperlang.plugin.psi.VyperStatement && type is org.vyperlang.plugin.psi.VyperFunctionDefinition -> Indent.getNormalIndent()
+            childType is org.vyperlang.plugin.psi.VyperLocalVariableDefinition && type is org.vyperlang.plugin.psi.VyperStructDefinition -> Indent.getNormalIndent()
 
             // fields inside structs
 //            type == VyperTypes.STRUCT_DEFINITION && childType == VyperTypes.LOCAL_VARIABLE_DEFINITION -> Indent.getNormalIndent()

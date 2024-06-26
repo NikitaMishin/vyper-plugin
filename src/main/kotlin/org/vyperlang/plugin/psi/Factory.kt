@@ -8,7 +8,7 @@ import org.vyperlang.plugin.VyperFileType
 class VyperPsiFactory(val project: Project) {
 
 
-    fun createStruct(struct: String): VyperStructDefinition {
+    fun createStruct(struct: String): org.vyperlang.plugin.psi.VyperStructDefinition {
         return createFromText(struct) ?: error("Failed to create struct: `$struct`")
     }
 

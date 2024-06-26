@@ -21,7 +21,7 @@ class CompileVyperFileAction : VyperAction() {
         val files = getClickedFiles(e)?.filter { it.path.contains(vyExtensionRegExp) }?.toTypedArray()
 
         if (files == null || files.isEmpty()) {
-            return NoFilesWithVyperAreSelectedDialogue().display()
+            return org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue().display()
         }
 
 

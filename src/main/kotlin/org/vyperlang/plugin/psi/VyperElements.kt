@@ -21,8 +21,8 @@ interface VyperReferenceElement : VyperNamedElement {
 
 interface VyperFunctionDefElement : VyperReferenceElement {
     val modifiers: List<PsiElement>
-    val parameters: VyperFunctionArgs?
-    val parameterTypes: List<VyperType>
-    val returns: VyperType?
+    val parameters: org.vyperlang.plugin.psi.VyperFunctionArgs?
+    val parameterTypes: List<org.vyperlang.plugin.psi.VyperType>
+    val returns: org.vyperlang.plugin.psi.VyperType?
     val isConstructor: Boolean
 }

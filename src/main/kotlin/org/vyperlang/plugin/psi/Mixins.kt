@@ -11,7 +11,8 @@ import org.vyperlang.plugin.references.VyperMemberAccessReference
 import org.vyperlang.plugin.references.VyperReference
 import org.vyperlang.plugin.references.VyperVarLiteralReference
 
-abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperVarLiteral {
+abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node),
+    org.vyperlang.plugin.psi.VyperVarLiteral {
 
     override val referenceNameElement: PsiElement
         get() = findChildByType(IDENTIFIER)!!
@@ -24,12 +25,12 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
         val grandparent = parent.parent
 //        println(grandparent)
         return when {
-            grandparent is VyperCallExpressionImpl && parent is VyperMemberAccessExpression -> {
+            grandparent is org.vyperlang.plugin.psi.impl.VyperCallExpressionImpl && parent is org.vyperlang.plugin.psi.VyperMemberAccessExpression -> {
                 VyperMemberAccessReference(
                     this, parent
                 )
             }
-            parent is VyperMemberAccessExpression && parent.varLiteral == node.psi -> {
+            parent is org.vyperlang.plugin.psi.VyperMemberAccessExpression && parent.varLiteral == node.psi -> {
                 VyperMemberAccessReference(
                     this,
                     parent
@@ -51,7 +52,8 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
 }
 
 
-abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), VyperCallExpression {
+abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node),
+    org.vyperlang.plugin.psi.VyperCallExpression {
 
     override val referenceNameElement: PsiElement
         get()  //else selfAccess
@@ -59,7 +61,7 @@ abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), Vy
             val sibl = node.findChildByType(LPAREN)?.treePrev
             //else selfAccess
             return when (sibl!!.psi) {
-                is VyperPrimaryExpression -> findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi
+                is org.vyperlang.plugin.psi.VyperPrimaryExpression -> findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi
                     ?: firstChild
                 //else selfAccess
                 else -> findLastChildByType(VAR_LITERAL, sibl)?.lastChildNode?.psi ?: firstChild
@@ -72,7 +74,8 @@ abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), Vy
 
 }
 
-abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperStructType {
+abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node),
+    org.vyperlang.plugin.psi.VyperStructType {
     override val referenceNameElement: PsiElement
         get() = findChildByType(IDENTIFIER)!!
 
@@ -82,7 +85,8 @@ abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node)
 
 }
 
-abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperFunctionDefinition {
+abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node),
+    org.vyperlang.plugin.psi.VyperFunctionDefinition {
     override val referenceNameElement: PsiElement
         get() = findChildByType(IDENTIFIER)!!
 
@@ -92,13 +96,13 @@ abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node
     override val modifiers: List<PsiElement>
         get() = findChildrenByType(FUNCTION_MODIFIER)
 
-    override val parameters: VyperFunctionArgs?
+    override val parameters: org.vyperlang.plugin.psi.VyperFunctionArgs?
         get() = findChildByType(FUNCTION_ARGS)
 
-    override val parameterTypes: List<VyperType>
+    override val parameterTypes: List<org.vyperlang.plugin.psi.VyperType>
         get() = parameters?.paramDefList?.map { it.type } ?: emptyList()
 
-    override val returns: VyperType?
+    override val returns: org.vyperlang.plugin.psi.VyperType?
         get() = findChildByType(TYPE)
 
     override val isConstructor: Boolean
