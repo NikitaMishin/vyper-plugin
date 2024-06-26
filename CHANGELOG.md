@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Changed
+- Add support for PyCharm ([#22](https://github.com/NikitaMishin/vyper-plugin/pull/22))
+- Update platform to version [`2024.1.4`](https://blog.jetbrains.com/idea/2024/06/intellij-idea-2024-1-4/)
+
 ## [0.2.0-alpha.1] - 2024-06-24
 
 ### Added
