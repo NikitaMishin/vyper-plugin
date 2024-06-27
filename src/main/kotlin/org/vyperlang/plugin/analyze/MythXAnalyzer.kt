@@ -133,5 +133,4 @@ object MythXAnalyzer {
             )
         )
     }
-
 }

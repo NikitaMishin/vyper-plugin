@@ -28,20 +28,17 @@ class MythXAnalyzeAction : VyperAction() {
         val files: Array<VirtualFile>? =
             getClickedFiles(e)?.filter { it.path.contains(vyExtensionRegExp) }?.toTypedArray()
 
-        if (files == null || files.isEmpty()) {
-            return org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue().display()
+        if (files.isNullOrEmpty()) {
+            return NoFilesWithVyperAreSelectedDialogue().display()
         }
 
-        //
-        //TODO FIX RIGHT NOW ONLY ONE FILE
-        //TODO FIX, not good
+        // TODO: We only take the first file, but we should take all of them
         val file = files.first()
 
         //task for analyzer
         ProgressManager.getInstance()
             .run(object : Task.Backgroundable(project, "analyzing with MythX, response may take some time...") {
                 override fun run(indicator: ProgressIndicator) {
-
                     val res = VyperCompilerDocker(
                         file.parent.path, file.path,
                         arrayOf("-f", "bytecode,bytecode_runtime")
@@ -55,19 +52,17 @@ class MythXAnalyzeAction : VyperAction() {
                             VyperMessageProcessor.notificateInBalloon(
                                 VyperMessageProcessor.VyperNotification(
                                     null,
-                                    "MythX", "File ${file.name} contains errors",
+                                    "MythX", "File ${file.name} contains errors: ${res.stderr}",
                                     VyperMessageProcessor.NotificationStatusVyper.ERROR,
                                     VyperMessageProcessor.NotificationGroupVyper.COMMON,
                                     project
                                 )
                             )
-
                         }
                     }
 
                 }
             })
-
     }
 }
 

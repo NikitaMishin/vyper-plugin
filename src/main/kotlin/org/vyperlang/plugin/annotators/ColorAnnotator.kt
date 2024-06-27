@@ -7,9 +7,11 @@ import com.intellij.psi.PsiElement
 import org.vyperlang.plugin.VyperFileType
 import org.vyperlang.plugin.VyperInterfaceFileType
 import org.vyperlang.plugin.psi.*
-import org.vyperlang.plugin.psi.impl.VyperStatementImpl
 
 
+/**
+ * Annotator that highlights Vyper elements with different colors
+ */
 class VyperColorAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         val fileType = element.containingFile.fileType

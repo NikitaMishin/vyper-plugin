@@ -89,7 +89,7 @@ object SmartCheckAnalyzer {
         VyperMessageProcessor.notificateInBalloon(
             VyperMessageProcessor.VyperNotification(
                 null, "SmartCheck",
-                "<html>analyzed of files finished. See detail in tool window</html>",
+                "<html>file analysis finished. See details in tool window</html>",
                 VyperMessageProcessor.NotificationStatusVyper.INFO,
                 VyperMessageProcessor.NotificationGroupVyper.ANALYZE,
                 project

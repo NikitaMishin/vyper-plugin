@@ -25,8 +25,8 @@ class SmartCheckAnalyzeAction : VyperAction() {
         val files: Array<VirtualFile>? =
             getClickedFiles(e)?.filter { it.path.contains(vyExtensionRegExp) }?.toTypedArray()
 
-        if (files == null || files.isEmpty()) {
-            return org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue().display()
+        if (files.isNullOrEmpty()) {
+            return NoFilesWithVyperAreSelectedDialogue().display()
         }
 
         //task for analyzer
@@ -35,9 +35,5 @@ class SmartCheckAnalyzeAction : VyperAction() {
                 SmartCheckAnalyzer.smartCheckAnalyze(files, project)
             }
         })
-
     }
 }
-
-
-

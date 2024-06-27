@@ -17,23 +17,20 @@ import java.beans.PropertyChangeListener
 
 class VyperCompilerListener(val project: Project) : PropertyChangeListener {
     override fun propertyChange(evt: PropertyChangeEvent?) {
-
         val data = evt!!.newValue as VyperCompiler.CompilerMessage
 
         ApplicationManager.getApplication().runReadAction {
 
             val psiFile = PsiManager.getInstance(project).findFile(data.file)
             //what if user picks another file?
-            val dm = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)
+            val document = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)
             for (report in data.error) {
-                val start = dm!!.getLineStartOffset(report.line - 1)
-                val end = dm.getLineEndOffset(report.line - 1)
+                val start = document!!.getLineStartOffset(report.line - 1)
+                val end = document.getLineEndOffset(report.line - 1)
                 val message = report.msg
                 CompilerOutput.messages.add(CompilerMessage(TextRange(start, end), message))
             }
             DaemonCodeAnalyzer.getInstance(project).restart()
-
-
         }
     }
 
@@ -41,9 +38,11 @@ class VyperCompilerListener(val project: Project) : PropertyChangeListener {
     fun listenAnalysis() {
         VyperCompiler.addListener(this)
     }
-
 }
 
+/**
+ * Annotator that listens to the compiler output and annotates the file accordingly
+ */
 class CompilerAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         if (element is VyperFile) {
@@ -52,7 +51,6 @@ class CompilerAnnotator : Annotator {
             }
             CompilerOutput.messages = mutableListOf()
         }
-
     }
 }
 

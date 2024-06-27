@@ -46,8 +46,6 @@ class VyperFormattingModelBuilder : FormattingModelBuilder {
                 .before(RBRACKET).none()
                 .before(COMMA).none()
                 .before(SEMICOLON).none()
-
-
         }
     }
 }

@@ -22,18 +22,16 @@ class VyperSmartCheckListener(val project: Project) : PropertyChangeListener {
         val data = evt!!.newValue as SmartCheckAnalyzer.SmartCheckData
         //TODO : compiler and implement this for all messages
         ApplicationManager.getApplication().runReadAction {
-//            val virtFile = VfsUtil.findFile(File("/home/gerwant/IdeaProjects/test/src/com/company/test.vy").toPath(), true)
             val psiFile = PsiManager.getInstance(project).findFile(data.file)
             //what if user picks another file?
-            val dm = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)
+            val document = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)
             for (report in data.smartCheckData) {
-                val start = dm!!.getLineStartOffset(report.line - 1)
-                val end = dm.getLineEndOffset(report.line - 1)
+                val start = document!!.getLineStartOffset(report.line - 1)
+                val end = document.getLineEndOffset(report.line - 1)
                 val message = report.ruleId
                 SmartCheckOutput.messages.add(SmartCheckMessage(TextRange(start, end), message))
             }
             DaemonCodeAnalyzer.getInstance(project).restart()
-
 
         }
     }
@@ -45,6 +43,9 @@ class VyperSmartCheckListener(val project: Project) : PropertyChangeListener {
 
 }
 
+/**
+ * Annotator that listens to the compiler output and adds smart check messages to the file
+ */
 class SmartCheckAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         if (element is VyperFile) {

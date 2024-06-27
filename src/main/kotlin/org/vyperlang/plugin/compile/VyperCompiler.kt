@@ -39,6 +39,7 @@ object VyperCompiler {
     private const val COMPILATION_SUCCESS = "Compilation succeed"
     private const val compilationNavigateHtml = "<html><a href=cite>navigate to file</a></html>"
     private const val compilationEmptyHtml = "<html>No bytecode is generated</html>"
+    private const val bytecodeInToolWindowHtml = "<html>Bytecode in tool window</html>"
 
     fun compile(params: VyperParameters) {
         for (file in params.files) {
@@ -63,7 +64,7 @@ object VyperCompiler {
                     displayOutputOnToolWindow(params.project, file.path, result.stdout)
                     notify(
                         params.project, file, COMPILATION_SUCCESS,
-                        "<html>Bytecode in tool window</html>",
+                        bytecodeInToolWindowHtml,
                         VyperMessageProcessor.NotificationStatusVyper.INFO
                     )
                 }
@@ -108,7 +109,6 @@ object VyperCompiler {
                         VyperMessageProcessor.NotificationStatusVyper.WARNING
                     )
                 }
-
             }
 
         }
@@ -120,13 +120,13 @@ object VyperCompiler {
     ) {
         VyperMessageProcessor.notificateInBalloon(
             VyperMessageProcessor.VyperNotification(
-                { not, _ ->
+                { notification, _ ->
                     val open = OpenFileDescriptor(
                         project, file,
                         0, 0
                     )
                     open.navigate(true)
-                    not.expire()
+                    notification.expire()
                 }, title, htmlWithLink, status,
                 VyperMessageProcessor.NotificationGroupVyper.COMPILER, project
             )
@@ -157,12 +157,10 @@ object VyperCompiler {
         propertyChangeSupport.firePropertyChange("COMPILER", null, message)
     }
 
-
     private fun displayOutputOnToolWindow(project: Project, path: String, output: String) =
         ApplicationManager.getApplication().invokeLater({
             VyperWindow.replaceTextInTabsWindow(
                 project, VyperWindow.VyperWindowTab.COMPILER_TAB, "$path:\n$output"
             )
         }, ModalityState.any())
-
 }
