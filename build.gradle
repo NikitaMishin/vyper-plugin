@@ -1,4 +1,4 @@
-import org.jetbrains.changelog.Changelog
+import org.jetbrains.changelog.Changelog;
 import org.jetbrains.changelog.ExtensionsKt;
 
 plugins {
@@ -113,8 +113,7 @@ tasks {
         }
         changeNotes = provider {
             changelog.renderItem(
-                    changelog
-                            .getUnreleased()
+                    (changelog.getOrNull(pluginVersion) ?: changelog.getUnreleased())
                             .withHeader(false)
                             .withEmptySections(false),
                     Changelog.OutputType.HTML

@@ -6,7 +6,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 @TestDataPath("\$CONTENT_ROOT/src/examples")
 class TestErrorDetection : BasePlatformTestCase() {
-    override fun getTestDataPath() = "src/examples"
+    override fun getTestDataPath() = "src/test/resources/examples"
 
     fun testVySyntax() {
         val messages = findErrors("incorrect.vy")

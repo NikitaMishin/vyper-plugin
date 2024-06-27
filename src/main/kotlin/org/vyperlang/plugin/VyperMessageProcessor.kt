@@ -55,9 +55,8 @@ object VyperMessageProcessor {
         val project: Project
     )
 
-
     /**
-     * Notificate user in ballon about something
+     * Notificate user in balloon about something
      */
     fun notificateInBalloon(vyperNotification: VyperNotification) {
         val notification = when (vyperNotification.status) {
@@ -82,7 +81,5 @@ object VyperMessageProcessor {
 
         notification.notify(vyperNotification.project)
     }
-
-
 }
 

@@ -1,8 +1,9 @@
+# pragma version 0.3.10
 # Blind Auction # Adapted to Vyper from [Solidity by Example](https://github.com/ethereum/solidity/blob/develop/docs/solidity-by-example.rst#blind-auction-1)
 
 struct Bid:
-  blindedBid: bytes32
-  deposit: uint256
+    blindedBid: bytes32
+    deposit: uint256
 
 # Note: because Vyper does not allow for dynamic arrays, we have limited the
 # number of bids that can be placed by one address to 128 in this example

@@ -9,7 +9,7 @@ class VyperInternalTypeFactory(project: Project) {
 
     private val psiFactory: VyperPsiFactory = VyperPsiFactory(project)
 
-    lateinit var msg: org.vyperlang.plugin.psi.VyperStructDefinition
+    lateinit var msg: VyperStructDefinition
         private set
 
     init {

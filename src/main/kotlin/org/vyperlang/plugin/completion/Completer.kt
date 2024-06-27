@@ -15,7 +15,7 @@ import javax.swing.Icon
 
 object VyperCompleter {
 
-    fun completeVarLiteral(element: org.vyperlang.plugin.psi.VyperVarLiteral): Array<out LookupElement> {
+    fun completeVarLiteral(element: VyperVarLiteral): Array<out LookupElement> {
         return VyperResolver.lexicalDeclarations(element)
             .map { createVarLookup(it) }
             .toTypedArray()
@@ -25,40 +25,39 @@ object VyperCompleter {
             .toTypedArray()
     }
 
-    fun completeMemberAccess(element: org.vyperlang.plugin.psi.VyperMemberAccessExpression): Array<out LookupElement> {
-        if (element.firstChild.firstChild is org.vyperlang.plugin.psi.VyperVarLiteral
-            && (element.firstChild.firstChild as org.vyperlang.plugin.psi.VyperVarLiteral).name == "self"
+    fun completeMemberAccess(element: VyperMemberAccessExpression): Array<out LookupElement> {
+        if (element.firstChild.firstChild is VyperVarLiteral
+            && (element.firstChild.firstChild as VyperVarLiteral).name == "self"
         ) {
 
-            val funDefs = (element.file as VyperFile).getStatements().filter { it is org.vyperlang.plugin.psi.VyperFunctionDefinition }
-                .map { it as org.vyperlang.plugin.psi.VyperFunctionDefinition }.createFunDecLookups(VyperIcons.FILE)
+            val funDefs = (element.file as VyperFile).getStatements().filter { it is VyperFunctionDefinition }
+                .map { it as VyperFunctionDefinition }.createFunDecLookups(VyperIcons.FILE)
 
             val stateVariables = resolveSelfAccessVarLiteralRec(element)
-                .map { it as org.vyperlang.plugin.psi.VyperStateVariableDeclaration }
+                .map { it as VyperStateVariableDeclaration }
                 .createStateVarLookups(VyperIcons.FILE).toMutableList()
             stateVariables.addAll(funDefs)
             return stateVariables.toTypedArray()
         }
         //msg VyperLocalVariableDeclaration
-        return resolveMemberAccess(element).map { it as org.vyperlang.plugin.psi.VyperLocalVariableDeclaration }
+        return resolveMemberAccess(element).map { it as VyperLocalVariableDeclaration }
             .createLocalVarLookups(VyperIcons.FILE)
     }
 
     private fun createVarLookup(elem: VyperNamedElement): LookupElement {
         when (elem) {
-            is org.vyperlang.plugin.psi.VyperUserDefinedConstantsExpression -> return LookupElementBuilder.create(elem, elem.name ?: "")
+            is VyperUserDefinedConstantsExpression -> return LookupElementBuilder.create(elem, elem.name ?: "")
                 .withIcon(VyperIcons.FILE).withTypeText("constant( ${elem.type?.text ?: ""} )")
-
-            is org.vyperlang.plugin.psi.VyperLocalVariableDeclaration -> return LookupElementBuilder.create(elem, elem.name ?: "")
+            is VyperLocalVariableDeclaration -> return LookupElementBuilder.create(elem, elem.name ?: "")
                 .withIcon(VyperIcons.FILE).withTypeText(elem.type.text ?: "")
-            is org.vyperlang.plugin.psi.VyperParamDef -> return LookupElementBuilder.create(elem, elem.name ?: "")
+            is VyperParamDef -> return LookupElementBuilder.create(elem, elem.name ?: "")
                 .withIcon(VyperIcons.FILE).withTypeText(elem.type.text ?: "")
         }
         return LookupElementBuilder.create(elem)
     }
 
 
-    private fun Collection<org.vyperlang.plugin.psi.VyperLocalVariableDeclaration>.createLocalVarLookups(icon: Icon): Array<LookupElement> {
+    private fun Collection<VyperLocalVariableDeclaration>.createLocalVarLookups(icon: Icon): Array<LookupElement> {
         return map {
             LookupElementBuilder.create(it, it.name ?: "")
                 .withIcon(icon).withTypeText(it.type.text)
@@ -67,7 +66,7 @@ object VyperCompleter {
         }.toTypedArray()
     }
 
-    private fun Collection<org.vyperlang.plugin.psi.VyperStateVariableDeclaration>.createStateVarLookups(icon: Icon): Array<LookupElement> {
+    private fun Collection<VyperStateVariableDeclaration>.createStateVarLookups(icon: Icon): Array<LookupElement> {
         return map {
             LookupElementBuilder.create(it, it.name ?: "")
                 .withIcon(icon).withTypeText(it.stateVariableType.text)
@@ -76,7 +75,7 @@ object VyperCompleter {
         }.toTypedArray()
     }
 
-    private fun Collection<org.vyperlang.plugin.psi.VyperFunctionDefinition>.createFunDecLookups(icon: Icon): Array<LookupElement> {
+    private fun Collection<VyperFunctionDefinition>.createFunDecLookups(icon: Icon): Array<LookupElement> {
         return map {
             LookupElementBuilder.create(it, it.name + "()")
                 .withIcon(icon).withTypeText("->${it.funTypeAnnotation?.text ?: "()"}")
@@ -96,12 +95,10 @@ class VyperBaseTypesCompletionContributor : CompletionContributor(), DumbAware {
                     "bytes32",
                     "bytes[]",
                     "address",
-                    "fixed",
                     "bool",
                     "map()",
-                    "timestamp",
                     "string[]",
-                    "constant()"
+                    "HashMap[]"
                 )
 
                 override fun addCompletions(
@@ -111,11 +108,13 @@ class VyperBaseTypesCompletionContributor : CompletionContributor(), DumbAware {
                 ) {
                     types.forEach { result.addElement(LookupElementBuilder.create(it)) }
                 }
-
             })
     }
 }
 
+/**
+ * Completion on the file top level
+ */
 class VyperInFileContributor : CompletionContributor() {
     init {
         extend(CompletionType.BASIC, inFile(),
@@ -127,7 +126,7 @@ class VyperInFileContributor : CompletionContributor() {
                 ) {
                     result.addElement(LookupElementBuilder.create("def"))
                     result.addElement(LookupElementBuilder.create("struct"))
-                    result.addElement(LookupElementBuilder.create("contract"))
+                    result.addElement(LookupElementBuilder.create("interface"))
                     result.addElement(LookupElementBuilder.create("import"))
                 }
             }
@@ -135,6 +134,9 @@ class VyperInFileContributor : CompletionContributor() {
     }
 }
 
+/**
+ * Completion when the user types @
+ */
 class VyperFunModifierContributor : CompletionContributor() {
     init {
         extend(CompletionType.BASIC, funModifiers(),
@@ -167,6 +169,6 @@ class VyperFunModifierContributor : CompletionContributor() {
 fun inFile() = PlatformPatterns.psiElement().inFile(PlatformPatterns.psiFile())
     .and(PlatformPatterns.psiElement().withSuperParent(2, PlatformPatterns.psiFile()))
 
-fun funModifiers() = PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(org.vyperlang.plugin.psi.VyperTypes.DECORATOR))
+fun funModifiers() = PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(VyperTypes.DECORATOR))
 
-fun baseTypes() = PlatformPatterns.psiElement().inside(PlatformPatterns.psiElement(org.vyperlang.plugin.psi.VyperType::class.java))
+fun baseTypes() = PlatformPatterns.psiElement().inside(PlatformPatterns.psiElement(VyperType::class.java))

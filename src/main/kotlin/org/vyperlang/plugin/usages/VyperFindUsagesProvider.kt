@@ -14,9 +14,9 @@ class VyperFindUsagesProvider : FindUsagesProvider {
     override fun getWordsScanner(): WordsScanner {
         return DefaultWordsScanner(
             VyperLexerAdapter(),
-            TokenSet.create(org.vyperlang.plugin.psi.VyperTypes.IDENTIFIER),
-            TokenSet.create(org.vyperlang.plugin.psi.VyperTypes.COMMENT),
-            TokenSet.create(org.vyperlang.plugin.psi.VyperTypes.VAR_LITERAL)
+            TokenSet.create(VyperTypes.IDENTIFIER),
+            TokenSet.create(VyperTypes.COMMENT),
+            TokenSet.create(VyperTypes.VAR_LITERAL)
         )
     }
 
@@ -30,10 +30,10 @@ class VyperFindUsagesProvider : FindUsagesProvider {
 
     override fun getType(element: PsiElement): String {
         return when (element) {
-            is org.vyperlang.plugin.psi.VyperStateVariableDeclaration -> "state var"
-            is org.vyperlang.plugin.psi.VyperLocalVariableDeclaration -> "local var"
-            is org.vyperlang.plugin.psi.VyperFunctionDefinition -> "function"
-            is org.vyperlang.plugin.psi.VyperStructDefinition -> "struct"
+            is VyperStateVariableDeclaration -> "state var"
+            is VyperLocalVariableDeclaration -> "local var"
+            is VyperFunctionDefinition -> "function"
+            is VyperStructDefinition -> "struct"
             else -> ""
         }
     }
@@ -44,10 +44,10 @@ class VyperFindUsagesProvider : FindUsagesProvider {
 
     override fun getNodeText(element: PsiElement, useFullName: Boolean): String {
         return when (element) {
-            is org.vyperlang.plugin.psi.VyperStateVariableDeclaration -> element.name + "state var"
-            is org.vyperlang.plugin.psi.VyperLocalVariableDeclaration -> element.name + "local var"
-            is org.vyperlang.plugin.psi.VyperFunctionDefinition -> element.name + "func"
-            is org.vyperlang.plugin.psi.VyperStructDefinition -> element.text + "struct"
+            is VyperStateVariableDeclaration -> element.name + "state var"
+            is VyperLocalVariableDeclaration -> element.name + "local var"
+            is VyperFunctionDefinition -> element.name + "func"
+            is VyperStructDefinition -> element.text + "struct"
             else -> ""
         }
     }

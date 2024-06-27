@@ -11,7 +11,7 @@ import org.junit.runners.Parameterized.Parameters;
 @TestDataPath("\$CONTENT_ROOT/src/examples")
 @RunWith(Parameterized::class)
 class TestGrammar(private val file: String) : BasePlatformTestCase() {
-    override fun getTestDataPath() = "src/examples"
+    override fun getTestDataPath() = "src/test/resources/examples"
 
     companion object {
         @JvmStatic

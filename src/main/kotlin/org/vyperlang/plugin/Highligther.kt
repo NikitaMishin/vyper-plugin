@@ -11,6 +11,10 @@ class VyperHighlighterFactory : SingleLazyInstanceSyntaxHighlighterFactory() {
     override fun createHighlighter() = VyperHighlighter()
 }
 
+/**
+ * Class responsible for syntax highlighting in the lexer level
+ * https://plugins.jetbrains.com/docs/intellij/syntax-highlighting-and-error-highlighting.html#lexer
+ */
 class VyperHighlighter : SyntaxHighlighterBase() {
     override fun getHighlightingLexer() = VyperLexerAdapter()
 
