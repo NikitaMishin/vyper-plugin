@@ -17,7 +17,8 @@ Provides support for Vyper smart contract programming language.
 * Nevertheless, pre-alpha.
 
 ## Demo
-See demo on [youtube](https://www.youtube.com/watch?v=M6f6xgcP4Xo&feature=youtu.be).
+See demo on [YouTube](https://www.youtube.com/watch?v=M6f6xgcP4Xo).
+**Note**: This video is extremely outdated.
 
 ## Build
 To build and run the project, open it in IntelliJ IDEA.
