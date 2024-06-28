@@ -27,6 +27,8 @@
 
         <fileType name="Vyper file" implementationClass="org.vyperlang.plugin.VyperFileType"
                   fieldName="INSTANCE" language="Vyper" extensions="vy"/>
+        <fileType name="Vyper interface file" implementationClass="org.vyperlang.plugin.VyperInterfaceFileType"
+                  fieldName="INSTANCE" language="Vyper" extensions="vyi"/>
         <notificationGroup id = "COMPILER" displayType="BALLOON"/>
         <notificationGroup id = "RUN" displayType="BALLOON"/>
         <notificationGroup id = "COMMON" displayType="BALLOON"/>
@@ -37,7 +39,6 @@
         <toolWindow id = "Vyper Tools" anchor="bottom" factoryClass="org.vyperlang.plugin.toolWindow.VyperToolFactory" canCloseContents="true"/>
         <lang.braceMatcher language="Vyper"
                            implementationClass="org.vyperlang.plugin.editorActions.PairedBraceMatcherVyper"/>
-        <!--        <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.SelfAccessUnresolvedReferenceAnnotator"/>-->
         <lang.commenter language="Vyper" implementationClass="org.vyperlang.plugin.commenter.VyperCommenter"/>
         <completion.contributor language="Vyper"
                                 implementationClass="org.vyperlang.plugin.completion.VyperBaseTypesCompletionContributor"/>
@@ -45,28 +46,20 @@
                                 implementationClass="org.vyperlang.plugin.completion.VyperInFileContributor"/>
         <completion.contributor language="Vyper"
                                 implementationClass="org.vyperlang.plugin.completion.VyperFunModifierContributor"/>
+
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperColorAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.SmartCheckAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.CompilerAnnotator"/>
-
 
         <applicationService serviceImplementation="org.vyperlang.plugin.settings.VyperSettings"/>
         <applicationConfigurable groupId="language" displayName="Vyper" id="preferences.Vyper" instance="org.vyperlang.plugin.settings.VyperSettingsConfigurable"/>
 
         <!--TODO lang formatter -->
         <!--        <lang.formatter language="Vyper" implementationClass="org.vyperlang.plugin.formating.VyperFormattingModelBuilder"/>-->
-        <!--      <configurationType implementation=""/> -->>
         <codeInsight.lineMarkerProvider language="Vyper" implementationClass="org.vyperlang.plugin.run.VyperRunMethodLineMarkerProvider"/>
 
     </extensions>
-
-    <!--DEPRECATED TODO FIX-->
-    <project-components>
-        <component>
-            <implementation-class>org.vyperlang.plugin.psi.VyperInternalTypeFactory</implementation-class>
-        </component>
-    </project-components>
 
     <actions>
         <action id="Vyper.NewVyperFile"

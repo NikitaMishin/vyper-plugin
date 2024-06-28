@@ -1,0 +1,99 @@
+package org.vyperlang.plugin.analyze
+
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import org.vyperlang.plugin.VyperMessageProcessor
+import org.vyperlang.plugin.docker.SmartCheckDocker
+import org.vyperlang.plugin.docker.StatusDocker
+import org.vyperlang.plugin.toolWindow.VyperWindow
+import java.beans.PropertyChangeListener
+import java.beans.PropertyChangeSupport
+
+object SmartCheckAnalyzer {
+
+    data class SmartCheckData(
+        val smartCheckData: Array<SmartCheckSinglePattern>,
+        val file: VirtualFile
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as SmartCheckData
+
+            if (!smartCheckData.contentEquals(other.smartCheckData)) return false
+            if (file != other.file) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = smartCheckData.contentHashCode()
+            result = 31 * result + file.hashCode()
+            return result
+        }
+    }
+
+    data class SmartCheckSinglePattern(
+        val ruleId: String,
+        val patternId: String,
+        val severity: String,
+        val line: Int,
+        val column: Int
+    )
+
+
+    private val propertyChangeSupport = PropertyChangeSupport(this)
+
+    fun addListener(listener: PropertyChangeListener) {
+        propertyChangeSupport.addPropertyChangeListener(listener)
+    }
+
+    private fun addMessage(data: SmartCheckData) {
+        propertyChangeSupport.firePropertyChange("ANALYSIS_SMART_CHECK", null, data)
+    }
+
+    private val pattern = Regex(
+        "ruleId: (\\w+)\npatternId: (\\w+)\nseverity: (\\w+)\nline: (\\d+)\ncolumn: (\\d+)"
+    )
+
+    fun smartCheckAnalyze(files: Array<VirtualFile>, project: Project) {
+        files.map {
+            val res = SmartCheckDocker(it.parent.path, it.path).execWrapper(project)
+            when (res.statusDocker) {
+                StatusDocker.SUCCESS -> {
+                    val p = it.path
+                    val arr = mutableListOf<SmartCheckSinglePattern>()
+                    pattern.findAll(res.stdout).toList().map { itt ->
+                        val data = SmartCheckSinglePattern(
+                            itt.groups[1]!!.value,
+                            itt.groups[2]!!.value,
+                            itt.groups[3]!!.value,
+                            itt.groups[4]!!.value.toInt(),
+                            itt.groups[5]!!.value.toInt()
+                        )
+                        arr.add(data)
+                    }
+                    VyperWindow.replaceTextInTabsWindow(
+                        project, VyperWindow.VyperWindowTab.ANALYZE_TAB,
+                        "$p:\n" + res.stdout.drop(1) + '\n'
+                    )
+                    addMessage(SmartCheckData(arr.toTypedArray(), it))
+                }
+                else -> {
+                    //show nothing
+                }
+            }
+        }
+
+        VyperMessageProcessor.notificateInBalloon(
+            VyperMessageProcessor.VyperNotification(
+                null, "SmartCheck",
+                "<html>file analysis finished. See details in tool window</html>",
+                VyperMessageProcessor.NotificationStatusVyper.INFO,
+                VyperMessageProcessor.NotificationGroupVyper.ANALYZE,
+                project
+            )
+        )
+    }
+}
