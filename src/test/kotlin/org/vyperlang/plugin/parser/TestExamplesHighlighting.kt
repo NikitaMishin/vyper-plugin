@@ -3,14 +3,14 @@ package org.vyperlang.plugin.parser
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameters
 
 @TestDataPath("\$CONTENT_ROOT/src/examples")
 @RunWith(Parameterized::class)
-class TestGrammar(private val file: String) : BasePlatformTestCase() {
+class TestExamplesHighlighting(private val file: String) : BasePlatformTestCase() {
     override fun getTestDataPath() = "src/test/resources/examples"
 
     companion object {

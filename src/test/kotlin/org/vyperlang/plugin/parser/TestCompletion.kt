@@ -2,7 +2,6 @@ package org.vyperlang.plugin.parser
 
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import junit.framework.TestCase
 import org.vyperlang.plugin.VyperFileType
 
 class TestCompletion : BasePlatformTestCase() {
@@ -136,9 +135,10 @@ class TestCompletion : BasePlatformTestCase() {
         if (expected.size == 1) {
             // the editor should automatically pick the only option
             assertEquals(myFixture.editor.document.text, code.replace("<caret>", expected[0]))
+            assertNull(myFixture.lookupElementStrings)
         } else {
-            val lookupElementStrings = myFixture.lookupElementStrings!!.toMutableList()
-            assertSameElements(lookupElementStrings, *expected)
+            val elements = myFixture.lookupElementStrings!!.toMutableList()
+            assertSameElements(elements, *expected)
         }
     }
 }

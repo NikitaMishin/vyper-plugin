@@ -11,44 +11,32 @@ import org.vyperlang.plugin.psi.*
 
 class VyperFindUsagesProvider : FindUsagesProvider {
 
-    override fun getWordsScanner(): WordsScanner {
-        return DefaultWordsScanner(
-            VyperLexerAdapter(),
-            TokenSet.create(VyperTypes.IDENTIFIER),
-            TokenSet.create(VyperTypes.COMMENT),
-            TokenSet.create(VyperTypes.VAR_LITERAL)
-        )
+    override fun getWordsScanner(): WordsScanner = DefaultWordsScanner(
+        VyperLexerAdapter(),
+        TokenSet.create(VyperTypes.IDENTIFIER),
+        TokenSet.create(VyperTypes.COMMENT),
+        TokenSet.create(VyperTypes.VAR_LITERAL)
+    )
+
+    override fun canFindUsagesFor(psiElement: PsiElement): Boolean = psiElement is PsiNamedElement
+
+    override fun getHelpId(psiElement: PsiElement): String? = null
+
+    override fun getType(element: PsiElement): String = when (element) {
+        is VyperStateVariableDeclaration -> "state variable"
+        is VyperLocalVariableDeclaration -> "local variable"
+        is VyperFunctionDefinition -> "function"
+        is VyperStructDefinition -> "struct"
+        else -> ""
     }
 
-    override fun canFindUsagesFor(psiElement: PsiElement): Boolean {
-        return psiElement is PsiNamedElement
-    }
+    override fun getDescriptiveName(element: PsiElement): String = ""
 
-    override fun getHelpId(psiElement: PsiElement): String? {
-        return null
-    }
-
-    override fun getType(element: PsiElement): String {
-        return when (element) {
-            is VyperStateVariableDeclaration -> "state var"
-            is VyperLocalVariableDeclaration -> "local var"
-            is VyperFunctionDefinition -> "function"
-            is VyperStructDefinition -> "struct"
-            else -> ""
-        }
-    }
-
-    override fun getDescriptiveName(element: PsiElement): String {
-        return ""
-    }
-
-    override fun getNodeText(element: PsiElement, useFullName: Boolean): String {
-        return when (element) {
-            is VyperStateVariableDeclaration -> element.name + "state var"
-            is VyperLocalVariableDeclaration -> element.name + "local var"
-            is VyperFunctionDefinition -> element.name + "func"
-            is VyperStructDefinition -> element.text + "struct"
-            else -> ""
-        }
+    override fun getNodeText(element: PsiElement, useFullName: Boolean): String = when (element) {
+        is VyperStateVariableDeclaration -> element.name + "state variable"
+        is VyperLocalVariableDeclaration -> element.name + "local variable"
+        is VyperFunctionDefinition -> element.name + "function"
+        is VyperStructDefinition -> element.text + "struct"
+        else -> ""
     }
 }

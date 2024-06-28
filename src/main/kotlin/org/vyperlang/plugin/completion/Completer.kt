@@ -39,21 +39,26 @@ object VyperCompleter {
             stateVariables.addAll(funDefs)
             return stateVariables.toTypedArray()
         }
-        //msg VyperLocalVariableDeclaration
         return resolveMemberAccess(element).map { it as VyperLocalVariableDeclaration }
             .createLocalVarLookups(VyperIcons.FILE)
     }
 
     private fun createVarLookup(elem: VyperNamedElement): LookupElement {
-        when (elem) {
-            is VyperUserDefinedConstantsExpression -> return LookupElementBuilder.create(elem, elem.name ?: "")
-                .withIcon(VyperIcons.FILE).withTypeText("constant( ${elem.type?.text ?: ""} )")
-            is VyperLocalVariableDeclaration -> return LookupElementBuilder.create(elem, elem.name ?: "")
-                .withIcon(VyperIcons.FILE).withTypeText(elem.type.text ?: "")
-            is VyperParamDef -> return LookupElementBuilder.create(elem, elem.name ?: "")
-                .withIcon(VyperIcons.FILE).withTypeText(elem.type.text ?: "")
+        return when (elem) {
+            is VyperUserDefinedConstantsExpression ->
+                LookupElementBuilder.create(elem, elem.name ?: "")
+                    .withIcon(VyperIcons.FILE)
+                    .withTypeText("constant( ${elem.type?.text ?: ""} )")
+            is VyperLocalVariableDeclaration ->
+                LookupElementBuilder.create(elem, elem.name ?: "")
+                    .withIcon(VyperIcons.FILE)
+                    .withTypeText(elem.type.text ?: "")
+            is VyperParamDef ->
+                LookupElementBuilder.create(elem, elem.name ?: "")
+                    .withIcon(VyperIcons.FILE)
+                    .withTypeText(elem.type.text ?: "")
+            else -> LookupElementBuilder.create(elem)
         }
-        return LookupElementBuilder.create(elem)
     }
 
 

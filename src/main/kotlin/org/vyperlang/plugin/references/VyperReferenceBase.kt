@@ -8,8 +8,8 @@ import com.intellij.psi.impl.source.resolve.ResolveCache
 import org.vyperlang.plugin.psi.VyperElement
 import org.vyperlang.plugin.psi.VyperReferenceElement
 
-abstract class VyperReferenceBase<T : VyperReferenceElement>(element: T) : PsiPolyVariantReferenceBase<T>(element),
-    VyperReference {
+abstract class VyperReferenceBase<T : VyperReferenceElement>(element: T)
+    : PsiPolyVariantReferenceBase<T>(element), VyperReference {
 
     //highlights the element which is referenced
     override fun calculateDefaultRangeInElement() = TextRange(0, element.textRange.length)

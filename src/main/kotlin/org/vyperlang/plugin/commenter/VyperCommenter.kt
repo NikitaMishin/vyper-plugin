@@ -3,24 +3,9 @@ package org.vyperlang.plugin.commenter
 import com.intellij.lang.Commenter
 
 class VyperCommenter : Commenter {
-
-    override fun getLineCommentPrefix(): String {
-        return "#"
-    }
-
-    override fun getBlockCommentPrefix(): String? {
-        return null
-    }
-
-    override fun getBlockCommentSuffix(): String? {
-        return null
-    }
-
-    override fun getCommentedBlockCommentPrefix(): String? {
-        return null
-    }
-
-    override fun getCommentedBlockCommentSuffix(): String? {
-        return null
-    }
+    override fun getLineCommentPrefix(): String = "# "
+    override fun getBlockCommentPrefix(): String? = null
+    override fun getBlockCommentSuffix(): String? = null
+    override fun getCommentedBlockCommentPrefix(): String? = null
+    override fun getCommentedBlockCommentSuffix(): String? = null
 }

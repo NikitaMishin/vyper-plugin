@@ -1,34 +1,75 @@
-package org.vyperlang.plugin.parser
+package TestErrorDetection
 
 import com.intellij.lang.annotation.HighlightSeverity
-import com.intellij.testFramework.TestDataPath
+import com.intellij.openapi.fileTypes.FileType
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.vyperlang.plugin.VyperFileType
+import org.vyperlang.plugin.VyperInterfaceFileType
 
-@TestDataPath("\$CONTENT_ROOT/src/examples")
 class TestErrorDetection : BasePlatformTestCase() {
-    override fun getTestDataPath() = "src/test/resources/examples"
+    override fun getTestDataPath() = "src/test/resources/TestErrorDetection"
 
     fun testVySyntax() {
-        val messages = findErrors("incorrect.vy")
-        assertEquals(messages.joinToString("\n"), listOf(
-            "...: Ellipsis is only allowed in `.vyi` files",
-        ).joinToString("\n"))
+        checkErrors(VyperFileType.INSTANCE, """
+                @view
+                @external
+                def totalSupply() -> uint256:
+                    ...
+            """.trimIndent(),
+            "Ellipsis is only allowed in `.vyi` files",
+        )
     }
 
-    fun testVyiSyntax() {
-        val messages = findErrors("incorrect.vyi")
-        assertEquals(messages.joinToString("\n"), listOf(
-            "a: public(address): State variables forbidden in `.vyi` files",
-            "pass: Statements forbidden in `.vyi` files",
-            "internal: Internal methods forbidden in `.vyi` files",
-            "self.a = _owner: Statements forbidden in `.vyi` files",
-        ).joinToString("\n"))
+    fun testVyiStateVar() {
+        checkErrors(
+            VyperInterfaceFileType.INSTANCE,
+            "a: public(address)",
+            "State variables forbidden in `.vyi` files",
+        )
     }
 
-    private fun findErrors(filePath: String): List<String> {
-        myFixture.configureByFile(filePath)
-        val messages = myFixture.doHighlighting().filter { it.severity == HighlightSeverity.ERROR }
-            .map { it.text + ": " + it.description }
-        return messages
+    fun testVyiPass() {
+        checkErrors(
+            VyperInterfaceFileType.INSTANCE,
+            """
+                @view
+                @external
+                def totalSupply() -> uint256:
+                    pass
+            """.trimIndent(),
+            "Statements forbidden in `.vyi` files"
+        )
+    }
+
+    fun testVyiInternal() {
+        checkErrors(
+            VyperInterfaceFileType.INSTANCE,
+            """
+                @view
+                @internal
+                def balanceOf(_owner: address) -> uint256:
+                    ...
+            """.trimIndent(),
+            "Internal methods forbidden in `.vyi` files",
+        )
+    }
+
+    fun testVyiStatement() {
+        checkErrors(VyperInterfaceFileType.INSTANCE, """
+                @view
+                @external
+                def allowance(_owner: address, _spender: address) -> uint256:
+                    self.a = _owner
+            """.trimIndent(),
+            "Statements forbidden in `.vyi` files",
+        )
+    }
+
+    private fun checkErrors(type: FileType, code: String, vararg expected: String) {
+        myFixture.configureByText(type, code)
+        val messages = myFixture.doHighlighting()
+            .filter { it.severity == HighlightSeverity.ERROR }
+            .map { it.description }
+        assertSameElements(messages, *expected)
     }
 }

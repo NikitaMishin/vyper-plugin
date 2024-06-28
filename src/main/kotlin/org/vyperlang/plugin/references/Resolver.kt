@@ -35,8 +35,6 @@ object VyperResolver {
         return parents
             .takeWhile { (it is VyperElement || it is VyperFile) && !stop(it) }
             .flatMap { lexicalDeclarations(it, place) }
-
-
     }
 
     private fun lexicalDeclarations(scope: PsiElement, place: PsiElement): List<VyperNamedElement> {
@@ -81,31 +79,18 @@ object VyperResolver {
         }
     }
 
-
     fun resolveFunction(element: VyperCallExpression): Collection<FunctionResolveResult> {
-        return resolveFunRec(element).filter { it.name == element.referenceName }
-            .map { FunctionResolveResult(it) }
-    }
-
-    private fun resolveFunRec(element: VyperCallExpression): List<VyperFunctionDefinition> {
-        val res = mutableListOf<VyperFunctionDefinition>()
-        val ref: VyperElement = element
         return when {
-            ref.firstChild is VyperPrimaryExpression -> emptyList()
-            ref.firstChild is VyperMemberAccessExpression
-                    && (ref.firstChild.firstChild.firstChild as VyperVarLiteral).name == "self" -> {
-                res.addAll((element.file as VyperFile)
-                    .getStatements()
-                    .filter { it is VyperFunctionDefinition }
-                    .map { it as VyperFunctionDefinition })
-                res
-            }
+            element.firstChild is VyperPrimaryExpression -> emptyList()
+            element.firstChild is VyperMemberAccessExpression &&
+                    (element.firstChild.firstChild.firstChild as VyperVarLiteral).name == "self" ->
+                return (element.file as VyperFile)
+                     .getStatements()
+                     .filterIsInstance<VyperFunctionDefinition>()
+                     .filter { it.name == element.referenceName }
+                     .map { FunctionResolveResult(it) }
             else -> emptyList()
         }
-
-//        if(ref is VyperMemberAccessExpression) res.addAll((element.file as VyperFile)
-//                                                .getStatements().filter { it is VyperFunctionDefinition}.map{it as VyperFunctionDefinition})
-
     }
 
     fun resolveMemberAccess(element: VyperMemberAccessExpression): List<VyperNamedElement> {
@@ -125,7 +110,6 @@ object VyperResolver {
             )
 
         }
-
         return emptyList()
     }
 
