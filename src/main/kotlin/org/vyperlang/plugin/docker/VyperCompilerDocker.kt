@@ -139,18 +139,14 @@ class VyperCompilerDocker(
 }
 
 private class VyperFramesAdapter : ResultCallback.Adapter<Frame>() {
-    private val items = mutableListOf<Frame>()
-
-    val errors: List<String> get() = items
-        .filter { it.streamType == StreamType.STDERR }
-        .map { String(it.payload).replace("\n", "").trim() }
-
-    val logs: List<String> get() = items
-        .filter { it.streamType == StreamType.STDOUT }
-        .map { String(it.payload).replace("\n", "").trim() }
-
+    val errors = mutableListOf<String>()
+    val logs = mutableListOf<String>()
     override fun onNext(item: Frame) {
-        items.add(item)
+        when (item.streamType) {
+            StreamType.STDERR -> errors
+            StreamType.STDOUT -> logs
+            else -> throw IllegalStateException("Unknown stream type " + item.streamType)
+        }.add(String(item.payload).trim())
     }
 }
 
