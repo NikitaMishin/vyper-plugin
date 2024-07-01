@@ -1,61 +1,68 @@
 package org.vyperlang.plugin.annotators
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.lang.annotation.AnnotationHolder
-import com.intellij.lang.annotation.Annotator
+import com.intellij.lang.annotation.ExternalAnnotator
 import com.intellij.lang.annotation.HighlightSeverity
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.PsiDocumentManager
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import org.vyperlang.plugin.compile.VyperCompiler
-import org.vyperlang.plugin.psi.VyperFile
-import java.beans.PropertyChangeEvent
-import java.beans.PropertyChangeListener
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.project.DumbAware
+import com.intellij.psi.PsiFile
+import org.vyperlang.plugin.docker.StatusDocker
+import org.vyperlang.plugin.docker.VyperCompilerDocker
+import com.intellij.openapi.diagnostic.Logger
 
-class VyperCompilerListener(val project: Project) : PropertyChangeListener {
-    override fun propertyChange(evt: PropertyChangeEvent?) {
-        val data = evt!!.newValue as VyperCompiler.CompilerMessage
+data class FileInfo(val file: PsiFile, val indicator: ProgressIndicator? = null)
 
-        ApplicationManager.getApplication().runReadAction {
+private val errorRegexes = listOf(
+    "(\\w+): ([^\\n]+)\\n+( +\\(hint: [^)]+\\)\\n+)? +(?:contract \"[^\"]+\", function \"[^\"]+\", )?line (\\d+):(\\d+)"
+).map { it.toRegex(RegexOption.MULTILINE) }
 
-            val psiFile = PsiManager.getInstance(project).findFile(data.file)
-            //what if user picks another file?
-            val document = PsiDocumentManager.getInstance(project).getDocument(psiFile!!)
-            for (report in data.error) {
-                val start = document!!.getLineStartOffset(report.line - 1)
-                val end = document.getLineEndOffset(report.line - 1)
-                val message = report.msg
-                CompilerOutput.messages.add(CompilerMessage(TextRange(start, end), message))
-            }
-            DaemonCodeAnalyzer.getInstance(project).restart()
-        }
-    }
-
-
-    fun listenAnalysis() {
-        VyperCompiler.addListener(this)
-    }
-}
+val LOG: Logger = Logger.getInstance(CompilerAnnotator::class.java)
 
 /**
  * Annotator that listens to the compiler output and annotates the file accordingly
  */
-class CompilerAnnotator : Annotator {
-    override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        if (element is VyperFile) {
-            for (message in CompilerOutput.messages) {
-                holder.newAnnotation(HighlightSeverity.ERROR, message.message)
+class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), DumbAware {
+
+    override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): FileInfo {
+        return FileInfo(file)
+    }
+
+    override fun doAnnotate(info: FileInfo?): List<CompilerError> {
+        val file = info!!.file
+        val result = VyperCompilerDocker(file.project, file.virtualFile, info.indicator).run()
+        return when (result.statusDocker) {
+            StatusDocker.SUCCESS -> listOf()
+            StatusDocker.FAILED -> parseErrors(result.stderr)
+            else -> emptyList()
+        }
+    }
+
+    private fun parseErrors(stderr: String): List<CompilerError> {
+        val messages = errorRegexes.flatMap { it.findAll(stderr) }.map {
+            val (errorType, message, hint, line, column) = it.destructured
+            CompilerError(errorType, message, hint, line.toInt(), column.toInt())
+        }
+        if (messages.isEmpty()) {
+            LOG.warn("No error messages found in compiler output: $stderr")
+        }
+        return messages
+    }
+
+    override fun apply(file: PsiFile, annotationResult: List<CompilerError>, holder: AnnotationHolder) {
+        annotationResult.forEach {
+            val element = file.findElementAt(
+                file.textOffset + file.text.lines().take(it.line - 1).sumOf { it.length + 1 } + it.column)
+            if (element != null) {
+                holder.newAnnotation(
+                    HighlightSeverity.ERROR,
+                     it.message
+                ).range(element.textRange)
+                    .tooltip(if (it.hint.isNullOrBlank()) it.errorType else it.hint)
+                    .create()
             }
-            CompilerOutput.messages = mutableListOf()
         }
     }
 }
 
-object CompilerOutput {
-    var messages: MutableList<CompilerMessage> = mutableListOf()
-}
-
-data class CompilerMessage(val range: TextRange, val message: String)
+data class CompilerError(val errorType: String, val message: String, val hint: String?, val line: Int, val column: Int)

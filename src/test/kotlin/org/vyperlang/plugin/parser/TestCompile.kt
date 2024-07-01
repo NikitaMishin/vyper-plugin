@@ -31,7 +31,7 @@ class TestCompile : BasePlatformTestCase() {
     fun testCompile() {
         val result = compile("example.vy")
         assertEmpty(result.stderr)
-        assertMatches(result.stdout.joinToString(""), "^0x([0-9a-f]{2})+$".toRegex())
+        assertMatches(result.stdout, "^0x([0-9a-f]{2})+$".toRegex())
         assertEquals(result.statusDocker, StatusDocker.SUCCESS)
     }
 
@@ -42,7 +42,7 @@ class TestCompile : BasePlatformTestCase() {
         val settings = VyperSettings.INSTANCE
         val params = VyperParameters(module, project, files, settings.getCompilerParamsArray(), settings.generateStubs, settings.fileExtension)
         val indicator = MockProgressIndicator()
-        return VyperCompiler.compile(params, indicator)[0]!!
+        return VyperCompiler.compile(params, indicator)!![0]
     }
 }
 

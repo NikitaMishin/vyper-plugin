@@ -8,7 +8,6 @@
 - Remove MythX and SmartCheck as they are deprecated ([#26](https://github.com/NikitaMishin/vyper-plugin/issues/26))
 - Remove run action and update compile action ([#27](https://github.com/NikitaMishin/vyper-plugin/issues/27))
 - Remove deprecated decorators from syntax (i.e. `@public`, `@private`).
-- Add warning for deprecated @nonreentrant with entrancy key.
 - New file icons
 
 ## [0.2.0-alpha.2] - 2024-06-26
