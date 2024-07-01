@@ -31,6 +31,7 @@ public interface VyperTypes {
   IElementType FUNCTION_CALL_EXPRESSION = new VyperElementType("FUNCTION_CALL_EXPRESSION");
   IElementType FUNCTION_DECORATOR = new VyperElementType("FUNCTION_DECORATOR");
   IElementType FUNCTION_DEFINITION = new VyperElementType("FUNCTION_DEFINITION");
+  IElementType FUNCTION_ENTRANCY_KEY = new VyperElementType("FUNCTION_ENTRANCY_KEY");
   IElementType FUNCTION_IMPLEMENTATION = new VyperElementType("FUNCTION_IMPLEMENTATION");
   IElementType FUNCTION_MODIFIER = new VyperElementType("FUNCTION_MODIFIER");
   IElementType FUN_TYPE_ANNOTATION = new VyperElementType("FUN_TYPE_ANNOTATION");
@@ -66,7 +67,6 @@ public interface VyperTypes {
   IElementType TUPLE_ASSIGNMENT_EXPRESSION = new VyperElementType("TUPLE_ASSIGNMENT_EXPRESSION");
   IElementType TYPE = new VyperElementType("TYPE");
   IElementType UNARY_EXPRESSION = new VyperElementType("UNARY_EXPRESSION");
-  IElementType UNIQUE_KEY = new VyperElementType("UNIQUE_KEY");
   IElementType USER_DEFINED_CONSTANTS_EXPRESSION = new VyperElementType("USER_DEFINED_CONSTANTS_EXPRESSION");
   IElementType VALUE_TYPE = new VyperElementType("VALUE_TYPE");
   IElementType VAR_LITERAL = new VyperElementType("VAR_LITERAL");
@@ -92,6 +92,7 @@ public interface VyperTypes {
   IElementType DECIMALNUMBER = new VyperTokenType("decimalNumber");
   IElementType DECORATOR = new VyperTokenType("@");
   IElementType DEF = new VyperTokenType("def");
+  IElementType DEPLOY = new VyperTokenType("deploy");
   IElementType DIV = new VyperTokenType("/");
   IElementType DIV_ASSIGN = new VyperTokenType("/=");
   IElementType DOT = new VyperTokenType(".");
@@ -239,6 +240,9 @@ public interface VyperTypes {
       else if (type == FUNCTION_DEFINITION) {
         return new VyperFunctionDefinitionImpl(node);
       }
+      else if (type == FUNCTION_ENTRANCY_KEY) {
+        return new VyperFunctionEntrancyKeyImpl(node);
+      }
       else if (type == FUNCTION_IMPLEMENTATION) {
         return new VyperFunctionImplementationImpl(node);
       }
@@ -343,9 +347,6 @@ public interface VyperTypes {
       }
       else if (type == UNARY_EXPRESSION) {
         return new VyperUnaryExpressionImpl(node);
-      }
-      else if (type == UNIQUE_KEY) {
-        return new VyperUniqueKeyImpl(node);
       }
       else if (type == USER_DEFINED_CONSTANTS_EXPRESSION) {
         return new VyperUserDefinedConstantsExpressionImpl(node);

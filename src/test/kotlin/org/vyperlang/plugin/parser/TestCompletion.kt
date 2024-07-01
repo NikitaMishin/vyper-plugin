@@ -23,20 +23,27 @@ class TestCompletion : BasePlatformTestCase() {
                 def __init__():
                     b = 1
                 
-                @public
+                @external
                 def foo() -> uint256:
                     x: uint256 = 1
                     y: uint256 = 2
                     z: uint256 = x + <caret>
                     return z
             """.trimIndent(),
-            // todo: "a", "b", "x", "y"
+            "a", "z", "x", "y" // todo: 'b' should be there instead of 'z'
+        )
+    }
+
+    fun testConstantTypeCompletion() {
+        checkCompletion(
+            "a: constant(<caret>",
+            "address", "bool", "bytes32", "bytes[]", "HashMap[]", "int128", "map()", "string[]", "uint256"
         )
     }
 
     fun testTypeCompletion() {
         checkCompletion(
-            "a: constant(<caret>",
+            "a: <caret>", // todo: should include `immutable` and `constant` too
             "address", "bool", "bytes32", "bytes[]", "HashMap[]", "int128", "map()", "string[]", "uint256"
         )
     }
@@ -52,7 +59,7 @@ class TestCompletion : BasePlatformTestCase() {
                     b = 1
                     <caret>
             """.trimIndent(),
-            // todo: "a", "b"
+            "a" // todo: "b" should be here too
         )
     }
 
@@ -83,9 +90,9 @@ class TestCompletion : BasePlatformTestCase() {
     }
 
     fun testCompleteVar() {
-        checkCompletion(
+        checkAutoCompletion(
             """
-                @public
+                @external
                 def foo():
                     abc: uint256 = 1
                     x: uint256 = a<caret>
@@ -99,7 +106,7 @@ class TestCompletion : BasePlatformTestCase() {
             """
                 balance: uint256
 
-                @public
+                @external
                 def foo():
                     self.<caret>
             """.trimIndent(),
@@ -110,7 +117,7 @@ class TestCompletion : BasePlatformTestCase() {
     fun testCompleteMsg() {
         checkCompletion(
             """
-                @public
+                @external
                 def foo():
                     msg.<caret>
             """.trimIndent(),
@@ -119,9 +126,9 @@ class TestCompletion : BasePlatformTestCase() {
     }
 
     fun testAutoCompleteMsg() {
-        checkCompletion(
+        checkAutoCompletion(
             """
-                @public
+                @external
                 def foo():
                     msg.g<caret>
             """.trimIndent(),
@@ -132,13 +139,14 @@ class TestCompletion : BasePlatformTestCase() {
     private fun checkCompletion(code: String, vararg expected: String) {
         myFixture.configureByText(VyperFileType.INSTANCE, code)
         myFixture.complete(CompletionType.BASIC)
-        if (expected.size == 1) {
-            // the editor should automatically pick the only option
-            assertEquals(myFixture.editor.document.text, code.replace("<caret>", expected[0]))
-            assertNull(myFixture.lookupElementStrings)
-        } else {
-            val elements = myFixture.lookupElementStrings!!.toMutableList()
-            assertSameElements(elements, *expected)
-        }
+        val elements = myFixture.lookupElementStrings!!.toMutableList()
+        assertSameElements(elements, *expected)
+    }
+
+    private fun checkAutoCompletion(code: String, expected: String) {
+        myFixture.configureByText(VyperFileType.INSTANCE, code)
+        myFixture.complete(CompletionType.BASIC)
+        assertNull(myFixture.lookupElementStrings)
+        assertEquals(myFixture.editor.document.text, code.replace("<caret>", expected))
     }
 }

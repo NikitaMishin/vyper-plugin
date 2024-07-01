@@ -20,6 +20,18 @@ class TestErrorDetection : BasePlatformTestCase() {
         )
     }
 
+    fun testOldDecorator() {
+        checkErrors(VyperFileType.INSTANCE, """
+                @view
+                @public
+                def totalSupply() -> uint256:
+                    return 0
+            """.trimIndent(),
+            "<function decorator> expected, got 'public'",
+            "'@', Identifier, event, from, implements, import, interface or struct expected, got 'def'",
+        )
+    }
+
     fun testVyiStateVar() {
         checkErrors(
             VyperInterfaceFileType.INSTANCE,

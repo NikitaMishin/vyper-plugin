@@ -8,11 +8,11 @@ class TestFindUsages : BasePlatformTestCase() {
     fun testConstant() {
         val code = """
             a<caret>b: constant(uint256) = 1
-            @public
+            @external
             def foo() -> uint256:
                 return ab
         """
-        checkUsages(code, 67 to 69) // todo: should include the declaration itself
+        checkUsages(code, 69 to 71) // todo: should include the declaration itself
     }
 
     fun testImmutable() {
@@ -27,37 +27,37 @@ class TestFindUsages : BasePlatformTestCase() {
 
     fun testFunctionParam() {
         val code = """
-            @public
+            @external
             def foo(a<caret>b: uint256) -> uint256:
                 return ab
         """
-        checkUsages(code, 52 to 54) // todo: should include the declaration itself
+        checkUsages(code, 54 to 56) // todo: should include the declaration itself
     }
 
     fun testStateVariable() {
         val code = """
             a<caret>b: uint256
-            @public
+            @external
             def foo() -> uint256:
                 return self.ab
         """
-        checkUsages(code, 58 to 60) // todo: should include the declaration itself
+        checkUsages(code, 60 to 62) // todo: should include the declaration itself
     }
 
     fun testSelfCall() {
         val code = """
-            @public
+            @external
             def foo<caret>() -> uint256:
                 return self.foo()
         """
-        checkUsages(code, 46 to 49, 41 to 51)
+        checkUsages(code, 48 to 51, 43 to 53)
     }
 
     fun testStruct() {
         val code = """
             struct Foo:
                 ab: uint256
-            @public
+            @external
             def foo() -> Foo:
                 return Fo<caret>o({ab: 1})
         """
@@ -68,7 +68,7 @@ class TestFindUsages : BasePlatformTestCase() {
         val code = """
             struct Foo:
                 a<caret>b: uint256
-            @public
+            @external
             def foo() -> Foo:
                 return Foo(ab=1)
         """
@@ -79,7 +79,7 @@ class TestFindUsages : BasePlatformTestCase() {
         val code = """
             event Lo<caret>g:
                 test: uint256
-            @public
+            @external
             def foo() -> uint256:
                 log Log(1)
         """
@@ -90,7 +90,7 @@ class TestFindUsages : BasePlatformTestCase() {
         val code = """
             from vyper.interfaces import ERC20
             implements: ERC<caret>20
-            @public
+            @external
             def balanceOf(a: address) -> uint256:
                 return ERC20(a).balanceOf(self)
         """

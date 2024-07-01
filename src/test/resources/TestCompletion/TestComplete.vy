@@ -2,11 +2,11 @@
 x: constant(uint256) = max(uint256)
 y: immutable(address)
 
-@public
+@external
 def __init__():
     self.y = empty(address)
 
-@public
+@external
 def test()->bool:
     return True
 

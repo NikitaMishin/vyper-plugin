@@ -1,46 +1,44 @@
 package org.vyperlang.plugin.actions
 
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
+import org.vyperlang.plugin.VyperFileType
 import org.vyperlang.plugin.compile.VyperCompiler
 import org.vyperlang.plugin.compile.VyperParameters
-import org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
+import org.vyperlang.plugin.gui.NoFilesWithVyperAreSelectedDialogue
 import org.vyperlang.plugin.settings.VyperSettings
 
 
-class CompileVyperFileAction : VyperAction() {
+private const val COMPILING_MESSAGE = "Compiling Vyper"
+private val EXTENSION = VyperFileType.INSTANCE.defaultExtension
+
+class CompileVyperFileAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
-        val project = e.project ?: return
+        val project = e.project!!
+        val files = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext)?.filter { it.extension == EXTENSION }
+            ?.toList()
 
-        val files = getClickedFiles(e)?.filter { it.path.contains(vyExtensionRegExp) }?.toTypedArray()
-
-        if (files == null || files.isEmpty()) {
-            return org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue().display()
+        if (files.isNullOrEmpty()) {
+            return NoFilesWithVyperAreSelectedDialogue().display()
         }
-
 
         ApplicationManager.getApplication().runWriteAction {
             FileDocumentManager.getInstance().saveAllDocuments()
         }
 
-
-        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Compiling Vyper") {
-            override fun run(indicator: ProgressIndicator) {
-                VyperCompiler.compile(
-                    VyperParameters(
-                        ModuleManager.getInstance(project).modules.first(), project, files,
-                        VyperSettings.INSTANCE.getCompilerParamsArray(),
-                        VyperSettings.INSTANCE.generateStubs, VyperSettings.INSTANCE.fileExtension
-                    )
-                )
-            }
+        val module = ModuleManager.getInstance(project).modules.first()
+        val settings = VyperSettings.INSTANCE
+        val params = VyperParameters(module, project, files, settings.getCompilerParamsArray(), settings.generateStubs, settings.fileExtension)
+        ProgressManager.getInstance().run(object : Task.Backgroundable(project, COMPILING_MESSAGE) {
+            override fun run(indicator: ProgressIndicator) { VyperCompiler.compile(params, indicator) }
         })
     }
-
 }

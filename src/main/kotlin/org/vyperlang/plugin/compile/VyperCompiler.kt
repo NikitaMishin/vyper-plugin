@@ -4,11 +4,13 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.vyperlang.plugin.VyperMessageProcessor
 import org.vyperlang.plugin.VyperStubGenerator
 import org.vyperlang.plugin.docker.StatusDocker
+import org.vyperlang.plugin.docker.ToolResult
 import org.vyperlang.plugin.docker.VyperCompilerDocker
 import org.vyperlang.plugin.toolWindow.VyperWindow
 import java.beans.PropertyChangeListener
@@ -18,8 +20,8 @@ import java.beans.PropertyChangeSupport
 data class VyperParameters(
     val module: Module,
     val project: Project,
-    val files: Array<VirtualFile>,
-    val compilerParameters: Array<String>,
+    val files: List<VirtualFile>,
+    val compilerParameters: List<String>,
     val generateStub: Boolean,
     val stubExtension: String
 )
@@ -37,81 +39,54 @@ object VyperCompiler {
     private const val COMPILATION_FAILED = "Compilation failed"
     private const val COMPILATION_EMPTY = "Compilation empty"
     private const val COMPILATION_SUCCESS = "Compilation succeed"
-    private const val compilationNavigateHtml = "<html><a href=cite>navigate to file</a></html>"
-    private const val compilationEmptyHtml = "<html>No bytecode is generated</html>"
-    private const val bytecodeInToolWindowHtml = "<html>Bytecode in tool window</html>"
 
-    fun compile(params: VyperParameters) {
-        for (file in params.files) {
-            val parent = file.parent.path
-            val fullPath = file.path
-            val result = VyperCompilerDocker(parent, fullPath, params.compilerParameters).execWrapper(params.project)
+    fun compile(params: VyperParameters, indicator: ProgressIndicator) = params.files.map {
+        val compiler = VyperCompilerDocker(params.project, it, indicator, *params.compilerParameters.toTypedArray())
+        reportResult(it, params, compiler.run())
+    }
 
-            when {
-                params.generateStub && result.statusDocker == StatusDocker.SUCCESS -> {
-                    displayOutputOnToolWindow(params.project, file.path, result.stdout)
-                    VyperStubGenerator.createStubInGenSourceFolder(
-                        result.stdout, params.module, params.project, fullPath, params.stubExtension
+    private fun reportResult(
+        file: VirtualFile,
+        params: VyperParameters,
+        result: ToolResult?
+    ): ToolResult? {
+        when (result?.statusDocker) {
+            StatusDocker.SUCCESS -> {
+                displayOutputOnToolWindow(params.project, file, result.stdout)
+                if (params.generateStub) {
+                    val stub = VyperStubGenerator.createStubInGenSourceFolder(
+                        result.stdout, params.module, params.project, file, params.stubExtension
                     )
                     notify(
                         params.project, file, COMPILATION_SUCCESS,
-                        "<html>Bytecode in tool window and in generated folder</html>",
+                        "<html>Bytecode generated to ${stub.path}</html>",
                         VyperMessageProcessor.NotificationStatusVyper.INFO
-                    )
-
-                }
-                !params.generateStub && result.statusDocker == StatusDocker.SUCCESS -> {
-                    displayOutputOnToolWindow(params.project, file.path, result.stdout)
-                    notify(
-                        params.project, file, COMPILATION_SUCCESS,
-                        bytecodeInToolWindowHtml,
-                        VyperMessageProcessor.NotificationStatusVyper.INFO
-                    )
-                }
-                params.generateStub && result.statusDocker == StatusDocker.FAILED -> {
-                    displayOutputOnToolWindow(params.project, file.path, result.stderr)
-
-                    addMessage(CompilerMessage(file, parseCompilerOutput(result.stderr)))
-
-                    notify(
-                        params.project, file, COMPILATION_FAILED,
-                        compilationNavigateHtml,
-                        VyperMessageProcessor.NotificationStatusVyper.ERROR
-                    )
-                }
-
-                !params.generateStub && result.statusDocker == StatusDocker.FAILED -> {
-
-                    displayOutputOnToolWindow(params.project, file.path, result.stderr)
-
-                    addMessage(CompilerMessage(file, parseCompilerOutput(result.stderr)))
-
-                    notify(
-                        params.project, file, COMPILATION_FAILED,
-                        compilationNavigateHtml,
-                        VyperMessageProcessor.NotificationStatusVyper.ERROR
-                    )
-                }
-
-                !params.generateStub && result.statusDocker == StatusDocker.EMPTY_OUTPUT -> {
-                    displayOutputOnToolWindow(params.project, file.path, "")
-                    notify(
-                        params.project, file, COMPILATION_EMPTY,
-                        compilationEmptyHtml,
-                        VyperMessageProcessor.NotificationStatusVyper.WARNING
-                    )
-                }
-                params.generateStub && result.statusDocker == StatusDocker.EMPTY_OUTPUT -> {
-                    displayOutputOnToolWindow(params.project, file.path, "")
-                    notify(
-                        params.project, file, COMPILATION_EMPTY,
-                        compilationEmptyHtml,
-                        VyperMessageProcessor.NotificationStatusVyper.WARNING
                     )
                 }
             }
 
+            StatusDocker.FAILED -> {
+                displayOutputOnToolWindow(params.project, file, result.stderr)
+                addMessage(CompilerMessage(file, parseCompilerOutput(result.stderr)))
+                notify(
+                    params.project, file, COMPILATION_FAILED,
+                    "<html>Vyper failed to compile</html>",
+                    VyperMessageProcessor.NotificationStatusVyper.ERROR
+                )
+            }
+
+            StatusDocker.EMPTY_OUTPUT -> {
+                displayOutputOnToolWindow(params.project, file, listOf("No bytecode is generated"))
+                notify(
+                    params.project, file, COMPILATION_EMPTY,
+                    "<html>No bytecode is generated</html>",
+                    VyperMessageProcessor.NotificationStatusVyper.WARNING
+                )
+            }
+
+            null -> {} // ignore, error is reported by `VyperCompilerDocker`
         }
+        return result
     }
 
     private fun notify(
@@ -133,16 +108,16 @@ object VyperCompiler {
         )
     }
 
-    val regBaseError =
+    private val regBaseError =
         Regex(
             """vyper\.exceptions\.\w+Exception:\s+line\s+(\d+).*$""",
             setOf(RegexOption.MULTILINE)
         )
-    val regError =
+    private val regError =
         Regex("""File.+,\s+line\s+(\d+)\s[^>]*""", setOf(RegexOption.MULTILINE))
 
-
-    private fun parseCompilerOutput(stderr: String): List<CompilerError> {
+    private fun parseCompilerOutput(lines: List<String>): List<CompilerError> {
+        val stderr = lines.joinToString("\n")
         val arrRegBase = regBaseError.findAll(stderr).toMutableList().map {
             CompilerError(it.groups[0]!!.value, it.groups[1]!!.value.toInt())
         }.toMutableList()
@@ -153,14 +128,15 @@ object VyperCompiler {
         return arrRegBase
     }
 
-    private fun addMessage(message: CompilerMessage) {
+    private fun addMessage(message: CompilerMessage) =
         propertyChangeSupport.firePropertyChange("COMPILER", null, message)
-    }
 
-    private fun displayOutputOnToolWindow(project: Project, path: String, output: String) =
+    private fun displayOutputOnToolWindow(project: Project, file: VirtualFile, output: List<String>) =
         ApplicationManager.getApplication().invokeLater({
             VyperWindow.replaceTextInTabsWindow(
-                project, VyperWindow.VyperWindowTab.COMPILER_TAB, "$path:\n$output"
+                project,
+                VyperWindow.VyperWindowTab.COMPILER_TAB,
+                "${file.path}:\n${output.joinToString("\n")}"
             )
         }, ModalityState.any())
 }

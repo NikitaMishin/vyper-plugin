@@ -17,19 +17,18 @@ import java.io.File
 object VyperStubGenerator {
 
     fun createStubInGenSourceFolder(
-        data: String, module: Module, project: Project,
-        fullPathToFile: String, extension: String
-    ) {
+        data: List<String>, module: Module, project: Project,
+        originalFile: VirtualFile, extension: String
+    ): File {
         generateFolder(module, project)
+        val parent = getGeneratedSourceRoot(module)
+            ?: throw NullPointerException("No generated source folder is found")
+
+        val filePath = parent.path + "/" + originalFile.name + extension
+        var file = File(filePath)
+
         VirtualFileManager.getInstance().asyncRefresh {
             WriteCommandAction.runWriteCommandAction(project) {
-
-                val parent = getGeneratedSourceRoot(module)
-                    ?: throw NullPointerException("No generated source folder is found")
-                val filename = fullPathToFile.split("/").last()
-
-                val filePath = parent.path + "/" + filename + extension
-                var file = File(filePath)
 
                 VirtualFileManager.getInstance().syncRefresh()
                 val isFileExists = file.createNewFile()
@@ -38,14 +37,16 @@ object VyperStubGenerator {
                 val virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)!!
                 val document: Document = FileDocumentManager.getInstance().getDocument(virtualFile)!!
 
+                val text = data.joinToString("\n")
                 if (isFileExists) {
-                    document.setText(data)
+                    document.setText(text)
                 } else {
-                    document.replaceString(0, document.textLength, data)
+                    document.replaceString(0, document.textLength, text)
                 }
 
             }
         }
+        return file
     }
 
     private fun getGeneratedSourceRoot(module: Module): VirtualFile? =

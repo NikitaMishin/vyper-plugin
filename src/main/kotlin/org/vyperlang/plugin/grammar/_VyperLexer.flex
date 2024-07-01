@@ -114,6 +114,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "def"                        { return DEF; }
   "struct"                     { return STRUCT; }
   "internal"                   { return INTERNAL; }
+  "deploy"                     { return DEPLOY; }
   "elif"                       { return ELIF; }
   "else"                       { return ELSE; }
   "if"                         { return IF; }

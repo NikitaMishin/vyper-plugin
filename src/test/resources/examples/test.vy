@@ -17,13 +17,13 @@ is_finished: bool
 is_accepted: bool
 
 
-@public
+@external
 def __init__(proposal : bytes[100]):
     self.creator = msg.sender
     self.current_proposal = proposal
 
 # test address ='0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf'
-@public
+@external
 def register()->int128:
     """
        register @new_user and provide token for him in amount of @initial_distribution
@@ -34,7 +34,7 @@ def register()->int128:
     self.all_tokens += initial_distribution
     return self.all_tokens
 
-@public
+@external
 def vote(for_yes:bool):
     assert not self.address_is_vote[msg.sender], "Already voted"
     assert self.address_to_tokens[msg.sender] > 0, "No tokens"
@@ -45,12 +45,12 @@ def vote(for_yes:bool):
 
     self.address_is_vote[msg.sender] = True
 
-@public
+@external
 def get_result()->bool:
     assert self.is_finished, "Not finished"
     return self.is_accepted
 
-@public
+@external
 def finish_vote():
     assert msg.sender == self.creator, "Not creator"
 
@@ -64,6 +64,6 @@ def finish_vote():
     self.vote_for_no = 0
     self.is_finished = True
 
-@public
+@external
 def get_current_proposal()->bytes[100]:
     return self.current_proposal

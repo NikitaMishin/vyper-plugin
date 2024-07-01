@@ -29,8 +29,8 @@ public class VyperFunctionDecoratorImpl extends ASTWrapperPsiElement implements 
 
   @Override
   @Nullable
-  public VyperUniqueKey getUniqueKey() {
-    return findChildByClass(VyperUniqueKey.class);
+  public VyperFunctionEntrancyKey getFunctionEntrancyKey() {
+    return findChildByClass(VyperFunctionEntrancyKey.class);
   }
 
 }

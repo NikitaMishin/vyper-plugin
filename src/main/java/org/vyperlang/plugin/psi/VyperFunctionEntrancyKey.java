@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperSetExpression extends VyperExpression {
+public interface VyperFunctionEntrancyKey extends VyperElement {
 
-  @NotNull
-  List<VyperExpression> getExpressionList();
+  @Nullable
+  PsiElement getStringLiteralDouble();
+
+  @Nullable
+  PsiElement getStringLiteralSingle();
 
 }
