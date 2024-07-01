@@ -30,7 +30,7 @@ class VyperSettings : PersistentStateComponent<VyperSettings> {
 
     var compilerParams: String = ""
 
-    fun getCompilerParamsArray(): Array<String> = compilerParams.split(" ").filter{ it.isNotEmpty() }.toTypedArray()
+    fun getCompilerParamsArray(): List<String> = compilerParams.split(" ").filter{ it.isNotEmpty() }.toList()
 
     @Override
     @Nullable

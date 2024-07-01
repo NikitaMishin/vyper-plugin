@@ -14,9 +14,6 @@ import org.vyperlang.plugin.docker.StatusDocker
 import org.vyperlang.plugin.docker.ToolResult
 import org.vyperlang.plugin.settings.VyperSettings
 import org.vyperlang.plugin.toolWindow.VyperWindow
-import java.util.concurrent.CountDownLatch
-
-val lock = CountDownLatch(10)
 
 class TestCompile : BasePlatformTestCase() {
     override fun getTestDataPath(): String {
@@ -34,18 +31,18 @@ class TestCompile : BasePlatformTestCase() {
     fun testCompile() {
         val result = compile("example.vy")
         assertEmpty(result.stderr)
-        assertMatches(result.stdout.replace("\n", ""), "^0x([0-9a-f]{2})+$".toRegex())
+        assertMatches(result.stdout.joinToString(""), "^([0-9a-f]{2})+$".toRegex())
         assertEquals(result.statusDocker, StatusDocker.SUCCESS)
     }
 
     private fun compile(fileName: String): ToolResult {
         val file = LocalFileSystem.getInstance().refreshAndFindFileByPath("${testDataPath}/${fileName}")
-        val files = arrayOf(file!!)
+        val files = listOf(file!!)
         val module = ModuleManager.getInstance(project).modules.first()
         val settings = VyperSettings.INSTANCE
         val params = VyperParameters(module, project, files, settings.getCompilerParamsArray(), settings.generateStubs, settings.fileExtension)
         val indicator = MockProgressIndicator()
-        return VyperCompiler.compile(params, indicator)[0]
+        return VyperCompiler.compile(params, indicator)[0]!!
     }
 }
 

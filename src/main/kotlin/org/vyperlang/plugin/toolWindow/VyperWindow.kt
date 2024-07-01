@@ -17,7 +17,7 @@ import javax.swing.text.DefaultCaret
  */
 object VyperWindow {
     internal const val ID_TOOL_WINDOW = "Vyper Tools" // also dispay name name
-    internal const val ID_COMPILER_TAB = "Compiler Output"
+    private const val ID_COMPILER_TAB = "Compiler Output"
     private const val ID_RUN_TAB = "Run Output"
     private const val ID_ANALYZE_TAB = "Analyze Output"
     private const val NAME_TAB_TEXT_PANE = "Compiler_text_pane"
@@ -43,6 +43,7 @@ object VyperWindow {
             val doc = getTabById(project, id).document
             doc.remove(0, doc.length)
             doc.insertString(doc.length, replace, null)
+            getToolWindow(project).show()
         }
 
 
@@ -67,9 +68,8 @@ object VyperWindow {
      * Return concrete component where output would be written
      * If not exists then it would be created
      */
-    internal fun getTabById(project: Project, tabId: String): JTextPane {
-        val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ID_TOOL_WINDOW)
-            ?: throw Exception("Tool window was not registered")
+    private fun getTabById(project: Project, tabId: String): JTextPane {
+        val toolWindow = getToolWindow(project)
         var tab = toolWindow.contentManager.findContent(tabId)
         if (tab == null) {
             //user close this tab
@@ -87,6 +87,9 @@ object VyperWindow {
         throw ClassNotFoundException("No pane exists")
     }
 
+    private fun getToolWindow(project: Project): ToolWindow =
+        ToolWindowManager.getInstance(project).getToolWindow(ID_TOOL_WINDOW)
+            ?: throw Exception("Tool window was not registered")
 
     private fun findComponentByUniqueName(name: String, parent: Container, depth: Int = 2): Component? {
         if (depth <= 0) return null

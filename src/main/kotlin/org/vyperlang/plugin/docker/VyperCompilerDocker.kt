@@ -18,13 +18,12 @@ enum class StatusDocker {
     EMPTY_OUTPUT,
     SUCCESS,
     FAILED,
-    INTERNAL_ERROR
 }
 
 /**
  *  represents results of execution
  */
-data class ToolResult(val stdout: String, val stderr: String, val filename: String, val statusDocker: StatusDocker)
+data class ToolResult(val stdout: List<String>, val stderr: List<String>, val file: VirtualFile, val statusDocker: StatusDocker)
 
 private const val DOCKER_ERROR_HTML = "<html>Error running docker.\n" +
         " Do you install <a href=\"https://docs.docker.com/install/\">docker</a>" +
@@ -55,7 +54,7 @@ class VyperCompilerDocker(
      * this function handle docker exceptions and notify uses about possible solution
      * TODO add timeout, use long-running containers for performance
      */
-    fun run(): ToolResult =
+    fun run(): ToolResult? =
         try {
             if (!hasImage()) {
                 downloadImage()
@@ -63,10 +62,10 @@ class VyperCompilerDocker(
             runContainer()
         } catch (dockerException: DockerException) {
             notify(project)
-            ToolResult("", "", "", StatusDocker.INTERNAL_ERROR)
+            null
         } catch (e: InterruptedException) {
             notify(project)
-            ToolResult("", "", "", StatusDocker.INTERNAL_ERROR)
+            null
         }
 
     private fun notify(project: Project) = VyperMessageProcessor.notificateInBalloon(
@@ -85,10 +84,7 @@ class VyperCompilerDocker(
     private fun hasImage() =
         PluginDockerClient.listImagesCmd().exec().any { it.repoTags.any { k -> k.contains(image, true) } }
 
-    //TODO make progress bar or notificate user about that
     private fun downloadImage(): ResultCallback.Adapter<PullResponseItem>? {
-        indicator.text = "Downloading docker image"
-        indicator.start()
         VyperMessageProcessor.notificateInBalloon(
             VyperMessageProcessor.VyperNotification(
                 null, "Docker",
@@ -120,46 +116,63 @@ class VyperCompilerDocker(
 
         PluginDockerClient.startContainerCmd(containerId).exec()
 
-        val logs = VyperAdapterLogs()
+        val frames = VyperFramesAdapter()
         PluginDockerClient
             .logContainerCmd(containerId)
             .withStdErr(true)
             .withStdOut(true)
             .withFollowStream(true)
-            .exec(logs)
+            .exec(frames)
             .awaitCompletion()
 
         PluginDockerClient
             .removeContainerCmd(containerId)
             .exec()
 
-        return when {
-            logs.errors.isEmpty() && logs.out.isNotEmpty() -> ToolResult(
-                logs.out.joinToString(separator = "\n"),
-                "",
-                file.path,
-                StatusDocker.SUCCESS
-            )
-
-            logs.errors.isEmpty() -> ToolResult("", "", file.path, StatusDocker.EMPTY_OUTPUT)
-            else -> ToolResult("", logs.errors.joinToString(separator = "\n"), file.path, StatusDocker.FAILED)
+        val status = when {
+            frames.errors.isNotEmpty() -> StatusDocker.FAILED
+            frames.logs.isNotEmpty() -> StatusDocker.SUCCESS
+            else -> StatusDocker.EMPTY_OUTPUT
         }
+        return ToolResult(frames.logs, frames.errors, file, status)
     }
 }
 
-private class VyperAdapterLogs : ResultCallback.Adapter<Frame>() {
-    private val items = mutableListOf<String>()
-    override fun onNext(item: Frame) {
-        items.add(item.toString())
-    }
+private class VyperFramesAdapter : ResultCallback.Adapter<Frame>() {
+    private val items = mutableListOf<Frame>()
 
-    val errors: List<String> get() = items.filter { it.contains("stderr", true) }.map { it.removePrefix("STDERR: ") }
-    val out: List<String> get() = items.filter { it.contains("stdout", true) }.map { it.removePrefix("STDOUT: ") }
+    val errors: List<String> get() = items
+        .filter { it.streamType == StreamType.STDERR }
+        .map { String(it.payload).replace("\n", "").trim() }
+
+    val logs: List<String> get() = items
+        .filter { it.streamType == StreamType.STDOUT }
+        .map { String(it.payload).replace("\n", "").trim() }
+
+    override fun onNext(item: Frame) {
+        items.add(item)
+    }
 }
 
 private class VyperPullImageAdapter(private val indicator: ProgressIndicator) : ResultCallback.Adapter<PullResponseItem>() {
+    /**
+     * Map of layer id to the `current` and `total` progress of that layer.
+     * As the layers get known, the total progress can go backwards a bit, but it's still quite helpful to have.
+     */
+    private val layerStatus = hashMapOf<String, Pair<Double, Double>>()
+
     override fun onNext(item: PullResponseItem) {
-        indicator.fraction = item.progressDetail?.current?.toDouble() ?: 0.0
+        val current = item.progressDetail?.current?.toDouble()
+        val total = item.progressDetail?.total?.toDouble()
+        val id = item.id
+        if (current != null && total != null && id != null) {
+            layerStatus[id] = current to total
+        }
+        indicator.isIndeterminate = layerStatus.isEmpty()
+        indicator.text = "Downloading docker image"
+        if (layerStatus.isNotEmpty()) {
+            indicator.fraction = layerStatus.values.sumOf { it.first } / layerStatus.values.sumOf { it.second }
+        }
         super.onNext(item)
     }
 }

@@ -34,7 +34,7 @@ class VyperColorAnnotator : Annotator {
             addError(holder, "Ellipsis is only allowed in `.vyi` files")
         }
         if (element is VyperFunctionEntrancyKey) {
-            holder.newAnnotation(HighlightSeverity.WARNING, "Entrancy key is deprecated").create();
+            holder.newAnnotation(HighlightSeverity.WARNING, "Entrancy key is deprecated").create()
         }
     }
 
@@ -51,6 +51,6 @@ class VyperColorAnnotator : Annotator {
     }
 
     private fun addError(holder: AnnotationHolder, error: String) {
-        holder.newAnnotation(HighlightSeverity.ERROR, error).create();
+        holder.newAnnotation(HighlightSeverity.ERROR, error).create()
     }
 }

@@ -2,7 +2,9 @@
     <id>org.vyperlang.plugin.vyper-plugin</id>
     <name>Vyper</name>
     <version>0.0.0<!-- updated by changelog plugin --></version>
-    <vendor email="https://github.com/NikitaMishin/vyper-plugin" url="https://github.com/NikitaMishin/vyper-plugin">VyperPluginSupport</vendor>
+    <vendor email="https://github.com/NikitaMishin/vyper-plugin" url="https://github.com/NikitaMishin/vyper-plugin">
+        VyperPluginSupport
+    </vendor>
     <idea-version since-build="223.7571.182"/>
 
     <description>
@@ -19,14 +21,17 @@
                   fieldName="INSTANCE" language="Vyper" extensions="vy"/>
         <fileType name="Vyper interface file" implementationClass="org.vyperlang.plugin.VyperInterfaceFileType"
                   fieldName="INSTANCE" language="Vyper" extensions="vyi"/>
-        <notificationGroup id = "COMPILER" displayType="BALLOON"/>
-        <notificationGroup id = "RUN" displayType="BALLOON"/>
-        <notificationGroup id = "COMMON" displayType="BALLOON"/>
-        <notificationGroup id = "ANALYZE" displayType="BALLOON"/>
-        <lang.findUsagesProvider language="Vyper" implementationClass="org.vyperlang.plugin.usages.VyperFindUsagesProvider"/>
+        <notificationGroup id="COMPILER" displayType="BALLOON"/>
+        <notificationGroup id="RUN" displayType="BALLOON"/>
+        <notificationGroup id="COMMON" displayType="BALLOON"/>
+        <notificationGroup id="ANALYZE" displayType="BALLOON"/>
+        <lang.findUsagesProvider language="Vyper"
+                                 implementationClass="org.vyperlang.plugin.usages.VyperFindUsagesProvider"/>
         <lang.parserDefinition language="Vyper" implementationClass="org.vyperlang.plugin.VyperParserDefinition"/>
-        <lang.syntaxHighlighterFactory language="Vyper" implementationClass="org.vyperlang.plugin.VyperHighlighterFactory"/>
-        <toolWindow id = "Vyper Tools" anchor="bottom" factoryClass="org.vyperlang.plugin.toolWindow.VyperToolFactory" canCloseContents="true"/>
+        <lang.syntaxHighlighterFactory language="Vyper"
+                                       implementationClass="org.vyperlang.plugin.VyperHighlighterFactory"/>
+        <toolWindow id="Vyper Tools" anchor="bottom" factoryClass="org.vyperlang.plugin.toolWindow.VyperToolFactory"
+                    canCloseContents="true" icon="org.vyperlang.plugin.VyperIcons.FILE"/>
         <lang.braceMatcher language="Vyper"
                            implementationClass="org.vyperlang.plugin.editorActions.PairedBraceMatcherVyper"/>
         <lang.commenter language="Vyper" implementationClass="org.vyperlang.plugin.commenter.VyperCommenter"/>
@@ -37,12 +42,14 @@
         <completion.contributor language="Vyper"
                                 implementationClass="org.vyperlang.plugin.completion.VyperFunModifierContributor"/>
 
-        <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
+        <annotator language="Vyper"
+                   implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperColorAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.CompilerAnnotator"/>
 
         <applicationService serviceImplementation="org.vyperlang.plugin.settings.VyperSettings"/>
-        <applicationConfigurable groupId="language" displayName="Vyper" id="preferences.Vyper" instance="org.vyperlang.plugin.settings.VyperSettingsConfigurable"/>
+        <applicationConfigurable groupId="language" displayName="Vyper" id="preferences.Vyper"
+                                 instance="org.vyperlang.plugin.settings.VyperSettingsConfigurable"/>
     </extensions>
 
     <actions>
@@ -54,7 +61,7 @@
         </action>
 
         <!-- VyperActions -->
-        <group id="VyperActions" />
+        <group id="VyperActions"/>
 
         <group id="VyperMenu" text="_Vyper" popup="true">
             <separator/>
@@ -74,5 +81,5 @@
         <reference ref="VyperMenu">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorPopupMenu1"/>
         </reference>
-    </actions>>
+    </actions>
 </idea-plugin>
