@@ -28,19 +28,9 @@ class VyperSettings : PersistentStateComponent<VyperSettings> {
     var address = defaultAddress
     var password = defaultPassword
 
-    var compilerParams: String = " "
-    fun getCompilerParamsArray(): Array<String> {
-        if (compilerParams == " " || compilerParams == "") return arrayOf()
-        val ls = mutableListOf<String>()
+    var compilerParams: String = ""
 
-        for (el in compilerParams.split(" ")) {
-            //ls.addAll(el.split(","))
-            ls.add(el)
-        }
-
-        return ls.toTypedArray()
-
-    }
+    fun getCompilerParamsArray(): Array<String> = compilerParams.split(" ").filter{ it.isNotEmpty() }.toTypedArray()
 
     @Override
     @Nullable

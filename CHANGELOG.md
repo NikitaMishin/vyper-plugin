@@ -5,6 +5,8 @@
 ## [Unreleased]
 
 - Add support for vyi files ([#17](https://github.com/NikitaMishin/vyper-plugin/issues/17))
+  - This includes specific errors to vyi vs vyper files
+- New file icons
 
 ## [0.2.0-alpha.2] - 2024-06-26
 

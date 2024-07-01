@@ -30,6 +30,9 @@ object VyperCompiler {
 
     private val propertyChangeSupport = PropertyChangeSupport(this)
 
+    internal var output: String? = null
+        private set
+
     fun addListener(listener: PropertyChangeListener) {
         propertyChangeSupport.addPropertyChangeListener(listener)
     }
@@ -37,9 +40,9 @@ object VyperCompiler {
     private const val COMPILATION_FAILED = "Compilation failed"
     private const val COMPILATION_EMPTY = "Compilation empty"
     private const val COMPILATION_SUCCESS = "Compilation succeed"
-    private const val compilationNavigateHtml = "<html><a href=cite>navigate to file</a></html>"
-    private const val compilationEmptyHtml = "<html>No bytecode is generated</html>"
-    private const val bytecodeInToolWindowHtml = "<html>Bytecode in tool window</html>"
+    private const val COMPILATION_NAVIGATE_HTML = "<html><a href=cite>navigate to file</a></html>"
+    private const val COMPILATION_EMPTY_HTML = "<html>No bytecode is generated</html>"
+    private const val BYTECODE_IN_WINDOW_HTML = "<html>Bytecode in tool window</html>"
 
     fun compile(params: VyperParameters) {
         for (file in params.files) {
@@ -64,7 +67,7 @@ object VyperCompiler {
                     displayOutputOnToolWindow(params.project, file.path, result.stdout)
                     notify(
                         params.project, file, COMPILATION_SUCCESS,
-                        bytecodeInToolWindowHtml,
+                        BYTECODE_IN_WINDOW_HTML,
                         VyperMessageProcessor.NotificationStatusVyper.INFO
                     )
                 }
@@ -75,7 +78,7 @@ object VyperCompiler {
 
                     notify(
                         params.project, file, COMPILATION_FAILED,
-                        compilationNavigateHtml,
+                        COMPILATION_NAVIGATE_HTML,
                         VyperMessageProcessor.NotificationStatusVyper.ERROR
                     )
                 }
@@ -88,7 +91,7 @@ object VyperCompiler {
 
                     notify(
                         params.project, file, COMPILATION_FAILED,
-                        compilationNavigateHtml,
+                        COMPILATION_NAVIGATE_HTML,
                         VyperMessageProcessor.NotificationStatusVyper.ERROR
                     )
                 }
@@ -97,7 +100,7 @@ object VyperCompiler {
                     displayOutputOnToolWindow(params.project, file.path, "")
                     notify(
                         params.project, file, COMPILATION_EMPTY,
-                        compilationEmptyHtml,
+                        COMPILATION_EMPTY_HTML,
                         VyperMessageProcessor.NotificationStatusVyper.WARNING
                     )
                 }
@@ -105,7 +108,7 @@ object VyperCompiler {
                     displayOutputOnToolWindow(params.project, file.path, "")
                     notify(
                         params.project, file, COMPILATION_EMPTY,
-                        compilationEmptyHtml,
+                        COMPILATION_EMPTY_HTML,
                         VyperMessageProcessor.NotificationStatusVyper.WARNING
                     )
                 }
@@ -133,14 +136,13 @@ object VyperCompiler {
         )
     }
 
-    val regBaseError =
+    private val regBaseError =
         Regex(
             """vyper\.exceptions\.\w+Exception:\s+line\s+(\d+).*$""",
             setOf(RegexOption.MULTILINE)
         )
-    val regError =
+    private val regError =
         Regex("""File.+,\s+line\s+(\d+)\s[^>]*""", setOf(RegexOption.MULTILINE))
-
 
     private fun parseCompilerOutput(stderr: String): List<CompilerError> {
         val arrRegBase = regBaseError.findAll(stderr).toMutableList().map {
@@ -157,10 +159,12 @@ object VyperCompiler {
         propertyChangeSupport.firePropertyChange("COMPILER", null, message)
     }
 
-    private fun displayOutputOnToolWindow(project: Project, path: String, output: String) =
+    private fun displayOutputOnToolWindow(project: Project, path: String, output: String) {
+        this.output = output
         ApplicationManager.getApplication().invokeLater({
             VyperWindow.replaceTextInTabsWindow(
                 project, VyperWindow.VyperWindowTab.COMPILER_TAB, "$path:\n$output"
             )
         }, ModalityState.any())
+    }
 }

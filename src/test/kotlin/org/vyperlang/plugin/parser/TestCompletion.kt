@@ -34,9 +34,16 @@ class TestCompletion : BasePlatformTestCase() {
         )
     }
 
-    fun testTypeCompletion() {
+    fun testConstantTypeCompletion() {
         checkCompletion(
             "a: constant(<caret>",
+            "address", "bool", "bytes32", "bytes[]", "HashMap[]", "int128", "map()", "string[]", "uint256"
+        )
+    }
+
+    fun testTypeCompletion() {
+        checkCompletion(
+            "a: <caret>", // todo: should include `immutable` and `constant` too
             "address", "bool", "bytes32", "bytes[]", "HashMap[]", "int128", "map()", "string[]", "uint256"
         )
     }

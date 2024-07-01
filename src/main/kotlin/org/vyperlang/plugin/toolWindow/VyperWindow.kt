@@ -16,12 +16,10 @@ import javax.swing.text.DefaultCaret
  *
  */
 object VyperWindow {
-    private const val ID_TOOL_WINDOW = "Vyper Tools" // also dispay name name
-    private const val ID_COMPILER_TAB = "Compiler Output"
+    internal const val ID_TOOL_WINDOW = "Vyper Tools" // also dispay name name
+    internal const val ID_COMPILER_TAB = "Compiler Output"
     private const val ID_RUN_TAB = "Run Output"
     private const val ID_ANALYZE_TAB = "Analyze Output"
-
-
     private const val NAME_TAB_TEXT_PANE = "Compiler_text_pane"
 
     enum class VyperWindowTab {
@@ -69,7 +67,7 @@ object VyperWindow {
      * Return concrete component where output would be written
      * If not exists then it would be created
      */
-    private fun getTabById(project: Project, tabId: String): JTextPane {
+    internal fun getTabById(project: Project, tabId: String): JTextPane {
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ID_TOOL_WINDOW)
             ?: throw Exception("Tool window was not registered")
         var tab = toolWindow.contentManager.findContent(tabId)
@@ -93,16 +91,13 @@ object VyperWindow {
     private fun findComponentByUniqueName(name: String, parent: Container, depth: Int = 2): Component? {
         if (depth <= 0) return null
 
-        for (p in parent.components) {
-            if (p.name == name) {
-                return p
-            } else {
-                if (p !is Container) continue
+        for (p in parent.components) when {
+            p.name == name -> return p
+            p is Container -> {
                 val res = findComponentByUniqueName(name, p, depth - 1)
                 if (res != null) return res
             }
         }
         return null
     }
-
 }

@@ -20,15 +20,13 @@ class CompileVyperFileAction : VyperAction() {
 
         val files = getClickedFiles(e)?.filter { it.path.contains(vyExtensionRegExp) }?.toTypedArray()
 
-        if (files == null || files.isEmpty()) {
-            return org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue().display()
+        if (files.isNullOrEmpty()) {
+            return NoFilesWithVyperAreSelectedDialogue().display()
         }
-
 
         ApplicationManager.getApplication().runWriteAction {
             FileDocumentManager.getInstance().saveAllDocuments()
         }
-
 
         ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Compiling Vyper") {
             override fun run(indicator: ProgressIndicator) {
@@ -42,5 +40,4 @@ class CompileVyperFileAction : VyperAction() {
             }
         })
     }
-
 }
