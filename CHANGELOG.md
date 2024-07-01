@@ -4,8 +4,9 @@
 
 ## [Unreleased]
 
-- Add support for vyi files ([#17](https://github.com/NikitaMishin/vyper-plugin/issues/17))
-  - This includes specific errors to vyi vs vyper files
+- Add support for vyi files ([#17](https://github.com/NikitaMishin/vyper-plugin/issues/17)), including specific errors to vyi vs vyper files
+- Remove MythX and SmartCheck as they are deprecated ([#26](https://github.com/NikitaMishin/vyper-plugin/issues/26))
+- Remove run action and update compile action ([#27](https://github.com/NikitaMishin/vyper-plugin/issues/27))
 - New file icons
 
 ## [0.2.0-alpha.2] - 2024-06-26
