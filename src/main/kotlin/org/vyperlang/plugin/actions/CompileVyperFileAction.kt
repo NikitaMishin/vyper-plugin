@@ -9,9 +9,11 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import org.vyperlang.plugin.compile.VyperCompiler
 import org.vyperlang.plugin.compile.VyperParameters
-import org.vyperlang.plugin.gui.smartcheck.NoFilesWithVyperAreSelectedDialogue
+import org.vyperlang.plugin.gui.NoFilesWithVyperAreSelectedDialogue
 import org.vyperlang.plugin.settings.VyperSettings
 
+
+private const val COMPILING_MESSAGE = "Compiling Vyper"
 
 class CompileVyperFileAction : VyperAction() {
 
@@ -28,16 +30,11 @@ class CompileVyperFileAction : VyperAction() {
             FileDocumentManager.getInstance().saveAllDocuments()
         }
 
-        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Compiling Vyper") {
-            override fun run(indicator: ProgressIndicator) {
-                VyperCompiler.compile(
-                    VyperParameters(
-                        ModuleManager.getInstance(project).modules.first(), project, files,
-                        VyperSettings.INSTANCE.getCompilerParamsArray(),
-                        VyperSettings.INSTANCE.generateStubs, VyperSettings.INSTANCE.fileExtension
-                    )
-                )
-            }
+        val module = ModuleManager.getInstance(project).modules.first()
+        val settings = VyperSettings.INSTANCE
+        val params = VyperParameters(module, project, files, settings.getCompilerParamsArray(), settings.generateStubs, settings.fileExtension)
+        ProgressManager.getInstance().run(object : Task.Backgroundable(project, COMPILING_MESSAGE) {
+            override fun run(indicator: ProgressIndicator) { VyperCompiler.compile(params, indicator) }
         })
     }
 }

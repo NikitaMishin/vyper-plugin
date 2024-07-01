@@ -83,7 +83,7 @@ def placeBid(bidder: address, _value: uint256) -> bool:
         return False
 
     # Refund the previously highest bidder
-    if (self.highestBidder != ZERO_ADDRESS):
+    if (self.highestBidder != empty(address)):
         self.pendingReturns[self.highestBidder] += self.highestBid
 
     # Place bid successfully and update auction state
@@ -128,9 +128,7 @@ def reveal(_numBids: int128, _values: uint256[128], _fakes: bool[128], _secrets:
 
         # Bid was not actually revealed
         # Do not refund deposit
-        if (blindedBid != bidToCheck.blindedBid):
-            assert 1 == 0
-            continue
+        assert blindedBid == bidToCheck.blindedBid
 
         # Add deposit to refund if bid was indeed revealed
         refund += bidToCheck.deposit
@@ -139,7 +137,7 @@ def reveal(_numBids: int128, _values: uint256[128], _fakes: bool[128], _secrets:
                 refund -= value
 
         # Make it impossible for the sender to re-claim the same deposit
-        zeroBytes32: bytes32 = EMPTY_BYTES32
+        zeroBytes32: bytes32 = empty(bytes32)
         bidToCheck.blindedBid = zeroBytes32
 
     # Send refund if non-zero

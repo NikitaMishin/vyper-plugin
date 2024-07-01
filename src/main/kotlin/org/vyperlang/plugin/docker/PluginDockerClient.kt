@@ -15,8 +15,4 @@ internal val dockerHttpClient = ApacheDockerHttpClient.Builder()
     .responseTimeout(Duration.ofSeconds(15))
     .build()
 
-class PluginDockerClient {
-    companion object {
-        val INSTANCE: DockerClient = DockerClientImpl.getInstance(dockerConfig, dockerHttpClient)
-    }
-}
+val PluginDockerClient by lazy { DockerClientImpl.getInstance(dockerConfig, dockerHttpClient)!! }

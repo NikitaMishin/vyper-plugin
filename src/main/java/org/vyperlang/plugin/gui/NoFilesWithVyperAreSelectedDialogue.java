@@ -1,4 +1,4 @@
-package org.vyperlang.plugin.gui.smartcheck;
+package org.vyperlang.plugin.gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -6,8 +6,6 @@ import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class NoFilesWithVyperAreSelectedDialogue extends JDialog {
     private JPanel contentPane;

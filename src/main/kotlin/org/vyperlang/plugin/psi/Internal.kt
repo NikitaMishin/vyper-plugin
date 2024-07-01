@@ -3,7 +3,6 @@ package org.vyperlang.plugin.psi
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import org.vyperlang.plugin.annotators.VyperCompilerListener
-import org.vyperlang.plugin.annotators.VyperSmartCheckListener
 
 class VyperInternalTypeFactory(project: Project) {
 
@@ -24,6 +23,5 @@ class VyperInternalTypeFactory(project: Project) {
         }
 
         VyperCompilerListener(project).listenAnalysis()
-        VyperSmartCheckListener(project).listenAnalysis()
     }
 }

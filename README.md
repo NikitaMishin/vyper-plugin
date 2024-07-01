@@ -6,7 +6,10 @@
 [![Release](https://github.com/NikitaMishin/vyper-plugin/actions/workflows/release.yml/badge.svg)](https://github.com/NikitaMishin/vyper-plugin/actions/workflows/release.yml)
 
 <!-- Plugin description -->
-Provides support for Vyper smart contract programming language.
+Vyper is a contract-oriented, pythonic programming language that targets the Ethereum Virtual Machine (EVM).
+It is designed to be a more secure alternative to Solidity, the most popular language for writing smart contracts on the Ethereum blockchain.
+Vyper is a statically-typed language with a syntax that is similar to Python, making it easy to learn and use for developers who are already familiar with Python.
+This plugin provides support for writing, compiling, and deploying Vyper smart contracts in JetBrains IDE's.
 <!-- Plugin description end -->
 
 ## Features:

@@ -1,30 +1,20 @@
 <idea-plugin require-restart="true">
     <id>org.vyperlang.plugin.vyper-plugin</id>
     <name>Vyper</name>
-    <version>2.1.3</version>
+    <version>0.0.0<!-- updated by changelog plugin --></version>
     <vendor email="https://github.com/NikitaMishin/vyper-plugin" url="https://github.com/NikitaMishin/vyper-plugin">VyperPluginSupport</vendor>
     <idea-version since-build="223.7571.182"/>
 
     <description>
-    <![CDATA[
-    Provides support for Vyper language.
-    <p>The following features are available with IntelliJ IDEA:<ul>
-      <li>Vyper Compiler</li>
-      <li>SmartCheck Analyzer</li>
-      <li>Compiler error codes</li>
-    </ul>
-    </p>
-    ]]>
+        <!-- Automatically updated by the changelog plugin -->
+        Vyper is a contract-oriented, pythonic programming language that targets the Ethereum Virtual Machine (EVM).
     </description>
 
-    <change-notes>Troubleshooting compatibility issues.</change-notes>
+    <change-notes><!-- Automatically filled by the changelog plugin --></change-notes>
 
     <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-        <!--        <fileTypeFactory implementation="org.vyperlang.plugin.VyperFileTypeFactory"/>-->
-
         <fileType name="Vyper file" implementationClass="org.vyperlang.plugin.VyperFileType"
                   fieldName="INSTANCE" language="Vyper" extensions="vy"/>
         <fileType name="Vyper interface file" implementationClass="org.vyperlang.plugin.VyperInterfaceFileType"
@@ -54,11 +44,6 @@
 
         <applicationService serviceImplementation="org.vyperlang.plugin.settings.VyperSettings"/>
         <applicationConfigurable groupId="language" displayName="Vyper" id="preferences.Vyper" instance="org.vyperlang.plugin.settings.VyperSettingsConfigurable"/>
-
-        <!--TODO lang formatter -->
-        <!--        <lang.formatter language="Vyper" implementationClass="org.vyperlang.plugin.formating.VyperFormattingModelBuilder"/>-->
-        <codeInsight.lineMarkerProvider language="Vyper" implementationClass="org.vyperlang.plugin.run.VyperRunMethodLineMarkerProvider"/>
-
     </extensions>
 
     <actions>
@@ -68,17 +53,9 @@
                 description="Create new Vyper file">
             <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
         </action>
-        <action id="vyper.smartcheckanalyze"
-                class="org.vyperlang.plugin.actions.SmartCheckAnalyzeAction"
-                text="Smart_Check_Analyze"
-                description="Analyze vyper code with smartcheck">
-            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl G"/>
-            <add-to-group group-id="AnalyzeActions" anchor="first"/>
-        </action>
 
         <!-- VyperActions -->
-        <group id="VyperActions">
-        </group>
+        <group id="VyperActions" />
 
         <group id="VyperMenu" text="_Vyper" popup="true">
             <separator/>
@@ -86,45 +63,17 @@
             <add-to-group group-id="MainMenu" anchor="after" relative-to-action="WindowMenu"/>
         </group>
 
-
         <group id="VyperGroup" text="Vyper Actions">
             <action id="Vyper.Compile" text="Compile"
                     description="Compile vyper file"
                     class="org.vyperlang.plugin.actions.CompileVyperFileAction">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl S"/>
             </action>
-            <!--       <action id="Vyper.BuildProject"
-                           class="org.vyperlang.plugin.actions.CompileVyperFileAction"
-                           text="Build project" description="Compile all Vyper files">
-                       <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl V"/>
-                   </action>
-              -->
-
-
-            <action id="Vyper.Run"
-                    text="Run Methods" description="Test contract"
-                    class="org.vyperlang.plugin.actions.VyperRunAction">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl R" />
-            </action>>
-            <action id="Vyper.MythX" text="Analyze_with_MythX"
-                    description="Analyze bytecode of contract with MythX"
-                    class="org.vyperlang.plugin.actions.MythXAnalyzeAction">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl L"/>
-            </action>
-
-            <reference ref="vyper.smartcheckanalyze"/>
-
             <add-to-group group-id="VyperMenu" anchor="first"/>
         </group>
-
 
         <reference ref="VyperMenu">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorPopupMenu1"/>
         </reference>
-
-
     </actions>>
-    <!-- Add your actions here -->
-
-
 </idea-plugin>
