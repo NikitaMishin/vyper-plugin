@@ -226,14 +226,11 @@ FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef Functi
 }
 
 
-//FunctionModifier ::= (&INDEQ FunctionModifierOptional)* (&INDEQ FunctionModifierMandatory) (&INDEQ FunctionModifierOptional)*
-//private FunctionModifierMandatory ::= DECORATOR ((&INDNONE public) | (&INDNONE private)) {pin = 1}
-FunctionDecorator ::= public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')
-FunctionModifier ::=  (DECORATOR (&INDNONE FunctionDecorator)) {
-    pin = 1
-}
-
-UNIQUE_KEY ::=  stringLiteralSingle | stringLiteralDouble
+private FunctionVisibility ::= external | internal | deploy
+private FunctionMutability ::= pure | view | nonpayable | payable
+FunctionDecorator ::= FunctionVisibility | FunctionMutability | (nonreentrant ((&INDNONE '(') FunctionEntrancyKey ')')?)
+FunctionModifier ::=  (DECORATOR (&INDNONE FunctionDecorator)) { pin = 1 }
+FunctionEntrancyKey ::=  stringLiteralSingle | stringLiteralDouble
 
 // statements
 Statement ::= PassStatement

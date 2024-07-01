@@ -103,6 +103,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitFunctionDefElement(o);
   }
 
+  public void visitFunctionEntrancyKey(@NotNull VyperFunctionEntrancyKey o) {
+    visitElement(o);
+  }
+
   public void visitFunctionImplementation(@NotNull VyperFunctionImplementation o) {
     visitElement(o);
   }
@@ -233,10 +237,6 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitTupleAssignmentExpression(@NotNull VyperTupleAssignmentExpression o) {
     visitExpression(o);
-  }
-
-  public void visitUniqueKey(@NotNull VyperUniqueKey o) {
-    visitElement(o);
   }
 
   public void visitUnaryExpression(@NotNull VyperUnaryExpression o) {

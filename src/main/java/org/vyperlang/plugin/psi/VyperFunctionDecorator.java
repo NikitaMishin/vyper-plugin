@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface VyperFunctionDecorator extends VyperElement {
 
   @Nullable
-  VyperUniqueKey getUniqueKey();
+  VyperFunctionEntrancyKey getFunctionEntrancyKey();
 
 }

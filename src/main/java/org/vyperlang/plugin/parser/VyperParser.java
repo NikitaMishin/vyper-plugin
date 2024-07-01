@@ -1278,51 +1278,62 @@ public class VyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // public | internal | view | pure | external | private | nonpayable | payable | (nonreentrant (&INDNONE '(') UNIQUE_KEY ')')
+  // FunctionVisibility | FunctionMutability | (nonreentrant ((&INDNONE '(') FunctionEntrancyKey ')')?)
   public static boolean FunctionDecorator(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionDecorator")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, FUNCTION_DECORATOR, "<function decorator>");
-    r = consumeToken(b, PUBLIC);
-    if (!r) r = consumeToken(b, INTERNAL);
-    if (!r) r = consumeToken(b, VIEW);
-    if (!r) r = consumeToken(b, PURE);
-    if (!r) r = consumeToken(b, EXTERNAL);
-    if (!r) r = consumeToken(b, PRIVATE);
-    if (!r) r = consumeToken(b, NONPAYABLE);
-    if (!r) r = consumeToken(b, PAYABLE);
-    if (!r) r = FunctionDecorator_8(b, l + 1);
+    r = FunctionVisibility(b, l + 1);
+    if (!r) r = FunctionMutability(b, l + 1);
+    if (!r) r = FunctionDecorator_2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // nonreentrant (&INDNONE '(') UNIQUE_KEY ')'
-  private static boolean FunctionDecorator_8(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FunctionDecorator_8")) return false;
+  // nonreentrant ((&INDNONE '(') FunctionEntrancyKey ')')?
+  private static boolean FunctionDecorator_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionDecorator_2")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, NONREENTRANT);
-    r = r && FunctionDecorator_8_1(b, l + 1);
-    r = r && UNIQUE_KEY(b, l + 1);
+    r = r && FunctionDecorator_2_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // ((&INDNONE '(') FunctionEntrancyKey ')')?
+  private static boolean FunctionDecorator_2_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionDecorator_2_1")) return false;
+    FunctionDecorator_2_1_0(b, l + 1);
+    return true;
+  }
+
+  // (&INDNONE '(') FunctionEntrancyKey ')'
+  private static boolean FunctionDecorator_2_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionDecorator_2_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = FunctionDecorator_2_1_0_0(b, l + 1);
+    r = r && FunctionEntrancyKey(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // &INDNONE '('
-  private static boolean FunctionDecorator_8_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FunctionDecorator_8_1")) return false;
+  private static boolean FunctionDecorator_2_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionDecorator_2_1_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = FunctionDecorator_8_1_0(b, l + 1);
+    r = FunctionDecorator_2_1_0_0_0(b, l + 1);
     r = r && consumeToken(b, LPAREN);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // &INDNONE
-  private static boolean FunctionDecorator_8_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FunctionDecorator_8_1_0")) return false;
+  private static boolean FunctionDecorator_2_1_0_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionDecorator_2_1_0_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -1374,6 +1385,19 @@ public class VyperParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indEq(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // stringLiteralSingle | stringLiteralDouble
+  public static boolean FunctionEntrancyKey(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionEntrancyKey")) return false;
+    if (!nextTokenIs(b, "<function entrancy key>", STRINGLITERALDOUBLE, STRINGLITERALSINGLE)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, FUNCTION_ENTRANCY_KEY, "<function entrancy key>");
+    r = consumeToken(b, STRINGLITERALSINGLE);
+    if (!r) r = consumeToken(b, STRINGLITERALDOUBLE);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -1515,6 +1539,29 @@ public class VyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // pure | view | nonpayable | payable
+  static boolean FunctionMutability(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionMutability")) return false;
+    boolean r;
+    r = consumeToken(b, PURE);
+    if (!r) r = consumeToken(b, VIEW);
+    if (!r) r = consumeToken(b, NONPAYABLE);
+    if (!r) r = consumeToken(b, PAYABLE);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // external | internal | deploy
+  static boolean FunctionVisibility(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionVisibility")) return false;
+    boolean r;
+    r = consumeToken(b, EXTERNAL);
+    if (!r) r = consumeToken(b, INTERNAL);
+    if (!r) r = consumeToken(b, DEPLOY);
     return r;
   }
 
@@ -2708,19 +2755,6 @@ public class VyperParser implements PsiParser, LightPsiParser {
     if (!r) r = MapType(b, l + 1);
     if (!r) r = ValueType(b, l + 1);
     if (!r) r = StructType(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // stringLiteralSingle | stringLiteralDouble
-  public static boolean UNIQUE_KEY(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "UNIQUE_KEY")) return false;
-    if (!nextTokenIs(b, "<unique key>", STRINGLITERALDOUBLE, STRINGLITERALSINGLE)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, UNIQUE_KEY, "<unique key>");
-    r = consumeToken(b, STRINGLITERALSINGLE);
-    if (!r) r = consumeToken(b, STRINGLITERALDOUBLE);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

@@ -39,7 +39,6 @@
 
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperColorAnnotator"/>
-        <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.SmartCheckAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.CompilerAnnotator"/>
 
         <applicationService serviceImplementation="org.vyperlang.plugin.settings.VyperSettings"/>

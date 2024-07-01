@@ -11,14 +11,14 @@ import static org.vyperlang.plugin.psi.VyperTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperUniqueKeyImpl extends ASTWrapperPsiElement implements VyperUniqueKey {
+public class VyperFunctionEntrancyKeyImpl extends ASTWrapperPsiElement implements VyperFunctionEntrancyKey {
 
-  public VyperUniqueKeyImpl(@NotNull ASTNode node) {
+  public VyperFunctionEntrancyKeyImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitUniqueKey(this);
+    visitor.visitFunctionEntrancyKey(this);
   }
 
   @Override
