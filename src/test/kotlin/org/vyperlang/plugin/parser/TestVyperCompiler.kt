@@ -10,6 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertTrue
 import org.vyperlang.plugin.VyperIcons
+import org.vyperlang.plugin.annotators.VYPER_ERROR_REGEX
 import org.vyperlang.plugin.compile.VyperCompiler
 import org.vyperlang.plugin.compile.VyperParameters
 import org.vyperlang.plugin.docker.CompilerMissingError
@@ -20,7 +21,7 @@ import org.vyperlang.plugin.toolWindow.VyperWindow
 
 class TestVyperCompiler : BasePlatformTestCase() {
     override fun getTestDataPath(): String {
-        return "src/test/resources/examples"
+        return "src/test/resources"
     }
 
     @Suppress("UnstableApiUsage") // https://intellij-support.jetbrains.com/hc/en-us/community/posts/7684067077650/comments/7713173276050
@@ -40,10 +41,17 @@ class TestVyperCompiler : BasePlatformTestCase() {
     }
 
     fun testCompile() {
-        val result = compile("example.vy")
+        val result = compile("examples/example.vy")
         assertEmpty(result.stderr)
         assertMatches(result.stdout, "^0x([0-9a-f]{2})+$".toRegex())
         assertEquals(result.statusDocker, StatusDocker.SUCCESS)
+    }
+
+    fun testCompileError() {
+        val result = compile("TestCompilerAnnotator/syntax-exception.vy")
+        assertEmpty(result.stdout)
+        assertMatches(result.stderr, VYPER_ERROR_REGEX)
+        assertEquals(result.statusDocker, StatusDocker.FAILED)
     }
 
     private fun compile(fileName: String): ToolResult {

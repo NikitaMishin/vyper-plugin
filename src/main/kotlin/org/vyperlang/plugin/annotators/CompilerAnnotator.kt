@@ -16,7 +16,7 @@ import org.vyperlang.plugin.docker.CompilerMissingError
 
 data class FileInfo(val project: Project, val file: VirtualFile, val indicator: ProgressIndicator? = null)
 
-private val errorRegex = listOf(
+val VYPER_ERROR_REGEX = listOf(
     // ErrorType: error message\n
     "(\\w+): ([^\\n]+)\\n+",
     // (hint: optional)\n
@@ -71,7 +71,7 @@ class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), Du
 
     /** Parse the compiler stderr, return list of errors. */
     private fun parseErrors(stderr: String): List<CompilerError> {
-        val messages = errorRegex.findAll(stderr).map {
+        val messages = VYPER_ERROR_REGEX.findAll(stderr).map {
             val (errorType, message, hint, line, column) = it.destructured
             CompilerError(errorType, message.trim(), hint, line.toInt(), column.toInt())
         }.toList()
