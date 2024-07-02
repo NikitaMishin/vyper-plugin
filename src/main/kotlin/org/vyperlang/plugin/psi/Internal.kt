@@ -2,7 +2,6 @@ package org.vyperlang.plugin.psi
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
-import org.vyperlang.plugin.annotators.VyperCompilerListener
 
 class VyperInternalTypeFactory(project: Project) {
 
@@ -21,7 +20,5 @@ class VyperInternalTypeFactory(project: Project) {
     """.trimMargin()
             )
         }
-
-        VyperCompilerListener(project).listenAnalysis()
     }
 }

@@ -52,7 +52,7 @@ object VyperWindow {
      */
     private fun createTab(toolWindow: ToolWindow, tabName: String) {
         val textPane = JTextPane()
-        textPane.font = Font(Font.DIALOG, 0, textPane.font.size)
+        textPane.font = Font(Font.MONOSPACED, 0, textPane.font.size)
         textPane.name = NAME_TAB_TEXT_PANE
         textPane.isEditable = false
         val scrollPane = JBScrollPane(textPane)
