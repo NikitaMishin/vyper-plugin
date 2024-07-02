@@ -60,7 +60,6 @@ object VyperWindow {
         caret.updatePolicy = DefaultCaret.ALWAYS_UPDATE
         textPane.text = ""
         val content = toolWindow.contentManager.factory.createContent(scrollPane, tabName, false)
-        // make sure to use a font that is monospaced
         toolWindow.contentManager.addContent(content)
     }
 

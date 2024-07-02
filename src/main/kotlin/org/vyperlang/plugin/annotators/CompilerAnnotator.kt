@@ -16,26 +16,30 @@ import org.vyperlang.plugin.docker.CompilerMissingError
 
 data class FileInfo(val project: Project, val file: VirtualFile, val indicator: ProgressIndicator? = null)
 
-private val errorRegexes = listOf(
+private val errorRegex = listOf(
     // ErrorType: error message\n
-    "(\\w+): ([^\\n]+)\\n+" +
-            // (hint: optional)\n
-            "( +\\(hint: [^)]+\\)\\n+)?" +
-            // contract "x", function "y", line 1:1
-            " +(?:contract \"[^\"]+\", )?(?:function \"[^\"]+\", )?line (\\d+):(\\d+)"
-).map { it.toRegex(RegexOption.MULTILINE) }
+    "(\\w+): ([^\\n]+)\\n+",
+    // (hint: optional)\n
+    "( +\\(hint: [^)]+\\)\\n+)?",
+    // contract "x", function "y", line 1:1
+    " +(?:contract \"[^\"]+\", )?(?:function \"[^\"]+\", )?line (\\d+):(\\d+)"
+).joinToString("").toRegex(RegexOption.MULTILINE)
 
 val LOG: Logger = Logger.getInstance(CompilerAnnotator::class.java)
 
 /**
- * Annotator that listens to the compiler output and annotates the file accordingly
+ * Annotator that calls the compiler and annotates the file accordingly.
+ * By using the ExternalAnnotator, the compiler is only called when the file is saved and all background processes are finished.
  */
 class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), DumbAware {
 
+    /** 1st step of the external annotator: Collect information needed to run the compiler. */
     override fun collectInformation(file: PsiFile) = FileInfo(file.project, file.virtualFile)
 
+    /** 1st step of the external annotator: Collect information needed to run the compiler. */
     override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean) = collectInformation(file)
 
+    /** 2nd step of the external annotator: Run the compiler and return the result. */
     override fun doAnnotate(info: FileInfo?): List<CompilerError> {
         val result = try {
             VyperCompilerDocker(info!!.project, info.file, info.indicator).run()
@@ -49,33 +53,40 @@ class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), Du
         return emptyList()
     }
 
-    private fun parseErrors(stderr: String): List<CompilerError> {
-        val messages = errorRegexes.flatMap { it.findAll(stderr) }.map {
-            val (errorType, message, hint, line, column) = it.destructured
-            CompilerError(errorType, message.trim(), hint, line.toInt(), column.toInt())
-        }
-        if (messages.isEmpty()) {
-            LOG.warn("No error messages found in compiler output: $stderr")
-        }
-        return messages
-    }
-
+    /** 3rd step of the external annotator: Apply the annotations to the file. */
     override fun apply(file: PsiFile, annotationResult: List<CompilerError>, holder: AnnotationHolder) {
         annotationResult.forEach {
             val offset = file.text.lines().take(it.line - 1).sumOf { it.length + 1 } + it.column
             val element = file.findReferenceAt(file.textOffset + offset)?.element
                 ?: file.findElementAt(offset)
                 ?: file.findElementAt(offset - 1)
-                ?: file.findElementAt(offset - 1)
+                ?: file.findElementAt(offset - 2)
                 ?: file
-            holder.newAnnotation(
-                HighlightSeverity.ERROR,
-                it.message
-            ).range(element.textRange)
-                .tooltip(if (it.hint.isNullOrBlank()) it.errorType else it.hint)
+            holder.newAnnotation(HighlightSeverity.ERROR, it.message)
+                .range(element.textRange)
+                .tooltip("${it.message} (${if (it.hint.isNullOrBlank()) it.errorType else it.hint})")
                 .create()
         }
     }
+
+    /** Parse the compiler stderr, return list of errors. */
+    private fun parseErrors(stderr: String): List<CompilerError> {
+        val messages = errorRegex.findAll(stderr).map {
+            val (errorType, message, hint, line, column) = it.destructured
+            CompilerError(errorType, message.trim(), hint, line.toInt(), column.toInt())
+        }.toList()
+        if (messages.isEmpty()) {
+            LOG.warn("No error messages found in compiler output: $stderr")
+        }
+        return messages
+    }
 }
 
-data class CompilerError(val errorType: String, val message: String, val hint: String?, val line: Int, val column: Int)
+/** Data class to store compiler error information. */
+data class CompilerError(
+    val errorType: String,
+    val message: String,
+    val hint: String?,
+    val line: Int,
+    val column: Int
+)

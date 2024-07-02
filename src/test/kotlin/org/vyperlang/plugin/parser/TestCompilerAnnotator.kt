@@ -22,7 +22,7 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
 
     fun testSyntaxException() = testCase(
         "syntax-exception.vy",
-        ExpectedError("expected '(' (<unknown>, line 1)", 0 to 5, "SyntaxException"),
+        ExpectedError("expected '(' (<unknown>, line 1)", 4 to 5, "SyntaxException"),
     )
 
     fun testUndeclaredDefinition() = testCase(
@@ -64,6 +64,8 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
         ExpectedError("Cannot iterate over the result of a function call", 34 to 39, "IteratorException"),
     )
 
+    fun testOK() = testCase("ok.vy")
+
     private fun testCase(fileName: String, vararg expectedErrors: ExpectedError) {
         val info = fileInfo(fileName)
         val errors = CompilerAnnotator().doAnnotate(info)
@@ -76,7 +78,7 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
             expected.forEach {
                 every { newAnnotation(HighlightSeverity.ERROR, it.message) } returns mockk {
                     every { range(TextRange(it.range.first, it.range.second)) } returns this
-                    every { tooltip(it.tooltip) } returns this
+                    every { tooltip("${it.message} (${it.tooltip})") } returns this
                     every { create() } returns mockk()
                 }
             }
