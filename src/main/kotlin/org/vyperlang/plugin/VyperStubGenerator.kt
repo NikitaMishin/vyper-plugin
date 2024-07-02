@@ -17,7 +17,7 @@ import java.io.File
 object VyperStubGenerator {
 
     fun createStubInGenSourceFolder(
-        data: List<String>, module: Module, project: Project,
+        data: String, module: Module, project: Project,
         originalFile: VirtualFile, extension: String
     ): File {
         generateFolder(module, project)
@@ -36,12 +36,10 @@ object VyperStubGenerator {
                 file = File(filePath) // update because need refresh
                 val virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)!!
                 val document: Document = FileDocumentManager.getInstance().getDocument(virtualFile)!!
-
-                val text = data.joinToString("\n")
                 if (isFileExists) {
-                    document.setText(text)
+                    document.setText(data)
                 } else {
-                    document.replaceString(0, document.textLength, text)
+                    document.replaceString(0, document.textLength, data)
                 }
 
             }

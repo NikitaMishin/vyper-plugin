@@ -1,0 +1,1 @@
+from vyper.interfaces import foobar

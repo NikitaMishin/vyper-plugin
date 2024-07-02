@@ -45,7 +45,7 @@
         <annotator language="Vyper"
                    implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperColorAnnotator"/>
-        <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.CompilerAnnotator"/>
+        <externalAnnotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.CompilerAnnotator"/>
 
         <applicationService serviceImplementation="org.vyperlang.plugin.settings.VyperSettings"/>
         <applicationConfigurable groupId="language" displayName="Vyper" id="preferences.Vyper"

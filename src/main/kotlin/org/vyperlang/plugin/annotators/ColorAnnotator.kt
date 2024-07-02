@@ -33,9 +33,9 @@ class VyperColorAnnotator : Annotator {
         if (element is VyperFunctionBody && element.text == "...") {
             addError(holder, "Ellipsis is only allowed in `.vyi` files")
         }
-        if (element is VyperFunctionEntrancyKey) {
-            holder.newAnnotation(HighlightSeverity.WARNING, "Entrancy key is deprecated").create()
-        }
+//        if (element is VyperFunctionEntrancyKey) {
+//            holder.newAnnotation(HighlightSeverity.WARNING, "Entrancy key is deprecated").create()
+//        }
     }
 
     private fun highlightInterfaceFile(element: PsiElement, holder: AnnotationHolder) {
