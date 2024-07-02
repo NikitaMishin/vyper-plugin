@@ -7,18 +7,14 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 import org.vyperlang.plugin.VyperIcons
 
-private const val name = "Create empty Vyper file"
+private const val name = "Vyper contract"
 private const val description = "Empty Vyper file"
+private const val kind = "Empty file"
+private const val templateName = "Vyper File"
 
 class CreateVyperFileAction : CreateFileFromTemplateAction(name, description, VyperIcons.FILE) {
-//    override fun getActionName(directory: PsiDirectory?, newName: String?, templateName: String?): String = name
-//    override fun buildDialog(project: Project?, directory: PsiDirectory?, builder: CreateFileFromTemplateDialog.Builder) {
-//        builder.setTitle(name).addKind("Empty file", VyperIcons.FILE, "Vyper File")
-//
-//    }
-
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
-        builder.setTitle(name).addKind("Empty file", VyperIcons.FILE, "Vyper File")
+        builder.setTitle(name).addKind(kind, VyperIcons.FILE, templateName)
     }
 
     override fun getActionName(directory: PsiDirectory?, newName: String, templateName: String?): String = name

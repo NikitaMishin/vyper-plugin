@@ -10,11 +10,19 @@ import com.intellij.psi.PsiFile
 import org.vyperlang.plugin.docker.StatusDocker
 import org.vyperlang.plugin.docker.VyperCompilerDocker
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import org.vyperlang.plugin.docker.CompilerMissingError
 
-data class FileInfo(val file: PsiFile, val indicator: ProgressIndicator? = null)
+data class FileInfo(val project: Project, val file: VirtualFile, val indicator: ProgressIndicator? = null)
 
 private val errorRegexes = listOf(
-    "(\\w+): ([^\\n]+)\\n+( +\\(hint: [^)]+\\)\\n+)? +(?:contract \"[^\"]+\", function \"[^\"]+\", )?line (\\d+):(\\d+)"
+    // ErrorType: error message\n
+    "(\\w+): ([^\\n]+)\\n+" +
+            // (hint: optional)\n
+            "( +\\(hint: [^)]+\\)\\n+)?" +
+            // contract "x", function "y", line 1:1
+            " +(?:contract \"[^\"]+\", )?(?:function \"[^\"]+\", )?line (\\d+):(\\d+)"
 ).map { it.toRegex(RegexOption.MULTILINE) }
 
 val LOG: Logger = Logger.getInstance(CompilerAnnotator::class.java)
@@ -24,24 +32,27 @@ val LOG: Logger = Logger.getInstance(CompilerAnnotator::class.java)
  */
 class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), DumbAware {
 
-    override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): FileInfo {
-        return FileInfo(file)
-    }
+    override fun collectInformation(file: PsiFile) = FileInfo(file.project, file.virtualFile)
+
+    override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean) = collectInformation(file)
 
     override fun doAnnotate(info: FileInfo?): List<CompilerError> {
-        val file = info!!.file
-        val result = VyperCompilerDocker(file.project, file.virtualFile, info.indicator).run()
-        return when (result.statusDocker) {
-            StatusDocker.SUCCESS -> listOf()
-            StatusDocker.FAILED -> parseErrors(result.stderr)
-            else -> emptyList()
+        val result = try {
+            VyperCompilerDocker(info!!.project, info.file, info.indicator).run()
+        } catch (e: CompilerMissingError) {
+            LOG.error("Error while running compiler annotator", e)
+            null
         }
+        if (result?.statusDocker == StatusDocker.FAILED) {
+            return parseErrors(result.stderr);
+        }
+        return emptyList()
     }
 
     private fun parseErrors(stderr: String): List<CompilerError> {
         val messages = errorRegexes.flatMap { it.findAll(stderr) }.map {
             val (errorType, message, hint, line, column) = it.destructured
-            CompilerError(errorType, message, hint, line.toInt(), column.toInt())
+            CompilerError(errorType, message.trim(), hint, line.toInt(), column.toInt())
         }
         if (messages.isEmpty()) {
             LOG.warn("No error messages found in compiler output: $stderr")
@@ -51,16 +62,18 @@ class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), Du
 
     override fun apply(file: PsiFile, annotationResult: List<CompilerError>, holder: AnnotationHolder) {
         annotationResult.forEach {
-            val element = file.findElementAt(
-                file.textOffset + file.text.lines().take(it.line - 1).sumOf { it.length + 1 } + it.column)
-            if (element != null) {
-                holder.newAnnotation(
-                    HighlightSeverity.ERROR,
-                     it.message
-                ).range(element.textRange)
-                    .tooltip(if (it.hint.isNullOrBlank()) it.errorType else it.hint)
-                    .create()
-            }
+            val offset = file.text.lines().take(it.line - 1).sumOf { it.length + 1 } + it.column
+            val element = file.findReferenceAt(file.textOffset + offset)?.element
+                ?: file.findElementAt(offset)
+                ?: file.findElementAt(offset - 1)
+                ?: file.findElementAt(offset - 1)
+                ?: file
+            holder.newAnnotation(
+                HighlightSeverity.ERROR,
+                it.message
+            ).range(element.textRange)
+                .tooltip(if (it.hint.isNullOrBlank()) it.errorType else it.hint)
+                .create()
         }
     }
 }

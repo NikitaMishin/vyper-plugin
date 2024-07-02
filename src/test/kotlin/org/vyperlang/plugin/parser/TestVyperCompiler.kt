@@ -15,7 +15,7 @@ import org.vyperlang.plugin.docker.ToolResult
 import org.vyperlang.plugin.settings.VyperSettings
 import org.vyperlang.plugin.toolWindow.VyperWindow
 
-class TestCompile : BasePlatformTestCase() {
+class TestVyperCompiler : BasePlatformTestCase() {
     override fun getTestDataPath(): String {
         return "src/test/resources/examples"
     }
@@ -36,7 +36,7 @@ class TestCompile : BasePlatformTestCase() {
     }
 
     private fun compile(fileName: String): ToolResult {
-        val file = LocalFileSystem.getInstance().refreshAndFindFileByPath("${testDataPath}/${fileName}")
+        val file = LocalFileSystem.getInstance().findFileByPath("${testDataPath}/${fileName}")
         val files = listOf(file!!)
         val module = ModuleManager.getInstance(project).modules.first()
         val settings = VyperSettings.INSTANCE

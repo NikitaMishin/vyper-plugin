@@ -4,6 +4,7 @@ import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.exception.DockerException
 import com.github.dockerjava.api.model.*
 import com.intellij.ide.BrowserUtil
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -28,6 +29,8 @@ data class ToolResult(val stdout: String, val stderr: String, val file: VirtualF
 private const val DOCKER_IMAGE_NOT_FOUND_HTML = "<html>Image is not found in your system. " +
         "It may take a while to download it. " +
         "Please wait</html>"
+
+val LOG: Logger = Logger.getInstance(VyperCompilerDocker::class.java)
 
 /**
  * Vyper compiler that runs inside docker container
@@ -74,6 +77,7 @@ class VyperCompilerDocker(
                 project
             )
         )
+        LOG.info("Pulling docker image $image:$imageTag")
         return PluginDockerClient.pullImageCmd(image)
             .withTag(imageTag)
             .exec(VyperPullImageAdapter(indicator))
@@ -95,6 +99,7 @@ class VyperCompilerDocker(
             .id
 
         PluginDockerClient.startContainerCmd(containerId).exec()
+        LOG.info("Container $containerId started")
 
         val frames = VyperFrameStreamAdapter()
         PluginDockerClient
@@ -116,23 +121,20 @@ class VyperCompilerDocker(
         }
         return ToolResult(frames.logs, frames.errors, file, status)
     }
-
-    companion object {
-        private var isNotified = false
-    }
 }
 
 private class VyperFrameStreamAdapter : ResultCallback.Adapter<Frame>() {
-    private val streams = HashMap<StreamType, StringBuilder>();
+    private val streams = HashMap<StreamType, StringBuilder>()
     val errors: String get() = streams[StreamType.STDERR]?.toString() ?: ""
     val logs: String get() = streams[StreamType.STDOUT]?.toString() ?: ""
     override fun onNext(item: Frame) {
         val builder = streams.computeIfAbsent(item.streamType) { StringBuilder() }
-        builder.append(String(item.payload) )
+        builder.append(String(item.payload))
     }
 }
 
-private class VyperPullImageAdapter(private val indicator: ProgressIndicator?) : ResultCallback.Adapter<PullResponseItem>() {
+private class VyperPullImageAdapter(private val indicator: ProgressIndicator?) :
+    ResultCallback.Adapter<PullResponseItem>() {
     /**
      * Map of layer id to the `current` and `total` progress of that layer.
      * As the layers get known, the total progress can go backwards a bit, but it's still quite helpful to have.
