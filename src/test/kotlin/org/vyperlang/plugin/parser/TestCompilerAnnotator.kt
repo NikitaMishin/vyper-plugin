@@ -11,7 +11,6 @@ import io.mockk.mockk
 import org.vyperlang.plugin.annotators.CompilerAnnotator
 import org.vyperlang.plugin.annotators.CompilerError
 import org.vyperlang.plugin.annotators.FileInfo
-import kotlin.math.pow
 
 data class ExpectedError(val message: String, val range: Pair<Int, Int>, val tooltip: String="")
 
@@ -90,6 +89,6 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
 
     private fun fileInfo(fileName: String): FileInfo {
         val file = LocalFileSystem.getInstance().findFileByPath("${testDataPath}/$fileName")!!
-        return FileInfo(project, file)
+        return FileInfo(project, file, mockk(relaxed = true))
     }
 }

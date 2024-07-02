@@ -133,8 +133,7 @@ private class VyperFrameStreamAdapter : ResultCallback.Adapter<Frame>() {
     }
 }
 
-private class VyperPullImageAdapter(private val indicator: ProgressIndicator?) :
-    ResultCallback.Adapter<PullResponseItem>() {
+private class VyperPullImageAdapter(private val indicator: ProgressIndicator?) : ResultCallback.Adapter<PullResponseItem>() {
     /**
      * Map of layer id to the `current` and `total` progress of that layer.
      * As the layers get known, the total progress can go backwards a bit, but it's still quite helpful to have.

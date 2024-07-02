@@ -30,7 +30,7 @@ object VyperCompiler {
     private const val COMPILATION_EMPTY = "Compilation empty"
     private const val COMPILATION_SUCCESS = "Compilation succeed"
 
-    fun compile(params: VyperParameters, indicator: ProgressIndicator?) =
+    fun compile(params: VyperParameters, indicator: ProgressIndicator? = null) =
         try {
             params.files.map {
                 val compiler =

@@ -6,10 +6,13 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.RegisterToolWindowTask
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Assert.assertTrue
 import org.vyperlang.plugin.VyperIcons
 import org.vyperlang.plugin.compile.VyperCompiler
 import org.vyperlang.plugin.compile.VyperParameters
+import org.vyperlang.plugin.docker.CompilerMissingError
 import org.vyperlang.plugin.docker.StatusDocker
 import org.vyperlang.plugin.docker.ToolResult
 import org.vyperlang.plugin.settings.VyperSettings
@@ -26,6 +29,14 @@ class TestVyperCompiler : BasePlatformTestCase() {
         ToolWindowManager.getInstance(project).registerToolWindow(
             RegisterToolWindowTask.closable(VyperWindow.ID_TOOL_WINDOW, VyperIcons.FILE) // , true, ToolWindowAnchor.RIGHT, project, true)
         )
+    }
+
+    fun testMissingDocker() {
+        val params = mockk<VyperParameters> {
+            every { files } throws CompilerMissingError(Exception("Docker is not installed"))
+            every { project } returns myFixture.project
+        }
+        assertNull(VyperCompiler.compile(params))
     }
 
     fun testCompile() {
