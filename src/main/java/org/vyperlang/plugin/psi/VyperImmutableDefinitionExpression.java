@@ -5,6 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperStateVariableModifier extends VyperElement {
+public interface VyperImmutableDefinitionExpression extends VyperExpression, VyperNamedElement {
+
+  @Nullable
+  VyperType getType();
+
+  @NotNull
+  PsiElement getIdentifier();
 
 }

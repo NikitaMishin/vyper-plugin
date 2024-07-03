@@ -22,7 +22,7 @@ class TestFindUsages : BasePlatformTestCase() {
             def __init__() -> uint256:
                 ab = 1
         """
-        checkUsages(code) // todo: immutables are not yet supported
+        checkUsages(code, 62 to 64)
     }
 
     fun testFunctionParam() {

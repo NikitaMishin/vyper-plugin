@@ -29,12 +29,6 @@ public class VyperStateVariableTypeImpl extends ASTWrapperPsiElement implements 
 
   @Override
   @Nullable
-  public VyperStateVariableModifier getStateVariableModifier() {
-    return findChildByClass(VyperStateVariableModifier.class);
-  }
-
-  @Override
-  @Nullable
   public VyperStateVariableType getStateVariableType() {
     return findChildByClass(VyperStateVariableType.class);
   }

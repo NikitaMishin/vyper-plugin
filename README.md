@@ -38,10 +38,8 @@ To generate files for the plugin we use the [Grammar Kit](https://plugins.jetbra
 To generate the files, you should have the plugin installed.
 - Run the `Generate Parser Code` task in the `Vyper.bnf` file.
   That generates `VyperParser.java` and `psi` files.
-  - However, the generator is not fully Kotlin compatible.
-    We need to add a `Companion` call to [`parseLight`](./src/main/java/com/vyperplugin/parser/VyperParser.java) (line 24) manually.
-  - If some grammar elements are removed, old `psi` files may be left in the project.
-    They should be removed manually.
+  - When grammar elements are removed, old `psi` files are not deleted automatically.
+    Just delete the whole [`psi` folder](./org/vyperlang/plugin/psi) and regenerate it.
 - Run the `Generate JFlex Lexer` task in the `Vyper.bnf` file.
   That generates `_VyperLexer.flex` file.
 - Run the `Run JFlex Generator` task in the `_VyperLexer.flex` file.

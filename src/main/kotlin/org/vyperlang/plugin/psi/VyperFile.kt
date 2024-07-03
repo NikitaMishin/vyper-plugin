@@ -8,14 +8,9 @@ import org.vyperlang.plugin.VyperLanguage
 
 class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, VyperLanguage) {
 
-    override fun getFileType(): FileType {
-        return viewProvider.fileType
-    }
+    override fun getFileType(): FileType = viewProvider.fileType
 
-    override fun toString(): String {
-        return fileType.name
-    }
+    override fun toString(): String = fileType.name
 
-    fun getStatements(): List<VyperElement> =
-        PsiTreeUtil.getChildrenOfAnyType(this, VyperElement::class.java)
+    val statements: List<VyperElement> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperElement::class.java)
 }

@@ -24,9 +24,11 @@ class VyperFindUsagesProvider : FindUsagesProvider {
 
     override fun getType(element: PsiElement): String = when (element) {
         is VyperStateVariableDeclaration -> "state variable"
-        is VyperLocalVariableDeclaration -> "local variable"
+        is VyperLocalVariableDefinition -> "local variable"
         is VyperFunctionDefinition -> "function"
         is VyperStructDefinition -> "struct"
+        is VyperConstantDefinitionExpression -> "constant"
+        is VyperImmutableDefinitionExpression -> "immutable"
         else -> ""
     }
 
@@ -34,9 +36,11 @@ class VyperFindUsagesProvider : FindUsagesProvider {
 
     override fun getNodeText(element: PsiElement, useFullName: Boolean): String = when (element) {
         is VyperStateVariableDeclaration -> element.name + "state variable"
-        is VyperLocalVariableDeclaration -> element.name + "local variable"
+        is VyperLocalVariableDefinition -> element.name + "local variable"
         is VyperFunctionDefinition -> element.name + "function"
         is VyperStructDefinition -> element.text + "struct"
+        is VyperConstantDefinitionExpression -> element.name + "constant"
+        is VyperImmutableDefinitionExpression -> element.name + "immutable"
         else -> ""
     }
 }

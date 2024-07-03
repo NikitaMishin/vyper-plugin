@@ -30,21 +30,28 @@ class TestCompletion : BasePlatformTestCase() {
                     z: uint256 = x + <caret>
                     return z
             """.trimIndent(),
-            "a", "z", "x", "y" // todo: 'b' should be there instead of 'z'
+            "a", "b", "x", "y"
         )
     }
 
     fun testConstantTypeCompletion() {
         checkCompletion(
             "a: constant(<caret>",
-            "address", "bool", "bytes32", "bytes[]", "HashMap[]", "int128", "map()", "string[]", "uint256"
+            "address", "bool", "bytes32", "bytes[", "int128", "string[", "uint256"
+        )
+    }
+
+    fun testImmutableTypeCompletion() {
+        checkCompletion(
+            "a: public(immutable(<caret>",
+            "address", "bool", "bytes32", "bytes[", "int128", "string[", "uint256"
         )
     }
 
     fun testTypeCompletion() {
         checkCompletion(
-            "a: <caret>", // todo: should include `immutable` and `constant` too
-            "address", "bool", "bytes32", "bytes[]", "HashMap[]", "int128", "map()", "string[]", "uint256"
+            "a: <caret>",
+            "address", "bool", "bytes32", "bytes[", "constant(", "DynArray[]", "HashMap[]", "immutable(", "int128", "public(", "string[", "uint256"
         )
     }
 
@@ -59,7 +66,7 @@ class TestCompletion : BasePlatformTestCase() {
                     b = 1
                     <caret>
             """.trimIndent(),
-            "a" // todo: "b" should be here too
+            "a", "b"
         )
     }
 
@@ -69,23 +76,14 @@ class TestCompletion : BasePlatformTestCase() {
                 a: constant(uint256) = 1
                 b: constant(uint256) = <caret>
             """.trimIndent(),
-            "a", "b"  // todo: b should not be here
+            "a"
         )
     }
 
     fun testCompletionInDecorator() {
         checkCompletion(
             "@<caret>",
-            "public",
-            "private",
-            "payable",
-            "nonreentrant()",
-            "modifying",
-            "constant",
-            "external",
-            "view",
-            "internal",
-            "pure"
+            "deploy", "external", "internal", "nonreentrant(\"lock\")", "payable", "pure", "view",
         )
     }
 

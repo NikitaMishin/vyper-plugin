@@ -7,6 +7,8 @@ import com.intellij.openapi.util.Key
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
+import org.vyperlang.plugin.parser.ParserUtil.Companion.parserStateKey
+import org.vyperlang.plugin.parser.ParserUtil.ParserState
 
 
 class ParserUtil : GeneratedParserUtilBase() {
@@ -53,7 +55,6 @@ class ParserUtil : GeneratedParserUtilBase() {
     }
 
     companion object {
-
         private val parserStateKey: Key<ParserState> = Key("parser-state")
 
         fun getParserState(builder_: PsiBuilder) = builder_.getUserData(parserStateKey)
@@ -131,13 +132,13 @@ class ParserUtil : GeneratedParserUtilBase() {
         }
 
         fun adapt_builder_(
-            root: IElementType,
-            builder_: PsiBuilder,
+            root: IElementType?,
+            builder_: PsiBuilder?,
             parser: PsiParser,
             extendsSet: Array<TokenSet>
         ): PsiBuilder {
             val psiBuilder = GeneratedParserUtilBase.adapt_builder_(root, builder_, parser, extendsSet)
-            val state = ParserState(builder_)
+            val state = ParserState(builder_!!)
             psiBuilder.putUserData(parserStateKey, state)
             return psiBuilder
         }

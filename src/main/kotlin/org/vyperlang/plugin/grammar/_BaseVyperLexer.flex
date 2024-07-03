@@ -10,13 +10,13 @@ import static org.vyperlang.plugin.psi.VyperTypes.*;
 %%
 
 %{
-  public _VyperLexer() {
+  public _BaseVyperLexer() {
     this((java.io.Reader)null);
   }
 %}
 
 %public
-%class _VyperLexer
+%class _BaseVyperLexer
 %implements FlexLexer
 %function advance
 %type IElementType
@@ -95,13 +95,14 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "public"                     { return PUBLIC; }
   "immutable"                  { return IMMUTABLE; }
   "constant"                   { return CONSTANT; }
-  "private"                    { return PRIVATE; }
   "nonreentrant"               { return NONREENTRANT; }
   "payable"                    { return PAYABLE; }
   "nonpayable"                 { return NONPAYABLE; }
   "external"                   { return EXTERNAL; }
-  "view"                       { return VIEW; }
+  "internal"                   { return INTERNAL; }
+  "deploy"                     { return DEPLOY; }
   "pure"                       { return PURE; }
+  "view"                       { return VIEW; }
   "event"                      { return EVENT; }
   "range"                      { return RANGE; }
   "string"                     { return STRING; }
@@ -113,8 +114,6 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "interface"                  { return INTERFACE; }
   "def"                        { return DEF; }
   "struct"                     { return STRUCT; }
-  "internal"                   { return INTERNAL; }
-  "deploy"                     { return DEPLOY; }
   "elif"                       { return ELIF; }
   "else"                       { return ELSE; }
   "if"                         { return IF; }

@@ -11,26 +11,20 @@ import static org.vyperlang.plugin.psi.VyperTypes.*;
 import org.vyperlang.plugin.psi.VyperNamedElementImpl;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperUserDefinedConstantsExpressionImpl extends VyperNamedElementImpl implements VyperUserDefinedConstantsExpression {
+public class VyperImmutableDefinitionExpressionImpl extends VyperNamedElementImpl implements VyperImmutableDefinitionExpression {
 
-  public VyperUserDefinedConstantsExpressionImpl(@NotNull ASTNode node) {
+  public VyperImmutableDefinitionExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitUserDefinedConstantsExpression(this);
+    visitor.visitImmutableDefinitionExpression(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof VyperVisitor) accept((VyperVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public VyperExpression getExpression() {
-    return findChildByClass(VyperExpression.class);
   }
 
   @Override

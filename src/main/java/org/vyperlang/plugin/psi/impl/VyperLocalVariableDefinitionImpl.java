@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.vyperlang.plugin.psi.VyperNamedElementImpl;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperLocalVariableDefinitionImpl extends ASTWrapperPsiElement implements VyperLocalVariableDefinition {
+public class VyperLocalVariableDefinitionImpl extends VyperNamedElementImpl implements VyperLocalVariableDefinition {
 
   public VyperLocalVariableDefinitionImpl(@NotNull ASTNode node) {
     super(node);
@@ -35,8 +35,14 @@ public class VyperLocalVariableDefinitionImpl extends ASTWrapperPsiElement imple
 
   @Override
   @NotNull
-  public VyperLocalVariableDeclaration getLocalVariableDeclaration() {
-    return findNotNullChildByClass(VyperLocalVariableDeclaration.class);
+  public VyperType getType() {
+    return findNotNullChildByClass(VyperType.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getIdentifier() {
+    return findNotNullChildByType(IDENTIFIER);
   }
 
 }
