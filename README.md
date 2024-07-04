@@ -39,7 +39,7 @@ To generate the files, you should have the plugin installed.
 - Run the `Generate Parser Code` task in the `Vyper.bnf` file.
   That generates `VyperParser.java` and `psi` files.
   - When grammar elements are removed, old `psi` files are not deleted automatically.
-    Just delete the whole [`psi` folder](./org/vyperlang/plugin/psi) and regenerate it.
+    Just delete the whole [`psi` folder](./src/main/gen/org/vyperlang/plugin/psi) and regenerate it.
 - Run the `Generate JFlex Lexer` task in the `Vyper.bnf` file.
   That generates `_VyperLexer.flex` file.
 - Run the `Run JFlex Generator` task in the `_VyperLexer.flex` file.

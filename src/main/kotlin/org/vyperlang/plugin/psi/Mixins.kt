@@ -4,6 +4,9 @@ package org.vyperlang.plugin.psi
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.childrenOfType
+import com.intellij.psi.util.parentOfType
+import org.mozilla.javascript.ast.FunctionCall
 import org.vyperlang.plugin.psi.VyperTypes.*
 import org.vyperlang.plugin.psi.impl.VyperCallExpressionImpl
 import org.vyperlang.plugin.references.VyperCallReference
@@ -18,7 +21,17 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
     override fun getReference(): VyperReference {
         val parent = node.psi.parent
         val grandparent = parent.parent
+        val greatGrandparent = grandparent.parent
         return when {
+            greatGrandparent is VyperFunctionCallArgument && parent.firstChild == node.psi -> {
+                val structName = greatGrandparent.parentOfType<VyperCallExpression>()?.childOfType<VyperVarLiteral>()?.text
+                val structPsi =
+                    node.psi.file.childrenOfType<VyperStructDefinition>()
+                        .first { it.localVariableDefinition?.identifier?.text == structName }
+                        ?.childOfType<VyperIdentifier>()
+                        .first { it.text == this.text }
+                VyperVarLiteralReference(structPsi)
+            }
             grandparent is VyperCallExpressionImpl && parent is VyperMemberAccessExpression ->
                 VyperMemberAccessReference(this, parent)
             parent is VyperMemberAccessExpression && parent.varLiteral == node.psi ->

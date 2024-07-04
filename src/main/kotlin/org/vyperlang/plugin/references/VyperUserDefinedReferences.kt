@@ -40,3 +40,14 @@ class VyperCallReference(element: VyperCallElement) : VyperReferenceBase<VyperCa
         return resolveFunctionCall().map { it.psiElement }
     }
 }
+
+class VyperStructMemberReference(element: VyperCallElement) : VyperReferenceBase<VyperCallElement>(element), VyperReference {
+
+    private fun resolveFunctionCall(): Collection<FunctionResolveResult> {
+        return VyperResolver.resolveFunction(element)
+    }
+
+    override fun multiResolve(): Collection<PsiElement> {
+        return resolveFunctionCall().map { it.psiElement }
+    }
+}

@@ -1,9 +1,7 @@
 package org.vyperlang.plugin.references
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.isAncestor
-import net.sf.cglib.core.Local
 import org.vyperlang.plugin.psi.*
 import org.vyperlang.plugin.psi.VyperTypes.VAR_LITERAL
 
@@ -26,16 +24,13 @@ object VyperResolver {
 //        return newList
 //    }
 
-    private fun lexicalDeclRec(place: PsiElement, stop: (PsiElement) -> Boolean): List<VyperNamedElement> {
-        val found = place.ancestors
+    private fun lexicalDeclRec(place: PsiElement, stop: (PsiElement) -> Boolean): List<VyperNamedElement> =
+        place.ancestors
             .drop(1) // current element might not be a VyperElement
             .takeWhile { (it is VyperElement || it is VyperFile) && !stop(it) }
             .flatMap { lexicalDeclarations(it, place) }
+            .filter { !it.isAncestor(place) } // don't suggest the element being defined
             .toList()
-        val filtered = found
-        .filter { !it.isAncestor(place) } // don't suggest the element being defined
-        return filtered
-    }
 
     private fun lexicalDeclarations(scope: PsiElement, place: PsiElement): List<VyperNamedElement> = when (scope) {
         is VyperLocalVariableDefinition -> listOf(scope)
