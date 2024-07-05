@@ -7,9 +7,6 @@ import com.intellij.openapi.util.Key
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
-import org.vyperlang.plugin.parser.ParserUtil.Companion.parserStateKey
-import org.vyperlang.plugin.parser.ParserUtil.ParserState
-
 
 class ParserUtil : GeneratedParserUtilBase() {
 

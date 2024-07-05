@@ -35,7 +35,6 @@ abstract class VyperReferenceBase<T : VyperReferenceElement>(element: T)
 
     override fun resolve(): VyperElement? = super.resolve() as VyperElement?
 
-
 //    protected open fun doRename(identifier: PsiElement, newName: String) {
 //        check(identifier.elementType == IDENTIFIER)
 //        identifier.replace(SolPsiFactory(identifier.project).createIdentifier(newName.replace(".sol", "")))

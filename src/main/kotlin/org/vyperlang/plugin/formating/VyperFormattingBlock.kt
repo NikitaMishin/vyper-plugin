@@ -108,7 +108,5 @@ class VyperFormattingBlock(
 
     override fun isIncomplete(): Boolean = isNodeIncomplete
 
-
     override fun isLeaf(): Boolean = astNode.firstChildNode == null
-
 }

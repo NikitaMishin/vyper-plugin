@@ -1,46 +1,24 @@
 package org.vyperlang.plugin.psi
 
-
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.childrenOfType
-import com.intellij.psi.util.parentOfType
 import org.vyperlang.plugin.psi.VyperTypes.*
-import org.vyperlang.plugin.psi.impl.VyperCallExpressionImpl
 import org.vyperlang.plugin.references.*
 
 abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperVarLiteral {
     override val referenceNameElement: PsiElement get() = findChildByType(IDENTIFIER)!!
     override val referenceName: String get() = referenceNameElement.text
 
-    override fun getReference(): VyperReference {
-        val parent = node.psi.parent
-        val grandparent = parent.parent
-        return when {
-            parent is VyperStructExpressionMember && parent.firstChild == node.psi -> {
-                val structExpression = parent.parentOfType<VyperStructExpression>()
-                val structMember =
-                    node.psi.file.childrenOfType<VyperStructDefinition>()
-                        .firstOrNull { it.name == structExpression?.identifier?.text }
-                        ?.childrenOfType<VyperLocalVariableDefinition>()
-                        ?.firstOrNull { it.identifier.text == this.text }
-                VyperStructMemberReference(this, structMember)
-            }
-            grandparent is VyperCallExpressionImpl && parent is VyperMemberAccessExpression ->
-                VyperMemberAccessReference(this, parent)
-            parent is VyperMemberAccessExpression && parent.varLiteral == node.psi ->
-                VyperMemberAccessReference(this, parent)
-            else -> VyperVarLiteralReference(this)
-        }
-//        if (parent is VyperCallElement) return VyperCallReference(parent)
-//        if (grandparent is VyperCallElement) return VyperCallReference(grandparent)
-//member access
-//        if (parent is VyperSelfAccessExpression) return VyperSelfAccessReference(this,parent)
-//        if (parent is VyperMemberAccessExpression && parent.varLiteral == node.psi) return VyperMemberAccessReference(this,parent)
+    override fun getReference(): VyperReference = when (node.psi.parent) {
+        is VyperImplementsDirective -> VyperStructReference(this)
+        is VyperEventLogExpression -> VyperEventLogReference(this)
+        is VyperStructExpression -> VyperStructReference(this)
+        is VyperStructExpressionMember -> VyperStructMemberReference(this)
+        is VyperMemberAccessExpression -> VyperMemberAccessReference(this, node.psi.parent as VyperMemberAccessExpression)
+        else -> VyperVarLiteralReference(this)
     }
 }
-
 
 abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), VyperCallExpression {
     /**

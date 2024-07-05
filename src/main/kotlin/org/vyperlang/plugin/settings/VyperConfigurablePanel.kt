@@ -20,13 +20,10 @@ class VyperConfigurablePanel {
     //private lateinit var password: JPasswordField
     private lateinit var password: JTextField
 
-
     // createStubInGenSourceFolder stubs
     internal lateinit var generateStubsPanel: JPanel
     private lateinit var generateStubs: JCheckBox
     private lateinit var genOutputPath: JTextField
-    //
-
 
     internal lateinit var compilerPanel: JPanel
 
@@ -73,7 +70,6 @@ class VyperConfigurablePanel {
             .settingsConfigChanged()
     }
 
-
     fun reset(settings: VyperSettings) {
         usesCustomAccount.isSelected = settings.usesCustomAccount
         generateStubs.isSelected = settings.generateStubs
@@ -104,7 +100,6 @@ class VyperConfigurablePanel {
             }
         }
     }
-
 
     fun isModified(settings: VyperSettings): Boolean =
         usesCustomAccount.isSelected != settings.usesCustomAccount ||

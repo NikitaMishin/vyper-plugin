@@ -17,7 +17,7 @@ class VyperDeclarationsOrderAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 
         if (element is VyperStateVariableDeclaration) {
-            val declarations = (element.file as VyperFile).statements.takeWhile { it != element }
+            val declarations = (element.file as VyperFile).elements.takeWhile { it != element }
             loop@ for (dec in declarations) {
                 when (dec) {
 

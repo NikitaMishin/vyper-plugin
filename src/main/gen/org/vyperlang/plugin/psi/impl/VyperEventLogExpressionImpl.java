@@ -35,8 +35,8 @@ public class VyperEventLogExpressionImpl extends VyperExpressionImpl implements 
 
   @Override
   @NotNull
-  public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+  public VyperVarLiteral getVarLiteral() {
+    return findNotNullChildByClass(VyperVarLiteral.class);
   }
 
 }

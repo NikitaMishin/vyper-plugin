@@ -1,6 +1,5 @@
 package org.vyperlang.plugin.actions
 
-
 import com.intellij.ide.actions.CreateFileFromTemplateAction
 import com.intellij.ide.actions.CreateFileFromTemplateDialog
 import com.intellij.openapi.project.Project

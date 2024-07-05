@@ -39,6 +39,7 @@ public interface VyperTypes {
   IElementType IF_STATEMENT = new VyperElementType("IF_STATEMENT");
   IElementType IMMUTABLE_DEFINITION_EXPRESSION = new VyperElementType("IMMUTABLE_DEFINITION_EXPRESSION");
   IElementType IMPLEMENTS_DIRECTIVE = new VyperElementType("IMPLEMENTS_DIRECTIVE");
+  IElementType IMPORT_DIRECTIVE = new VyperElementType("IMPORT_DIRECTIVE");
   IElementType IMPORT_PATH = new VyperElementType("IMPORT_PATH");
   IElementType INDEXED_DATA = new VyperElementType("INDEXED_DATA");
   IElementType INDEX_ACCESS_EXPRESSION = new VyperElementType("INDEX_ACCESS_EXPRESSION");
@@ -262,6 +263,9 @@ public interface VyperTypes {
       }
       else if (type == IMPLEMENTS_DIRECTIVE) {
         return new VyperImplementsDirectiveImpl(node);
+      }
+      else if (type == IMPORT_DIRECTIVE) {
+        return new VyperImportDirectiveImpl(node);
       }
       else if (type == IMPORT_PATH) {
         return new VyperImportPathImpl(node);

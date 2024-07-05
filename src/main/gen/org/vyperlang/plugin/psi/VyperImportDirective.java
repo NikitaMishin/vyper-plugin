@@ -5,12 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperEventDeclaration extends VyperNamedElement {
+public interface VyperImportDirective extends VyperNamedElement {
 
   @Nullable
-  VyperEventProperty getEventProperty();
+  VyperImportPath getImportPath();
 
-  @NotNull
+  @Nullable
   PsiElement getIdentifier();
 
 }

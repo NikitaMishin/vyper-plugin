@@ -49,7 +49,7 @@ public class VyperVisitor extends PsiElementVisitor {
   }
 
   public void visitEventDeclaration(@NotNull VyperEventDeclaration o) {
-    visitElement(o);
+    visitNamedElement(o);
   }
 
   public void visitEventLogExpression(@NotNull VyperEventLogExpression o) {
@@ -135,6 +135,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitImplementsDirective(@NotNull VyperImplementsDirective o) {
     visitElement(o);
+  }
+
+  public void visitImportDirective(@NotNull VyperImportDirective o) {
+    visitNamedElement(o);
   }
 
   public void visitInExpression(@NotNull VyperInExpression o) {

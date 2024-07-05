@@ -11,6 +11,6 @@ public interface VyperStructExpression extends VyperExpression {
   List<VyperStructExpressionMember> getStructExpressionMemberList();
 
   @NotNull
-  PsiElement getIdentifier();
+  VyperVarLiteral getVarLiteral();
 
 }

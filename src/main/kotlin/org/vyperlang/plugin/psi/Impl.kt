@@ -24,3 +24,7 @@ abstract class VyperNamedElementImpl(node: ASTNode) : VyperElementImpl(node), Vy
 
     override fun getTextOffset(): Int = nameIdentifier?.textOffset ?: super.getTextOffset()
 }
+
+abstract class VyperImportImpl(node: ASTNode) : VyperNamedElementImpl(node) {
+    override fun getNameIdentifier(): PsiElement? = findLastChildByType(IDENTIFIER)
+}

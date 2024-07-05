@@ -15,7 +15,6 @@ import org.vyperlang.plugin.compile.VyperParameters
 import org.vyperlang.plugin.gui.NoFilesWithVyperAreSelectedDialogue
 import org.vyperlang.plugin.settings.VyperSettings
 
-
 private const val COMPILING_MESSAGE = "Compiling Vyper"
 private val EXTENSION = VyperFileType.INSTANCE.defaultExtension
 

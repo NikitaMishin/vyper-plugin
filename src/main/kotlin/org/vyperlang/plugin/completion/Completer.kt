@@ -15,37 +15,26 @@ import org.vyperlang.plugin.psi.*
 import org.vyperlang.plugin.psi.VyperTypes.*
 import org.vyperlang.plugin.references.VyperResolver
 import org.vyperlang.plugin.references.VyperResolver.resolveMemberAccess
-import org.vyperlang.plugin.references.VyperResolver.resolveSelfVariables
-import javax.swing.Icon
 
 object VyperCompleter {
 
     fun completeVarLiteral(element: VyperVarLiteral): Array<out LookupElement> =
         VyperResolver.lexicalDeclarations(element)
-            .map { createVarLookup(it) }
+            .map { createLookup(it) }
             .map { PrioritizedLookupElement.withPriority(it, 15.0) }
             .toTypedArray()
 
-    fun completeMemberAccess(element: VyperMemberAccessExpression): Array<out LookupElement> {
-        if (element.firstChild.firstChild is VyperVarLiteral
-            && (element.firstChild.firstChild as VyperVarLiteral).name == "self"
-        ) {
+    fun completeMemberAccess(element: VyperMemberAccessExpression): Array<out LookupElement> =
+        resolveMemberAccess(element)
+            .map { PrioritizedLookupElement.withPriority(this.createLookup(it), 15.0) }
+            .toTypedArray()
 
-            val funDefs = (element.file as VyperFile).statements
-                .filterIsInstance<VyperFunctionDefinition>()
-                .createFunDecLookups(VyperIcons.FILE)
-
-            val stateVariables = resolveSelfVariables(element)
-                .map { it as VyperStateVariableDeclaration }
-                .createStateVarLookups(VyperIcons.FILE).toMutableList()
-            stateVariables.addAll(funDefs)
-            return stateVariables.toTypedArray()
-        }
-        return resolveMemberAccess(element).map { it as VyperLocalVariableDefinition }
-            .createLocalVarLookups(VyperIcons.FILE)
-    }
-
-    private fun createVarLookup(elem: VyperNamedElement): LookupElement = when (elem) {
+    /**
+     * Creates a lookup element for the given element.
+     * @param elem The named element to target.
+     * @return The lookup element.
+     */
+    private fun createLookup(elem: VyperNamedElement): LookupElement = when (elem) {
         is VyperConstantDefinitionExpression ->
             LookupElementBuilder.create(elem, elem.name ?: "")
                 .withIcon(VyperIcons.FILE)
@@ -66,31 +55,17 @@ object VyperCompleter {
                 .withIcon(VyperIcons.FILE)
                 .withTypeText(elem.type.text ?: "")
 
+        is VyperStateVariableDeclaration -> LookupElementBuilder
+            .create(elem, elem.name ?: "")
+            .withIcon(VyperIcons.FILE)
+            .withTypeText(elem.stateVariableType.text)
+
+        is VyperFunctionDefinition -> LookupElementBuilder.create(elem, elem.name + "()")
+                .withIcon(VyperIcons.FILE)
+                .withTypeText("->${elem.funTypeAnnotation?.text ?: "()"}")
+
         else -> LookupElementBuilder.create(elem)
     }
-
-
-    private fun Collection<VyperLocalVariableDefinition>.createLocalVarLookups(icon: Icon): Array<LookupElement> =
-        map {
-            LookupElementBuilder.create(it, it.name ?: "")
-                .withIcon(icon).withTypeText(it.type.text)
-        }.map {
-            PrioritizedLookupElement.withPriority(it, 15.0)
-        }.toTypedArray()
-
-    private fun Collection<VyperStateVariableDeclaration>.createStateVarLookups(icon: Icon): Array<LookupElement> =
-        map {
-            LookupElementBuilder.create(it, it.name ?: "")
-                .withIcon(icon).withTypeText(it.stateVariableType.text)
-        }.map { PrioritizedLookupElement.withPriority(it, 15.0) }
-            .toTypedArray()
-
-    private fun Collection<VyperFunctionDefinition>.createFunDecLookups(icon: Icon): Array<LookupElement> = map {
-        LookupElementBuilder.create(it, it.name + "()")
-            .withIcon(icon).withTypeText("->${it.funTypeAnnotation?.text ?: "()"}")
-    }.map {
-        PrioritizedLookupElement.withPriority(it, 15.0)
-    }.toTypedArray()
 }
 
 class VyperBaseTypesCompletionContributor : LookupContributor(
@@ -183,4 +158,3 @@ abstract class LookupContributor(place: ElementPattern<out PsiElement>, vararg l
         })
     }
 }
-

@@ -7,7 +7,6 @@ import com.intellij.util.Processor
 import org.vyperlang.plugin.VyperFileType
 import org.vyperlang.plugin.usages.VyperFindUsagesProvider
 
-
 class TestFindUsages : BasePlatformTestCase() {
     fun testConstant() {
         val code = """
@@ -65,7 +64,7 @@ class TestFindUsages : BasePlatformTestCase() {
             def foo() -> Foo:
                 return Fo<caret>o({ab: 1})
         """
-        checkUsages(code)
+        checkUsages(code, 67 to 70)
     }
 
     fun testStructMember() {
@@ -88,7 +87,7 @@ class TestFindUsages : BasePlatformTestCase() {
             def foo() -> uint256:
                 log Log(1)
         """
-        checkUsages(code)
+        checkUsages(code, 69 to 72)
     }
 
     fun testImport(){
@@ -99,7 +98,7 @@ class TestFindUsages : BasePlatformTestCase() {
             def balanceOf(a: address) -> uint256:
                 return ERC20(a).balanceOf(self)
         """
-        checkUsages(code)
+        checkUsages(code, 10 to 20)
     }
 
     private fun checkUsages(code: String, vararg expectedRanges: Pair<Int, Int>) {

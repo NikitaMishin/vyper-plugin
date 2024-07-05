@@ -3,7 +3,6 @@ package org.vyperlang.plugin.references
 import com.intellij.psi.PsiElement
 import org.vyperlang.plugin.completion.VyperCompleter
 import org.vyperlang.plugin.psi.VyperCallElement
-import org.vyperlang.plugin.psi.VyperLocalVariableDefinition
 import org.vyperlang.plugin.psi.VyperMemberAccessExpression
 import org.vyperlang.plugin.psi.VyperVarLiteral
 
@@ -24,13 +23,19 @@ class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemb
 }
 
 class VyperCallReference(element: VyperCallElement) : VyperReferenceBase<VyperCallElement>(element), VyperReference {
-    private fun resolveFunctionCall(): Collection<FunctionResolveResult> = VyperResolver.resolveFunction(element)
+    private fun resolveFunctionCall() = VyperResolver.resolveCall(element)
 
-    override fun multiResolve(): Collection<PsiElement> = resolveFunctionCall().map { it.psiElement }
+    override fun multiResolve() = resolveFunctionCall()
 }
 
-class VyperStructMemberReference(element: VyperVarLiteral, private val structMember: VyperLocalVariableDefinition?) :
-    VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+class VyperStructReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+    override fun singleResolve(): PsiElement? = VyperResolver.resolveStruct(element)
+}
 
-    override fun singleResolve(): PsiElement? = structMember
+class VyperStructMemberReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+    override fun singleResolve(): PsiElement? = VyperResolver.resolveStructMember(element)
+}
+
+class VyperEventLogReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+    override fun multiResolve(): Collection<PsiElement> = VyperResolver.resolveEventLog(element)
 }

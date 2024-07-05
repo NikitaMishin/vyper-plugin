@@ -8,7 +8,6 @@ import org.vyperlang.plugin.VyperFileType
 import org.vyperlang.plugin.VyperInterfaceFileType
 import org.vyperlang.plugin.psi.*
 
-
 /**
  * Annotator that highlights Vyper elements with different colors
  */

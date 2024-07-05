@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.vyperlang.plugin.psi.VyperImportImpl;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperImplementsDirectiveImpl extends ASTWrapperPsiElement implements VyperImplementsDirective {
+public class VyperImportDirectiveImpl extends VyperImportImpl implements VyperImportDirective {
 
-  public VyperImplementsDirectiveImpl(@NotNull ASTNode node) {
+  public VyperImportDirectiveImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitImplementsDirective(this);
+    visitor.visitImportDirective(this);
   }
 
   @Override
@@ -29,8 +29,14 @@ public class VyperImplementsDirectiveImpl extends ASTWrapperPsiElement implement
 
   @Override
   @Nullable
-  public VyperVarLiteral getVarLiteral() {
-    return findChildByClass(VyperVarLiteral.class);
+  public VyperImportPath getImportPath() {
+    return findChildByClass(VyperImportPath.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getIdentifier() {
+    return findChildByType(IDENTIFIER);
   }
 
 }

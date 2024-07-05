@@ -12,5 +12,11 @@ class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Vype
 
     override fun toString(): String = fileType.name
 
-    val statements: List<VyperElement> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperElement::class.java)
+    val elements: List<VyperElement> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperElement::class.java)
+
+    val selfElements: MutableList<VyperNamedElement> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperFunctionDefinition::class.java, VyperStateVariableDeclaration::class.java)
+
+    val functions: List<VyperFunctionDefinition> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperFunctionDefinition::class.java)
+
+    val stateVariables: List<VyperStateVariableDeclaration> get () = PsiTreeUtil.getChildrenOfAnyType(this, VyperStateVariableDeclaration::class.java)
 }

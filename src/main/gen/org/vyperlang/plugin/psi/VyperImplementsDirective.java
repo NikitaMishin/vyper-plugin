@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface VyperImplementsDirective extends VyperElement {
 
+  @Nullable
+  VyperVarLiteral getVarLiteral();
+
 }

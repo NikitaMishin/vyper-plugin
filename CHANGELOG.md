@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 - Fix auto-complete issues and `immutable` support ([#31](https://github.com/NikitaMishin/vyper-plugin/issues/31))
+- Fix find usages issues ([#28](https://github.com/NikitaMishin/vyper-plugin/issues/28)) for `immutable`, `interface` and `struct`
 
 ## [0.2.0-alpha.3] - 2024-07-02
 - Add automatic compilation errors ([#36](https://github.com/NikitaMishin/vyper-plugin/issues/36))

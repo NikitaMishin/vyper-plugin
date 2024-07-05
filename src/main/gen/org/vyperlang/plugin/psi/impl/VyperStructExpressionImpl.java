@@ -35,8 +35,8 @@ public class VyperStructExpressionImpl extends VyperExpressionImpl implements Vy
 
   @Override
   @NotNull
-  public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+  public VyperVarLiteral getVarLiteral() {
+    return findNotNullChildByClass(VyperVarLiteral.class);
   }
 
 }

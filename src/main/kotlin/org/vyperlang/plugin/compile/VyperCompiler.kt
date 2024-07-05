@@ -15,7 +15,6 @@ import org.vyperlang.plugin.docker.ToolResult
 import org.vyperlang.plugin.docker.VyperCompilerDocker
 import org.vyperlang.plugin.toolWindow.VyperWindow
 
-
 data class VyperParameters(
     val module: Module,
     val project: Project,

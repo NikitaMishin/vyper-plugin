@@ -1,3 +1,1 @@
-src/main/java/org/vyperlang/plugin/grammar/**/*.java linguist-generated=true
-src/main/java/org/vyperlang/plugin/parser/**/*.java linguist-generated=true
-src/main/java/org/vyperlang/plugin/psi/**/*.java linguist-generated=true
+src/gen/**/*.* linguist-generated=true
