@@ -179,6 +179,8 @@ ParamDef ::= Identifier ':' TYPE ('=' Expression)? {
 // could be default assignment
 StructDefinition ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
     pin = 1
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
 private StructBody ::= StructSingleDef | <<indented (StructMultipleDef) >>
@@ -306,7 +308,7 @@ Expression ::=
   | RangeExpression
   | ParenthesiziedExpression
   | CallExpression
-  | NewExpression
+  | StructExpression
   | AssertExpression
   | EqExpression
   | OrExpression
@@ -338,8 +340,9 @@ private RangeInterval ::= (Identifier | NumberLiteral) (&INDNONE ',' &INDNONE Ex
 
 RangeExpression ::= range &INDNONE '(' RangeInterval (',' 'bound' '=' Identifier)? ')'
 
-NewExpression ::= Identifier (&INDNONE'(') '{' (  ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression)
-                             (',' ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression))*)? '}' ')'
+StructExpressionMember ::= VarLiteral &INDNONE ':' &INDNONE Expression
+
+StructExpression ::= Identifier (&INDNONE'(') '{' StructExpressionMember (',' StructExpressionMember)* '}' ')'
 
 AssignmentExpression ::=
     Expression (&INDNONE ('=' | '+=' | '-=' | '*=' | '/=' | '%='))
@@ -357,7 +360,7 @@ CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
 
 //??
 FunctionCallExpression ::= (Identifier &INDNONE FunctionCallArguments) |
-                           ( ( PrimaryExpression | NewExpression | TypeName  )
+                           ( ( PrimaryExpression | TypeName  )
                            ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )*
                                      &INDNONE FunctionCallArguments )  {
    //implements and mixin
@@ -395,7 +398,7 @@ AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {
 }
 private AssertMessage ::= ',' ( stringLiteralDouble | stringLiteralSingle | MultiLineString )
 
-FunctionCallArgument ::= Expression | ( Identifier '=' Expression )
+FunctionCallArgument ::= Expression | ( VarLiteral '=' Expression )
 FunctionCallArguments ::= '(' (FunctionCallArgument (',' (FunctionCallArgument | &')'))*)? ')' {pin(".*")=1}
 
 PrimaryExpression ::= VarLiteral | BooleanLiteral | NumberLiteral | HexLiteral | StringLiteral

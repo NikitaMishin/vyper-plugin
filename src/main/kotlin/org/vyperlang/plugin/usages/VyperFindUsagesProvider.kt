@@ -18,7 +18,7 @@ class VyperFindUsagesProvider : FindUsagesProvider {
         TokenSet.create(VyperTypes.VAR_LITERAL)
     )
 
-    override fun canFindUsagesFor(psiElement: PsiElement): Boolean = psiElement is PsiNamedElement
+    override fun canFindUsagesFor(psiElement: PsiElement) = psiElement is PsiNamedElement
 
     override fun getHelpId(psiElement: PsiElement): String? = null
 
@@ -32,15 +32,19 @@ class VyperFindUsagesProvider : FindUsagesProvider {
         else -> ""
     }
 
-    override fun getDescriptiveName(element: PsiElement): String = ""
+    override fun getDescriptiveName(element: PsiElement): String = when (element) {
+        is VyperFunctionCallArgument -> element.varLiteral?.name
+        is PsiNamedElement -> element.name
+        else -> element.text
+    } ?: ""
 
     override fun getNodeText(element: PsiElement, useFullName: Boolean): String = when (element) {
-        is VyperStateVariableDeclaration -> element.name + "state variable"
-        is VyperLocalVariableDefinition -> element.name + "local variable"
-        is VyperFunctionDefinition -> element.name + "function"
-        is VyperStructDefinition -> element.text + "struct"
-        is VyperConstantDefinitionExpression -> element.name + "constant"
-        is VyperImmutableDefinitionExpression -> element.name + "immutable"
-        else -> ""
+//        is VyperStateVariableDeclaration -> element.name + "state variable"
+//        is VyperLocalVariableDefinition -> element.name + "local variable"
+//        is VyperFunctionDefinition -> element.name + "function"
+//        is VyperStructDefinition -> element.text + "struct"
+//        is VyperConstantDefinitionExpression -> element.name + "constant"
+//        is VyperImmutableDefinitionExpression -> element.name + "immutable"
+        else -> element.text
     }
 }

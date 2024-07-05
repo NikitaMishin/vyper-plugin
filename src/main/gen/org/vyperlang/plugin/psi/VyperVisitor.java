@@ -181,10 +181,6 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitNewExpression(@NotNull VyperNewExpression o) {
-    visitExpression(o);
-  }
-
   public void visitOrExpression(@NotNull VyperOrExpression o) {
     visitExpression(o);
   }
@@ -222,6 +218,14 @@ public class VyperVisitor extends PsiElementVisitor {
   }
 
   public void visitStructDefinition(@NotNull VyperStructDefinition o) {
+    visitNamedElement(o);
+  }
+
+  public void visitStructExpression(@NotNull VyperStructExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitStructExpressionMember(@NotNull VyperStructExpressionMember o) {
     visitElement(o);
   }
 

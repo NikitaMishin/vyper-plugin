@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.vyperlang.plugin.psi.VyperNamedElementImpl;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperStructDefinitionImpl extends ASTWrapperPsiElement implements VyperStructDefinition {
+public class VyperStructDefinitionImpl extends VyperNamedElementImpl implements VyperStructDefinition {
 
   public VyperStructDefinitionImpl(@NotNull ASTNode node) {
     super(node);

@@ -6,13 +6,9 @@ import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
-import org.mozilla.javascript.ast.FunctionCall
 import org.vyperlang.plugin.psi.VyperTypes.*
 import org.vyperlang.plugin.psi.impl.VyperCallExpressionImpl
-import org.vyperlang.plugin.references.VyperCallReference
-import org.vyperlang.plugin.references.VyperMemberAccessReference
-import org.vyperlang.plugin.references.VyperReference
-import org.vyperlang.plugin.references.VyperVarLiteralReference
+import org.vyperlang.plugin.references.*
 
 abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperVarLiteral {
     override val referenceNameElement: PsiElement get() = findChildByType(IDENTIFIER)!!
@@ -21,16 +17,15 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
     override fun getReference(): VyperReference {
         val parent = node.psi.parent
         val grandparent = parent.parent
-        val greatGrandparent = grandparent.parent
         return when {
-            greatGrandparent is VyperFunctionCallArgument && parent.firstChild == node.psi -> {
-                val structName = greatGrandparent.parentOfType<VyperCallExpression>()?.childOfType<VyperVarLiteral>()?.text
-                val structPsi =
+            parent is VyperStructExpressionMember && parent.firstChild == node.psi -> {
+                val structExpression = parent.parentOfType<VyperStructExpression>()
+                val structMember =
                     node.psi.file.childrenOfType<VyperStructDefinition>()
-                        .first { it.localVariableDefinition?.identifier?.text == structName }
-                        ?.childOfType<VyperIdentifier>()
-                        .first { it.text == this.text }
-                VyperVarLiteralReference(structPsi)
+                        .firstOrNull { it.name == structExpression?.identifier?.text }
+                        ?.childrenOfType<VyperLocalVariableDefinition>()
+                        ?.firstOrNull { it.identifier.text == this.text }
+                VyperStructMemberReference(this, structMember)
             }
             grandparent is VyperCallExpressionImpl && parent is VyperMemberAccessExpression ->
                 VyperMemberAccessReference(this, parent)

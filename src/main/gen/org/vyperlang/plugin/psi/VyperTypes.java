@@ -51,7 +51,6 @@ public interface VyperTypes {
   IElementType MEMBER_INDEX_ACCESS = new VyperElementType("MEMBER_INDEX_ACCESS");
   IElementType MULTI_LINE_STRING = new VyperElementType("MULTI_LINE_STRING");
   IElementType MULT_DIV_EXPRESSION = new VyperElementType("MULT_DIV_EXPRESSION");
-  IElementType NEW_EXPRESSION = new VyperElementType("NEW_EXPRESSION");
   IElementType OR_EXPRESSION = new VyperElementType("OR_EXPRESSION");
   IElementType PARAM_DEF = new VyperElementType("PARAM_DEF");
   IElementType PARENTHESIZIED_EXPRESSION = new VyperElementType("PARENTHESIZIED_EXPRESSION");
@@ -62,6 +61,8 @@ public interface VyperTypes {
   IElementType STATE_VARIABLE_DECLARATION = new VyperElementType("STATE_VARIABLE_DECLARATION");
   IElementType STATE_VARIABLE_TYPE = new VyperElementType("STATE_VARIABLE_TYPE");
   IElementType STRUCT_DEFINITION = new VyperElementType("STRUCT_DEFINITION");
+  IElementType STRUCT_EXPRESSION = new VyperElementType("STRUCT_EXPRESSION");
+  IElementType STRUCT_EXPRESSION_MEMBER = new VyperElementType("STRUCT_EXPRESSION_MEMBER");
   IElementType STRUCT_TYPE = new VyperElementType("STRUCT_TYPE");
   IElementType TERNARY_EXPRESSION = new VyperElementType("TERNARY_EXPRESSION");
   IElementType TUPLE_ASSIGNMENT_EXPRESSION = new VyperElementType("TUPLE_ASSIGNMENT_EXPRESSION");
@@ -298,9 +299,6 @@ public interface VyperTypes {
       else if (type == MULT_DIV_EXPRESSION) {
         return new VyperMultDivExpressionImpl(node);
       }
-      else if (type == NEW_EXPRESSION) {
-        return new VyperNewExpressionImpl(node);
-      }
       else if (type == OR_EXPRESSION) {
         return new VyperOrExpressionImpl(node);
       }
@@ -330,6 +328,12 @@ public interface VyperTypes {
       }
       else if (type == STRUCT_DEFINITION) {
         return new VyperStructDefinitionImpl(node);
+      }
+      else if (type == STRUCT_EXPRESSION) {
+        return new VyperStructExpressionImpl(node);
+      }
+      else if (type == STRUCT_EXPRESSION_MEMBER) {
+        return new VyperStructExpressionMemberImpl(node);
       }
       else if (type == STRUCT_TYPE) {
         return new VyperStructTypeImpl(node);
