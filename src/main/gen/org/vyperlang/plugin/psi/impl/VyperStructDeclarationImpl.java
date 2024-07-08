@@ -11,14 +11,14 @@ import static org.vyperlang.plugin.psi.VyperTypes.*;
 import org.vyperlang.plugin.psi.VyperNamedElementImpl;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperStructDefinitionImpl extends VyperNamedElementImpl implements VyperStructDefinition {
+public class VyperStructDeclarationImpl extends VyperNamedElementImpl implements VyperStructDeclaration {
 
-  public VyperStructDefinitionImpl(@NotNull ASTNode node) {
+  public VyperStructDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitStructDefinition(this);
+    visitor.visitStructDeclaration(this);
   }
 
   @Override

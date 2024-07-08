@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperStructDefinition extends VyperNamedElement {
+public interface VyperStructDeclaration extends VyperNamedElement {
 
   @Nullable
   VyperLocalVariableDefinition getLocalVariableDefinition();

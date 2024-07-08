@@ -224,7 +224,7 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitStructDefinition(@NotNull VyperStructDefinition o) {
+  public void visitStructDeclaration(@NotNull VyperStructDeclaration o) {
     visitNamedElement(o);
   }
 

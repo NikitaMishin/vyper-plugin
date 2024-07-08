@@ -93,6 +93,7 @@
         nonreentrant='nonreentrant'
 
         event='event'
+        indexed='indexed'
         range = 'range'
 
         intM = 'regexp:(int[0-9]+)'
@@ -122,13 +123,12 @@ external INDLT ::= indLt
 external INDGT ::= indGt
 external INDNONE ::= indNone
 
-// : External interface and struct declarations must come before event declarations, global declarations,
-// and function definitions
+// Order is handled by `VyperDeclarationsOrderAnnotator`
 private SourceUnit ::= ( ImportDirective
                         | ConstantDefinitionExpression
                         | ImmutableDefinitionExpression
                         | ImplementsDirective
-                        | StructDefinition
+                        | StructDeclaration
                         | InterfaceDeclaration
                         | EventDeclaration
                         | FunctionDefinition
@@ -189,7 +189,7 @@ ParamDef ::= Identifier ':' TYPE ('=' Expression)? {
 }
 
 // could be default assignment
-StructDefinition ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
+StructDeclaration ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
     pin = 1
     mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
@@ -198,10 +198,8 @@ StructDefinition ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
 private StructBody ::= StructSingleDef | <<indented (StructMultipleDef) >>
 private StructSingleDef ::= (&INDNONE StructLocalVariableDefinition)
 
-private StructMultipleDef ::= StructLocalVariableDefinition (&INDEQ StructLocalVariableDefinition )*
-private StructLocalVariableDefinition ::= LocalVariableDefinition | Identifier | StringLiteral
-{recoverWhile=structRecover}
-
+private StructMultipleDef ::= StructLocalVariableDefinition ( &INDEQ StructLocalVariableDefinition )*
+private StructLocalVariableDefinition ::= LocalVariableDefinition | Identifier | StringLiteral {recoverWhile=structRecover}
 private structRecover ::= !(&INDEQ | &INDLT |<<eof>>)
 
 //ok
@@ -213,9 +211,7 @@ EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProper
 }
 
 EventProperty ::= Identifier ':' (IndexedData | TYPE) (Identifier ':' (IndexedData |TYPE))*
-IndexedData ::= IndexedType '(' TYPE ')'
-
-private IndexedType ::= 'indexed'
+IndexedData ::= indexed '(' TYPE ')'
 
 // VARIABLES
 

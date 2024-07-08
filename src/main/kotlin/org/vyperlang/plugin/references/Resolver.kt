@@ -24,7 +24,6 @@ object VyperResolver {
             .drop(1) // current element might not be a VyperElement
             .takeWhile { (it is VyperElement || it is VyperFile) && !stop(it) }
             .flatMap { lexicalDeclarations(it, place) }
-            .toList()
             .filter { !it.isAncestor(place) } // don't suggest the element being defined
             .distinct()
             .toList()
@@ -47,7 +46,7 @@ object VyperResolver {
             .filter { it.name == element.name }
 
     private fun findStructByName(file: PsiFile, structName: String?) =
-        file.childrenOfType<VyperStructDefinition>()
+        file.childrenOfType<VyperStructDeclaration>()
             .filter { it.name == structName }
 
     fun resolveEventLog(element: VyperVarLiteral) =
@@ -57,7 +56,7 @@ object VyperResolver {
     private fun lexicalDeclarations(scope: PsiElement, place: PsiElement): List<VyperNamedElement> = when (scope) {
         is VyperLocalVariableDefinition -> listOf(scope)
         is VyperImportDirective -> listOf(scope)
-        is VyperStructDefinition -> listOf(scope)
+        is VyperStructDeclaration -> listOf(scope)
         is VyperConstantDefinitionExpression -> listOf(scope)
         is VyperImmutableDefinitionExpression -> listOf(scope)
         is VyperInterfaceDeclaration -> listOf(scope)

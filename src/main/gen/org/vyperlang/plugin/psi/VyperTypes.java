@@ -62,7 +62,7 @@ public interface VyperTypes {
   IElementType STATEMENT = new VyperElementType("STATEMENT");
   IElementType STATE_VARIABLE_DECLARATION = new VyperElementType("STATE_VARIABLE_DECLARATION");
   IElementType STATE_VARIABLE_TYPE = new VyperElementType("STATE_VARIABLE_TYPE");
-  IElementType STRUCT_DEFINITION = new VyperElementType("STRUCT_DEFINITION");
+  IElementType STRUCT_DECLARATION = new VyperElementType("STRUCT_DECLARATION");
   IElementType STRUCT_EXPRESSION = new VyperElementType("STRUCT_EXPRESSION");
   IElementType STRUCT_EXPRESSION_MEMBER = new VyperElementType("STRUCT_EXPRESSION_MEMBER");
   IElementType STRUCT_TYPE = new VyperElementType("STRUCT_TYPE");
@@ -118,6 +118,7 @@ public interface VyperTypes {
   IElementType IMPLEMENTS = new VyperTokenType("implements");
   IElementType IMPORT = new VyperTokenType("import");
   IElementType IN = new VyperTokenType("in");
+  IElementType INDEXED = new VyperTokenType("indexed");
   IElementType INTERFACE = new VyperTokenType("interface");
   IElementType INTERNAL = new VyperTokenType("internal");
   IElementType INTERSECTION = new VyperTokenType("&");
@@ -333,8 +334,8 @@ public interface VyperTypes {
       else if (type == STATE_VARIABLE_TYPE) {
         return new VyperStateVariableTypeImpl(node);
       }
-      else if (type == STRUCT_DEFINITION) {
-        return new VyperStructDefinitionImpl(node);
+      else if (type == STRUCT_DECLARATION) {
+        return new VyperStructDeclarationImpl(node);
       }
       else if (type == STRUCT_EXPRESSION) {
         return new VyperStructExpressionImpl(node);

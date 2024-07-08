@@ -27,7 +27,7 @@ class VyperFindUsagesProvider : FindUsagesProvider {
             is VyperStateVariableDeclaration -> "state variable"
             is VyperLocalVariableDefinition -> "local variable"
             is VyperFunctionDefinition -> "function"
-            is VyperStructDefinition -> "struct"
+            is VyperStructDeclaration -> "struct"
             is VyperConstantDefinitionExpression -> "constant"
             is VyperImmutableDefinitionExpression -> "immutable"
             is VyperImplementsDirective -> "implements"

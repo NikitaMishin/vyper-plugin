@@ -2058,23 +2058,17 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IndexedType '(' TYPE ')'
+  // indexed '(' TYPE ')'
   public static boolean IndexedData(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IndexedData")) return false;
+    if (!nextTokenIs(b, INDEXED)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, INDEXED_DATA, "<indexed data>");
-    r = IndexedType(b, l + 1);
-    r = r && consumeToken(b, LPAREN);
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, INDEXED, LPAREN);
     r = r && TYPE(b, l + 1);
     r = r && consumeToken(b, RPAREN);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, INDEXED_DATA, r);
     return r;
-  }
-
-  /* ********************************************************** */
-  // 'indexed'
-  static boolean IndexedType(PsiBuilder b, int l) {
-    return consumeToken(b, "indexed");
   }
 
   /* ********************************************************** */
@@ -2631,7 +2625,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   //                         | ConstantDefinitionExpression
   //                         | ImmutableDefinitionExpression
   //                         | ImplementsDirective
-  //                         | StructDefinition
+  //                         | StructDeclaration
   //                         | InterfaceDeclaration
   //                         | EventDeclaration
   //                         | FunctionDefinition
@@ -2644,7 +2638,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     if (!r) r = ConstantDefinitionExpression(b, l + 1);
     if (!r) r = ImmutableDefinitionExpression(b, l + 1);
     if (!r) r = ImplementsDirective(b, l + 1);
-    if (!r) r = StructDefinition(b, l + 1);
+    if (!r) r = StructDeclaration(b, l + 1);
     if (!r) r = InterfaceDeclaration(b, l + 1);
     if (!r) r = EventDeclaration(b, l + 1);
     if (!r) r = FunctionDefinition(b, l + 1);
@@ -2843,16 +2837,16 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // struct &INDNONE Identifier &INDNONE COLON  StructBody
-  public static boolean StructDefinition(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "StructDefinition")) return false;
+  public static boolean StructDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "StructDeclaration")) return false;
     if (!nextTokenIs(b, STRUCT)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, STRUCT_DEFINITION, null);
+    Marker m = enter_section_(b, l, _NONE_, STRUCT_DECLARATION, null);
     r = consumeToken(b, STRUCT);
     p = r; // pin = 1
-    r = r && report_error_(b, StructDefinition_1(b, l + 1));
+    r = r && report_error_(b, StructDeclaration_1(b, l + 1));
     r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
-    r = p && report_error_(b, StructDefinition_3(b, l + 1)) && r;
+    r = p && report_error_(b, StructDeclaration_3(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, COLON)) && r;
     r = p && StructBody(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
@@ -2860,8 +2854,8 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE
-  private static boolean StructDefinition_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "StructDefinition_1")) return false;
+  private static boolean StructDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "StructDeclaration_1")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -2870,8 +2864,8 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE
-  private static boolean StructDefinition_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "StructDefinition_3")) return false;
+  private static boolean StructDeclaration_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "StructDeclaration_3")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -2929,7 +2923,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // StructLocalVariableDefinition (&INDEQ StructLocalVariableDefinition )*
+  // StructLocalVariableDefinition ( &INDEQ StructLocalVariableDefinition )*
   static boolean StructMultipleDef(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StructMultipleDef")) return false;
     boolean r;
@@ -2940,7 +2934,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (&INDEQ StructLocalVariableDefinition )*
+  // ( &INDEQ StructLocalVariableDefinition )*
   private static boolean StructMultipleDef_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StructMultipleDef_1")) return false;
     while (true) {

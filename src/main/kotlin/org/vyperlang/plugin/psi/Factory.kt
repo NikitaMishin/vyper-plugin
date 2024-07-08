@@ -5,7 +5,7 @@ import com.intellij.psi.PsiFileFactory
 import org.vyperlang.plugin.VyperFileType
 
 class VyperPsiFactory(val project: Project) {
-    fun createStruct(struct: String): VyperStructDefinition =
+    fun createStruct(struct: String): VyperStructDeclaration =
         createFromText(struct) ?: error("Failed to create struct: `$struct`")
 
     private inline fun <reified T : VyperElement> createFromText(code: String): T? =

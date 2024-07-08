@@ -9,7 +9,7 @@ import org.vyperlang.plugin.psi.VyperImportDirective
 import org.vyperlang.plugin.psi.VyperStateVariableDeclaration
 import org.vyperlang.plugin.psi.file
 
-// todo: Events must be declared before global declarations and function definitions.
+// todo: External interface and struct declarations must come before event declarations, global declarations, and function definitions
 
 class VyperDeclarationsOrderAnnotator : Annotator {
 
