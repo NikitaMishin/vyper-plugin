@@ -2058,16 +2058,16 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // indexed '(' TYPE ')'
+  // 'indexed' '(' TYPE ')'
   public static boolean IndexedData(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IndexedData")) return false;
-    if (!nextTokenIs(b, INDEXED)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, INDEXED, LPAREN);
+    Marker m = enter_section_(b, l, _NONE_, INDEXED_DATA, "<indexed data>");
+    r = consumeToken(b, "indexed");
+    r = r && consumeToken(b, LPAREN);
     r = r && TYPE(b, l + 1);
     r = r && consumeToken(b, RPAREN);
-    exit_section_(b, m, INDEXED_DATA, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 

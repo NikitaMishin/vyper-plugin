@@ -93,7 +93,6 @@
         nonreentrant='nonreentrant'
 
         event='event'
-        indexed='indexed'
         range = 'range'
 
         intM = 'regexp:(int[0-9]+)'
@@ -211,7 +210,7 @@ EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProper
 }
 
 EventProperty ::= Identifier ':' (IndexedData | TYPE) (Identifier ':' (IndexedData |TYPE))*
-IndexedData ::= indexed '(' TYPE ')'
+IndexedData ::= 'indexed' '(' TYPE ')'
 
 // VARIABLES
 

@@ -118,7 +118,6 @@ public interface VyperTypes {
   IElementType IMPLEMENTS = new VyperTokenType("implements");
   IElementType IMPORT = new VyperTokenType("import");
   IElementType IN = new VyperTokenType("in");
-  IElementType INDEXED = new VyperTokenType("indexed");
   IElementType INTERFACE = new VyperTokenType("interface");
   IElementType INTERNAL = new VyperTokenType("internal");
   IElementType INTERSECTION = new VyperTokenType("&");
