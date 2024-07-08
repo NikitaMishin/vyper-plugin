@@ -28,7 +28,7 @@ class TestErrorDetection : BasePlatformTestCase() {
                     return 0
             """.trimIndent(),
             "<function decorator> expected, got 'public'",
-            "<import directive>, '@', Identifier, event, from, implements, import, interface or struct expected, got 'def'",
+            "<import directive>, '@', Identifier, event, implements, interface or struct expected, got 'def'",
         )
     }
 

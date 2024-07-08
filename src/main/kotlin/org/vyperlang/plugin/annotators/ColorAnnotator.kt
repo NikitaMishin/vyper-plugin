@@ -13,13 +13,9 @@ import org.vyperlang.plugin.psi.*
  */
 class VyperColorAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        val fileType = element.containingFile.fileType
-
-        if (fileType is VyperFileType) {
-            highlightVyperFile(element, holder)
-        }
-        else if (fileType is VyperInterfaceFileType) {
-            highlightInterfaceFile(element, holder)
+        when (element.containingFile.fileType) {
+            is VyperFileType -> highlightVyperFile(element, holder)
+            is VyperInterfaceFileType -> highlightInterfaceFile(element, holder)
         }
     }
 

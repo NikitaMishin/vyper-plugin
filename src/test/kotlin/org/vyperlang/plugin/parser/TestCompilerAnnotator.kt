@@ -60,7 +60,7 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
 
     fun testIteratorException() = testCase(
         "iterator-error.vy",
-        ExpectedError("Cannot iterate over the result of a function call", 34 to 39, "IteratorException"),
+        ExpectedError("Cannot iterate over the result of a function call", 34 to 37, "IteratorException"),
     )
 
     fun testOK() = testCase("ok.vy")

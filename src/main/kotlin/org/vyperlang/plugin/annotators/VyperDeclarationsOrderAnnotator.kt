@@ -9,23 +9,24 @@ import org.vyperlang.plugin.psi.VyperImportDirective
 import org.vyperlang.plugin.psi.VyperStateVariableDeclaration
 import org.vyperlang.plugin.psi.file
 
-//Events must be declared before global declarations and function definitions.
-
-//Global variables must all come before function definitions
+// todo: Events must be declared before global declarations and function definitions.
 
 class VyperDeclarationsOrderAnnotator : Annotator {
+
+    // todo: val variableTypes = listOf(VyperStateVariableDeclaration::class, VyperConstantDefinitionExpression::class, VyperImmutableDefinitionExpression::class)
+
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         if (element is VyperStateVariableDeclaration && findBefore<VyperFunctionDefinition>(element) != null) {
             holder.newAnnotation(
                 HighlightSeverity.ERROR,
                 "Global variables must all come before function definitions"
-            )
+            ).create()
         }
         if (element is VyperImportDirective && findBefore<VyperStateVariableDeclaration>(element) != null) {
             holder.newAnnotation(
                 HighlightSeverity.ERROR,
                 "Imports must come before global variables"
-            )
+            ).create()
         }
     }
 

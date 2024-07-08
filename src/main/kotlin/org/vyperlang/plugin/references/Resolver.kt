@@ -77,45 +77,17 @@ object VyperResolver {
         else -> emptyList()
     }
 
-    // Recurse call expressions and arguments
-    fun resolveCall(element: VyperCallExpression): Collection<VyperNamedElement> =
-        sequenceOf(
-            element.expressionList.flatMap { resolveExpression(it) },
-            element.functionCallArgumentsList.flatMap {
-                it.functionCallArgumentList.flatMap { arg -> resolveFunctionArgument(arg) }
-            }
-        ).flatten().toList()
-
-    private fun resolveFunctionArgument(arg: VyperFunctionCallArgument) = sequenceOf(
-        resolveExpression(arg.expression),
-        when (arg.varLiteral) {
-            is VyperVarLiteral -> resolveVarLiteral(arg.varLiteral!!)
-            else -> emptyList()
-        }
-    ).flatten()
-
-    private fun resolveExpression(it: VyperExpression) = when (it) {
-        is VyperMemberAccessExpression -> resolveMemberAccess(it)
-        else -> emptyList() // other references should be handled by `VarLiteral`?
-    }
-
     fun resolveMemberAccess(element: VyperMemberAccessExpression): List<VyperNamedElement> = when (getFirstLiteralName(element.expression)) {
         "msg" -> VyperInternalTypeFactory(element.project).msg.children.filterIsInstance<VyperLocalVariableDefinition>()
         "self" -> element.file.selfElements
-        is String -> resolveCustomMembers(element, getFirstLiteralName(element.expression))
+        is String -> resolveInterfaceMember(element, getFirstLiteralName(element.expression))
         else -> emptyList() // todo: support interfaces, structs and `block` built-in
     }
 
-    private fun resolveCustomMembers(element: VyperMemberAccessExpression, name: String?) =
-        sequenceOf(element.file.imports, element.file.structs, element.file.interfaces)
-            .flatten()
+    private fun resolveInterfaceMember(element: VyperMemberAccessExpression, name: String?) =
+        element.file.interfaces
             .filter { it.name == name }
-            .flatMap { when(it) {
-                is VyperStructDefinition -> it.childrenOfType<VyperLocalVariableDefinition>()
-                is VyperInterfaceDeclaration -> it.childrenOfType<VyperInterfaceFunction>()
-                is VyperImportDirective -> emptyList() // imports not supported for finding members
-                else -> throw IllegalStateException("Unknown type: $it")
-            }}
+            .flatMap { it.childrenOfType<VyperInterfaceFunction>() }
             .filter { it.name == element.varLiteral.name }
             .toList()
 

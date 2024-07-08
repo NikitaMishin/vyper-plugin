@@ -74,11 +74,9 @@ class TestFindUsages : BasePlatformTestCase() {
             @external
             def foo() -> Foo:
                 ab: uint256 = 1
-                foo = Foo({ab: ab})
-                assert foo.ab
-                return foo
+                return Foo({ab: ab})
         """
-        checkUsages(code, 91 to 93, 96 to 98)
+        checkUsages(code, 92 to 94)
     }
 
     fun testLog() {
