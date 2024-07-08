@@ -28,7 +28,7 @@ class TestErrorDetection : BasePlatformTestCase() {
                     return 0
             """.trimIndent(),
             "<function decorator> expected, got 'public'",
-            "'@', Identifier, event, from, implements, import, interface or struct expected, got 'def'",
+            "<import directive>, '@', Identifier, event, from, implements, import, interface or struct expected, got 'def'",
         )
     }
 
@@ -74,6 +74,26 @@ class TestErrorDetection : BasePlatformTestCase() {
                     self.a = _owner
             """.trimIndent(),
             "Statements forbidden in `.vyi` files",
+        )
+    }
+
+    fun testImportAfterStateVar() {
+        checkErrors(VyperFileType.INSTANCE, """
+                a: uint256
+                from vyper.interfaces import ERC20
+            """.trimIndent(),
+            "Imports must come before global variables",
+        )
+    }
+
+    fun testFunctionBeforeStateVar() {
+        checkErrors(VyperFileType.INSTANCE, """
+                @external
+                def foo() -> uint256:
+                    return 0
+                a: uint256
+            """.trimIndent(),
+            "Global variables must all come before function definitions",
         )
     }
 

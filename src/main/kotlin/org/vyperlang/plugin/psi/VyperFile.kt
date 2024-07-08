@@ -16,7 +16,9 @@ class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Vype
 
     val selfElements: MutableList<VyperNamedElement> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperFunctionDefinition::class.java, VyperStateVariableDeclaration::class.java)
 
-    val functions: List<VyperFunctionDefinition> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperFunctionDefinition::class.java)
+    val interfaces: List<VyperInterfaceDeclaration> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperInterfaceDeclaration::class.java)
 
-    val stateVariables: List<VyperStateVariableDeclaration> get () = PsiTreeUtil.getChildrenOfAnyType(this, VyperStateVariableDeclaration::class.java)
+    val imports: List<VyperImportDirective> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperImportDirective::class.java)
+
+    val structs: List<VyperStructDefinition> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperStructDefinition::class.java)
 }

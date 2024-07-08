@@ -129,7 +129,7 @@ private SourceUnit ::= ( ImportDirective
                         | ImmutableDefinitionExpression
                         | ImplementsDirective
                         | StructDefinition
-                        | ExternalInterfaces
+                        | InterfaceDeclaration
                         | EventDeclaration
                         | FunctionDefinition
                         | StateVariableDeclaration)
@@ -161,15 +161,25 @@ ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifie
 IMPORT_PATH ::= Identifier  (&INDNONE '.' &INDNONE Identifier)*
 
 // implements statements
-ImplementsDirective ::= implements &INDNONE ':' &INDNONE VarLiteral (&INDNONE ',' &INDNONE Identifier )* {pin=1}
+ImplementsDirective ::= implements &INDNONE ':' &INDNONE VarLiteral (&INDNONE ',' &INDNONE VarLiteral)* {
+    pin=1
+}
 
 // external interfaces ok
-ExternalInterfaces ::= interface &INDNONE Identifier &INDNONE ':'
-                        <<indented (ExternalInterfaceBody+) >> {pin=1}
+InterfaceDeclaration ::= interface &INDNONE Identifier &INDNONE ':'
+                        <<indented (InterfaceFunction+) >> {
+    pin=1
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
+}
 
-private ExternalInterfaceBody ::= ( def &INDNONE Identifier FunctionArgs FunTypeAnnotation? &INDNONE ':' &INDNONE ExternalFunStatus ) {pin = 1}
+InterfaceFunction ::= ( def &INDNONE Identifier FunctionArgs FunTypeAnnotation? &INDNONE ':' &INDNONE InterfaceFunctionModifier )  {
+    pin=1
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
+}
 
-private ExternalFunStatus ::= pure | view | nonpayable | payable
+private InterfaceFunctionModifier ::= pure | view | nonpayable | payable
 
 FunctionArgs ::= '(' (ParamDef (',' (ParamDef | & ')'))*)? ')' {pin(".*")=1}
 
@@ -351,21 +361,13 @@ AssignmentExpression ::=
 
 TupleAssignmentExpression ::= Identifier (',' Identifier)+ &INDNONE '=' Expression
 
-//??
 CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
                   &INDNONE FunctionCallArguments (&INDNONE FunctionCallArguments)*
-{
-    implements = "org.vyperlang.plugin.psi.VyperReferenceElement"
-    mixin = "org.vyperlang.plugin.psi.VyperCallElement"
-}
 
-//??
-FunctionCallExpression ::= (Identifier &INDNONE FunctionCallArguments) |
-                           ( ( PrimaryExpression | TypeName  )
-                           ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )*
-                                     &INDNONE FunctionCallArguments )  {
-   //implements and mixin
-}
+
+private SimpleFunctionCall ::= Identifier &INDNONE FunctionCallArguments
+private ComplexFunctionCall ::= ( PrimaryExpression ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )* &INDNONE FunctionCallArguments )
+FunctionCallExpression ::= SimpleFunctionCall | ComplexFunctionCall
 
 //left recursion?
 MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral) {
@@ -418,20 +420,19 @@ ValueType ::= intM | uintM | bytesM | address | bool | ((string | bytes) &INDNON
 ListType ::= ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier) ']'
                     (&INDNONE '[' (DecimalNumber | Identifier) ']')*
 
-StructType ::= Identifier
+StructType ::= Identifier  // todo: this is the same as `VarLiteral`
 {
     implements = "org.vyperlang.plugin.psi.VyperReferenceElement"
     mixin = "org.vyperlang.plugin.psi.VyperStructTypeMixin"
 }
 
-MapType ::= ( ( DynArray | HashMap ) &INDNONE '[' ValueType ',' TYPE ']' )
-{
-    pin=1
-}
+private DynArrayType ::= DynArray &INDNONE '[' TYPE ',' (VarLiteral | NumberLiteral) ']'
+private HashMapType ::= HashMap &INDNONE '[' ValueType ',' TYPE ']'
+MapType ::= DynArrayType | HashMapType { pin=1 }
 
 private BooleanLiteral ::= booleanLiteral
-private NumberLiteral ::= HexNumber | DecimalNumber |FixedNumber
-private StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB|MultiLineString
+private NumberLiteral ::= HexNumber | DecimalNumber | FixedNumber
+private StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB | MultiLineString
 private DecimalNumber ::= decimalNumber
 private HexNumber ::= hexNumber
 private HexLiteral ::= hexLiteral

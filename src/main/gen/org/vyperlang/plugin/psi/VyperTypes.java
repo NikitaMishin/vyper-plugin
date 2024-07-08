@@ -23,7 +23,6 @@ public interface VyperTypes {
   IElementType EVENT_PROPERTY = new VyperElementType("EVENT_PROPERTY");
   IElementType EXPONENT_EXPRESSION = new VyperElementType("EXPONENT_EXPRESSION");
   IElementType EXPRESSION = new VyperElementType("EXPRESSION");
-  IElementType EXTERNAL_INTERFACES = new VyperElementType("EXTERNAL_INTERFACES");
   IElementType FOR_STATEMENT = new VyperElementType("FOR_STATEMENT");
   IElementType FUNCTION_ARGS = new VyperElementType("FUNCTION_ARGS");
   IElementType FUNCTION_BODY = new VyperElementType("FUNCTION_BODY");
@@ -44,6 +43,8 @@ public interface VyperTypes {
   IElementType INDEXED_DATA = new VyperElementType("INDEXED_DATA");
   IElementType INDEX_ACCESS_EXPRESSION = new VyperElementType("INDEX_ACCESS_EXPRESSION");
   IElementType INLINE_ARRAY_EXPRESSION = new VyperElementType("INLINE_ARRAY_EXPRESSION");
+  IElementType INTERFACE_DECLARATION = new VyperElementType("INTERFACE_DECLARATION");
+  IElementType INTERFACE_FUNCTION = new VyperElementType("INTERFACE_FUNCTION");
   IElementType IN_EXPRESSION = new VyperElementType("IN_EXPRESSION");
   IElementType LIST_TYPE = new VyperElementType("LIST_TYPE");
   IElementType LOCAL_VARIABLE_DEFINITION = new VyperElementType("LOCAL_VARIABLE_DEFINITION");
@@ -166,7 +167,6 @@ public interface VyperTypes {
   IElementType STRUCT = new VyperTokenType("struct");
   IElementType TILDE = new VyperTokenType("~");
   IElementType TO = new VyperTokenType("=>");
-  IElementType TYPENAME = new VyperTokenType("TypeName");
   IElementType UINTM = new VyperTokenType("uintM");
   IElementType UNION = new VyperTokenType("|");
   IElementType VIEW = new VyperTokenType("view");
@@ -215,9 +215,6 @@ public interface VyperTypes {
       }
       else if (type == EXPONENT_EXPRESSION) {
         return new VyperExponentExpressionImpl(node);
-      }
-      else if (type == EXTERNAL_INTERFACES) {
-        return new VyperExternalInterfacesImpl(node);
       }
       else if (type == FOR_STATEMENT) {
         return new VyperForStatementImpl(node);
@@ -278,6 +275,12 @@ public interface VyperTypes {
       }
       else if (type == INLINE_ARRAY_EXPRESSION) {
         return new VyperInlineArrayExpressionImpl(node);
+      }
+      else if (type == INTERFACE_DECLARATION) {
+        return new VyperInterfaceDeclarationImpl(node);
+      }
+      else if (type == INTERFACE_FUNCTION) {
+        return new VyperInterfaceFunctionImpl(node);
       }
       else if (type == IN_EXPRESSION) {
         return new VyperInExpressionImpl(node);

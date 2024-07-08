@@ -5,7 +5,13 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperExternalInterfaces extends VyperElement {
+public interface VyperInterfaceFunction extends VyperNamedElement {
+
+  @Nullable
+  VyperFunTypeAnnotation getFunTypeAnnotation();
+
+  @Nullable
+  VyperFunctionArgs getFunctionArgs();
 
   @Nullable
   PsiElement getIdentifier();

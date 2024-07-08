@@ -28,9 +28,9 @@ public class VyperImplementsDirectiveImpl extends ASTWrapperPsiElement implement
   }
 
   @Override
-  @Nullable
-  public VyperVarLiteral getVarLiteral() {
-    return findChildByClass(VyperVarLiteral.class);
+  @NotNull
+  public List<VyperVarLiteral> getVarLiteralList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperVarLiteral.class);
   }
 
 }

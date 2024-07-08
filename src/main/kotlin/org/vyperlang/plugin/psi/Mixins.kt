@@ -10,28 +10,22 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
     override val referenceNameElement: PsiElement get() = findChildByType(IDENTIFIER)!!
     override val referenceName: String get() = referenceNameElement.text
 
+    /**
+     * Converts the var literal to a reference.
+     */
     override fun getReference(): VyperReference = when (node.psi.parent) {
-        is VyperImplementsDirective -> VyperStructReference(this)
+        is VyperImplementsDirective -> VyperInterfaceReference(this)
         is VyperEventLogExpression -> VyperEventLogReference(this)
+
         is VyperStructExpression -> VyperStructReference(this)
         is VyperStructExpressionMember -> VyperStructMemberReference(this)
-        is VyperMemberAccessExpression -> VyperMemberAccessReference(this, node.psi.parent as VyperMemberAccessExpression)
-        else -> VyperVarLiteralReference(this)
-    }
-}
+        is VyperMemberAccessExpression -> VyperMemberAccessReference(
+            this,
+            node.psi.parent as VyperMemberAccessExpression
+        )
 
-abstract class VyperCallElement(node: ASTNode) : VyperNamedElementImpl(node), VyperCallExpression {
-    /**
-     * Finds the name of the function being called.
-     */
-    override val referenceNameElement: PsiElement get() {
-        val sibling = node.findChildByType(FUNCTION_CALL_ARGUMENTS)?.treePrev
-            ?: throw NullPointerException("No function call arguments found in \"${node.text}\"")
-        return findLastChildByType(VAR_LITERAL, sibling)?.lastChildNode?.psi ?: firstChild
+        else -> VyperVarLiteralReference(this) // reference itself
     }
-
-    override val referenceName: String get() = referenceNameElement.text
-    override fun getReference() = VyperCallReference(this)
 }
 
 abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperStructType {

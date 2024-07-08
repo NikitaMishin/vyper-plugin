@@ -42,8 +42,7 @@
         <completion.contributor language="Vyper" implementationClass="org.vyperlang.plugin.completion.VyperReferenceTypesCompletionContributor"/>
         <completion.contributor language="Vyper" implementationClass="org.vyperlang.plugin.completion.VyperVariableModifierContributor"/>
 
-        <annotator language="Vyper"
-                   implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
+        <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperColorAnnotator"/>
         <externalAnnotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.CompilerAnnotator"/>
 

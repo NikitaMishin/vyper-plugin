@@ -53,7 +53,7 @@ class TestFindUsages : BasePlatformTestCase() {
             def foo<caret>() -> uint256:
                 return self.foo()
         """
-        checkUsages(code, 48 to 51, 43 to 53)
+        checkUsages(code, 48 to 51)
     }
 
     fun testStruct() {
@@ -74,9 +74,11 @@ class TestFindUsages : BasePlatformTestCase() {
             @external
             def foo() -> Foo:
                 ab: uint256 = 1
-                return Foo({ab: ab})
+                foo = Foo({ab: ab})
+                assert foo.ab
+                return foo
         """
-        checkUsages(code, 92 to 94)
+        checkUsages(code, 91 to 93, 96 to 98)
     }
 
     fun testLog() {
@@ -98,7 +100,29 @@ class TestFindUsages : BasePlatformTestCase() {
             def balanceOf(a: address) -> uint256:
                 return ERC20(a).balanceOf(self)
         """
-        checkUsages(code, 10 to 20)
+        checkUsages(code, 47 to 52, 112 to 117)
+    }
+
+    fun testInterface(){
+        val code = """
+            interface ERC<caret>20:
+                def balanceOf(who: address) -> uint256: view
+            @external
+            def myBalance(coin: address) -> uint256:
+                return ERC20(coin).balanceOf(self)
+        """
+        checkUsages(code, 128 to 133)
+    }
+
+    fun testInterfaceMember(){
+        val code = """
+            interface ERC20:
+                def balance<caret>Of(who: address) -> uint256: view
+            @external
+            def myBalance(coin: address) -> uint256:
+                return ERC20(coin).balanceOf(self)
+        """
+        checkUsages(code, 140 to 149)
     }
 
     private fun checkUsages(code: String, vararg expectedRanges: Pair<Int, Int>) {

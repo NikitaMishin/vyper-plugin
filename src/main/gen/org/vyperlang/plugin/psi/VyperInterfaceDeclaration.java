@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperImplementsDirective extends VyperElement {
+public interface VyperInterfaceDeclaration extends VyperNamedElement {
 
-  @NotNull
-  List<VyperVarLiteral> getVarLiteralList();
+  @Nullable
+  PsiElement getIdentifier();
 
 }

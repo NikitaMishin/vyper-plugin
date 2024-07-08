@@ -28,15 +28,39 @@ public class VyperMapTypeImpl extends ASTWrapperPsiElement implements VyperMapTy
   }
 
   @Override
-  @Nullable
+  @NotNull
   public VyperType getType() {
-    return findChildByClass(VyperType.class);
+    return findNotNullChildByClass(VyperType.class);
   }
 
   @Override
   @Nullable
   public VyperValueType getValueType() {
     return findChildByClass(VyperValueType.class);
+  }
+
+  @Override
+  @Nullable
+  public VyperVarLiteral getVarLiteral() {
+    return findChildByClass(VyperVarLiteral.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getDecimalNumber() {
+    return findChildByType(DECIMALNUMBER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getFixedNumber() {
+    return findChildByType(FIXEDNUMBER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getHexNumber() {
+    return findChildByType(HEXNUMBER);
   }
 
 }

@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
+import org.vyperlang.plugin.psi.VyperNamedElementImpl;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperCallExpressionImpl extends VyperExpressionImpl implements VyperCallExpression {
+public class VyperInterfaceDeclarationImpl extends VyperNamedElementImpl implements VyperInterfaceDeclaration {
 
-  public VyperCallExpressionImpl(@NotNull ASTNode node) {
+  public VyperInterfaceDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitCallExpression(this);
+    visitor.visitInterfaceDeclaration(this);
   }
 
   @Override
@@ -28,15 +28,9 @@ public class VyperCallExpressionImpl extends VyperExpressionImpl implements Vype
   }
 
   @Override
-  @NotNull
-  public List<VyperExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public List<VyperFunctionCallArguments> getFunctionCallArgumentsList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperFunctionCallArguments.class);
+  @Nullable
+  public PsiElement getIdentifier() {
+    return findChildByType(IDENTIFIER);
   }
 
 }

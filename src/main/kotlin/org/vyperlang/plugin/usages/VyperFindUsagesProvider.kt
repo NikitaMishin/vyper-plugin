@@ -23,28 +23,21 @@ class VyperFindUsagesProvider : FindUsagesProvider {
     override fun getHelpId(psiElement: PsiElement): String? = null
 
     override fun getType(element: PsiElement): String = when (element) {
-        is VyperStateVariableDeclaration -> "state variable"
-        is VyperLocalVariableDefinition -> "local variable"
-        is VyperFunctionDefinition -> "function"
-        is VyperStructDefinition -> "struct"
-        is VyperConstantDefinitionExpression -> "constant"
-        is VyperImmutableDefinitionExpression -> "immutable"
+        is VyperNamedElement -> when(element) {
+            is VyperStateVariableDeclaration -> "state variable"
+            is VyperLocalVariableDefinition -> "local variable"
+            is VyperFunctionDefinition -> "function"
+            is VyperStructDefinition -> "struct"
+            is VyperConstantDefinitionExpression -> "constant"
+            is VyperImmutableDefinitionExpression -> "immutable"
+            is VyperImplementsDirective -> "implements"
+            is VyperInterfaceFunction -> "interface function"
+            else -> throw IllegalArgumentException("Unknown element type: $element")
+        }
         else -> ""
     }
 
-    override fun getDescriptiveName(element: PsiElement): String = when (element) {
-        is VyperFunctionCallArgument -> element.varLiteral?.name
-        is PsiNamedElement -> element.name
-        else -> element.text
-    } ?: ""
+    override fun getDescriptiveName(element: PsiElement): String = getType(element)
 
-    override fun getNodeText(element: PsiElement, useFullName: Boolean): String = when (element) {
-//        is VyperStateVariableDeclaration -> element.name + "state variable"
-//        is VyperLocalVariableDefinition -> element.name + "local variable"
-//        is VyperFunctionDefinition -> element.name + "function"
-//        is VyperStructDefinition -> element.text + "struct"
-//        is VyperConstantDefinitionExpression -> element.name + "constant"
-//        is VyperImmutableDefinitionExpression -> element.name + "immutable"
-        else -> element.text
-    }
+    override fun getNodeText(element: PsiElement, useFullName: Boolean): String = element.text
 }

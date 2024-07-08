@@ -124,7 +124,6 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "return"                     { return RETURN; }
   "raise"                      { return RAISE; }
   "log"                        { return LOG; }
-  "TypeName"                   { return TYPENAME; }
   "clear"                      { return CLEAR; }
   "assert"                     { return ASSERT; }
   "address"                    { return ADDRESS; }
