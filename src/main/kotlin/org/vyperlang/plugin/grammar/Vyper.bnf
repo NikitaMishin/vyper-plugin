@@ -365,7 +365,7 @@ CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
 
 private SimpleFunctionCall ::= Identifier &INDNONE FunctionCallArguments
 private ComplexFunctionCall ::= PrimaryExpression ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )* &INDNONE FunctionCallArguments
-FunctionCallExpression ::= SimpleFunctionCall | ComplexFunctionCall
+FunctionCallExpression ::= SimpleFunctionCall | ComplexFunctionCall // TODO: currently only used for `log`, otherwise see `CallExpression`
 
 //left recursion?
 MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral) {

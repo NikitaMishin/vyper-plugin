@@ -72,6 +72,9 @@ object VyperResolver {
             .flatMap { it.childrenOfType<VyperInterfaceFunctionModifier>() }
             .map { it.text }
 
+    /**
+     * Finds all the members of an interface referenced by the given element.
+     */
     private fun findInterfaceMembers(element: VyperNamedElement?): Collection<VyperInterfaceFunction> = when (element) {
         is VyperParamDef -> findInterfaceMembers(element, element.type.text)
         is VyperStateVariableDeclaration -> findInterfaceMembers(element, element.stateVariableType.text)
@@ -87,7 +90,7 @@ object VyperResolver {
 
     /**
      * Returns all the interfaces in the file. They may be either an import or a declaration.
-     * Import declarations are not resolved to their actual interfaces.
+     * Imports are not resolved to their contents.
      */
     fun resolveInterfaces(element: VyperElement): List<VyperNamedElement> =
         sequenceOf(element.file.interfaces, element.file.imports).flatten().toList()
@@ -98,4 +101,5 @@ object VyperResolver {
         else -> null
     }
 
+    fun resolveStructCall(element: VyperCallExpression) = element.file.structs.filter { it.name == getFirstLiteralName(element) }
 }

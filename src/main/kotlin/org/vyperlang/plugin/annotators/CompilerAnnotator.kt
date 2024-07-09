@@ -41,8 +41,11 @@ class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), Du
 
     /** 2nd step of the external annotator: Run the compiler and return the result. */
     override fun doAnnotate(info: FileInfo?): List<CompilerError> {
+        if (info?.file?.exists() != true) {
+            return emptyList() // file may not be written to disk yet, also occurs in unit tests with `configureByText`
+        }
         val result = try {
-            VyperCompilerDocker(info!!.project, info.file, info.indicator).run()
+            VyperCompilerDocker(info.project, info.file, info.indicator).run()
         } catch (e: CompilerMissingError) {
             LOG.error("Error while running compiler annotator", e)
             null
