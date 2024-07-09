@@ -24,6 +24,8 @@ public interface VyperTypes {
   IElementType EXPONENT_EXPRESSION = new VyperElementType("EXPONENT_EXPRESSION");
   IElementType EXPRESSION = new VyperElementType("EXPRESSION");
   IElementType EXT_CALL_EXPRESSION = new VyperElementType("EXT_CALL_EXPRESSION");
+  IElementType FLAG_DECLARATION = new VyperElementType("FLAG_DECLARATION");
+  IElementType FLAG_OPTION = new VyperElementType("FLAG_OPTION");
   IElementType FOR_STATEMENT = new VyperElementType("FOR_STATEMENT");
   IElementType FUNCTION_ARGS = new VyperElementType("FUNCTION_ARGS");
   IElementType FUNCTION_BODY = new VyperElementType("FUNCTION_BODY");
@@ -105,12 +107,14 @@ public interface VyperTypes {
   IElementType ELIF = new VyperTokenType("elif");
   IElementType ELLIPSIS = new VyperTokenType("...");
   IElementType ELSE = new VyperTokenType("else");
+  IElementType ENUM = new VyperTokenType("enum");
   IElementType EQ = new VyperTokenType("==");
   IElementType EVENT = new VyperTokenType("event");
   IElementType EXPONENT = new VyperTokenType("**");
   IElementType EXTCALL = new VyperTokenType("extcall");
   IElementType EXTERNAL = new VyperTokenType("external");
   IElementType FIXEDNUMBER = new VyperTokenType("fixedNumber");
+  IElementType FLAG = new VyperTokenType("flag");
   IElementType FOR = new VyperTokenType("for");
   IElementType FROM = new VyperTokenType("from");
   IElementType HASHMAP = new VyperTokenType("HashMap");
@@ -223,6 +227,12 @@ public interface VyperTypes {
       }
       else if (type == EXT_CALL_EXPRESSION) {
         return new VyperExtCallExpressionImpl(node);
+      }
+      else if (type == FLAG_DECLARATION) {
+        return new VyperFlagDeclarationImpl(node);
+      }
+      else if (type == FLAG_OPTION) {
+        return new VyperFlagOptionImpl(node);
       }
       else if (type == FOR_STATEMENT) {
         return new VyperForStatementImpl(node);

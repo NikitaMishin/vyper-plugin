@@ -114,6 +114,8 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "interface"                  { return INTERFACE; }
   "def"                        { return DEF; }
   "struct"                     { return STRUCT; }
+  "enum"                       { return ENUM; }
+  "flag"                       { return FLAG; }
   "elif"                       { return ELIF; }
   "else"                       { return ELSE; }
   "if"                         { return IF; }

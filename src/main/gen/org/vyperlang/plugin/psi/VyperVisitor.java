@@ -71,6 +71,14 @@ public class VyperVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitFlagDeclaration(@NotNull VyperFlagDeclaration o) {
+    visitNamedElement(o);
+  }
+
+  public void visitFlagOption(@NotNull VyperFlagOption o) {
+    visitNamedElement(o);
+  }
+
   public void visitForStatement(@NotNull VyperForStatement o) {
     visitElement(o);
   }

@@ -788,6 +788,114 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // (enum|flag) &INDNONE Identifier &INDNONE COLON  (<<indented FlagOptions >>)
+  public static boolean FlagDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagDeclaration")) return false;
+    if (!nextTokenIs(b, "<flag declaration>", ENUM, FLAG)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, FLAG_DECLARATION, "<flag declaration>");
+    r = FlagDeclaration_0(b, l + 1);
+    p = r; // pin = 1
+    r = r && report_error_(b, FlagDeclaration_1(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
+    r = p && report_error_(b, FlagDeclaration_3(b, l + 1)) && r;
+    r = p && report_error_(b, consumeToken(b, COLON)) && r;
+    r = p && FlagDeclaration_5(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // enum|flag
+  private static boolean FlagDeclaration_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagDeclaration_0")) return false;
+    boolean r;
+    r = consumeToken(b, ENUM);
+    if (!r) r = consumeToken(b, FLAG);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean FlagDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagDeclaration_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean FlagDeclaration_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagDeclaration_3")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // <<indented FlagOptions >>
+  private static boolean FlagDeclaration_5(PsiBuilder b, int l) {
+    return indented(b, l + 1, BaseVyperParser::FlagOptions);
+  }
+
+  /* ********************************************************** */
+  // Identifier
+  public static boolean FlagOption(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagOption")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, FLAG_OPTION, "<flag option>");
+    r = consumeToken(b, IDENTIFIER);
+    exit_section_(b, l, m, r, false, BaseVyperParser::recoverIndent);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // FlagOption ( &INDEQ FlagOption )*
+  static boolean FlagOptions(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagOptions")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = FlagOption(b, l + 1);
+    r = r && FlagOptions_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // ( &INDEQ FlagOption )*
+  private static boolean FlagOptions_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagOptions_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!FlagOptions_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "FlagOptions_1", c)) break;
+    }
+    return true;
+  }
+
+  // &INDEQ FlagOption
+  private static boolean FlagOptions_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagOptions_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = FlagOptions_1_0_0(b, l + 1);
+    r = r && FlagOption(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDEQ
+  private static boolean FlagOptions_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FlagOptions_1_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indEq(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // for &INDNONE Identifier (&INDNONE  ':' TYPE)? &INDNONE in &INDNONE Expression &INDNONE ':'
   //                     (&INDNONE Statement | <<indented (Statement (&INDEQ Statement)*)>>)
   public static boolean ForStatement(PsiBuilder b, int l) {
@@ -2660,6 +2768,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   //                         | StructDeclaration
   //                         | InterfaceDeclaration
   //                         | EventDeclaration
+  //                         | FlagDeclaration
   //                         | FunctionDefinition
   //                         | StateVariableDeclaration
   static boolean SourceUnit(PsiBuilder b, int l) {
@@ -2673,9 +2782,10 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     if (!r) r = StructDeclaration(b, l + 1);
     if (!r) r = InterfaceDeclaration(b, l + 1);
     if (!r) r = EventDeclaration(b, l + 1);
+    if (!r) r = FlagDeclaration(b, l + 1);
     if (!r) r = FunctionDefinition(b, l + 1);
     if (!r) r = StateVariableDeclaration(b, l + 1);
-    exit_section_(b, l, m, r, false, BaseVyperParser::structRecover);
+    exit_section_(b, l, m, r, false, BaseVyperParser::recoverIndent);
     return r;
   }
 
@@ -2950,7 +3060,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     r = LocalVariableDefinition(b, l + 1);
     if (!r) r = consumeToken(b, IDENTIFIER);
     if (!r) r = StringLiteral(b, l + 1);
-    exit_section_(b, l, m, r, false, BaseVyperParser::structRecover);
+    exit_section_(b, l, m, r, false, BaseVyperParser::recoverIndent);
     return r;
   }
 
@@ -3197,6 +3307,49 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // !(&INDEQ | &INDLT |<<eof>>)
+  static boolean recoverIndent(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "recoverIndent")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !recoverIndent_0(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDEQ | &INDLT |<<eof>>
+  private static boolean recoverIndent_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "recoverIndent_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = recoverIndent_0_0(b, l + 1);
+    if (!r) r = recoverIndent_0_1(b, l + 1);
+    if (!r) r = eof(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDEQ
+  private static boolean recoverIndent_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "recoverIndent_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indEq(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDLT
+  private static boolean recoverIndent_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "recoverIndent_0_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indLt(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // !(&INDEQ|&INDLT)
   static boolean recoverStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverStatement")) return false;
@@ -3231,49 +3384,6 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   // &INDLT
   private static boolean recoverStatement_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverStatement_0_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indLt(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // !(&INDEQ | &INDLT |<<eof>>)
-  static boolean structRecover(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "structRecover")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NOT_);
-    r = !structRecover_0(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // &INDEQ | &INDLT |<<eof>>
-  private static boolean structRecover_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "structRecover_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = structRecover_0_0(b, l + 1);
-    if (!r) r = structRecover_0_1(b, l + 1);
-    if (!r) r = eof(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // &INDEQ
-  private static boolean structRecover_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "structRecover_0_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indEq(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // &INDLT
-  private static boolean structRecover_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "structRecover_0_1")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indLt(b, l + 1);

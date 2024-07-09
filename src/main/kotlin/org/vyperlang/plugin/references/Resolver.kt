@@ -36,6 +36,7 @@ object VyperResolver {
         is VyperConstantDefinitionExpression -> listOf(scope)
         is VyperImmutableDefinitionExpression -> listOf(scope)
         is VyperInterfaceDeclaration -> listOf(scope)
+        is VyperFlagDeclaration -> listOf(scope)
 
         is VyperStatement -> scope.prevSiblings
             .filterIsInstance<VyperStatement>()
@@ -63,30 +64,37 @@ object VyperResolver {
     private fun resolveInterfaceMembers(element: VyperMemberAccessExpression, name: String?) =
         lexicalDeclarations(element)
             .filter { it.name == name }
-            .flatMap { findInterfaceMembers(it) }
+            .flatMap { resolveMembers(it) }
             .toList()
 
     fun resolveInterfaceFunctionModifiers(element: VyperMemberAccessExpression): List<String> =
         resolveMemberAccess(element)
-            .flatMap { findInterfaceMembers(it) }
+            .flatMap { resolveMembers(it) }
             .flatMap { it.childrenOfType<VyperInterfaceFunctionModifier>() }
             .map { it.text }
 
     /**
      * Finds all the members of an interface referenced by the given element.
      */
-    private fun findInterfaceMembers(element: VyperNamedElement?): Collection<VyperInterfaceFunction> = when (element) {
-        is VyperParamDef -> findInterfaceMembers(element, element.type.text)
-        is VyperStateVariableDeclaration -> findInterfaceMembers(element, element.stateVariableType.text)
-        is VyperImmutableDefinitionExpression -> findInterfaceMembers(element, element.type?.text)
-        is VyperConstantDefinitionExpression -> findInterfaceMembers(element, element.type?.text)
+    private fun resolveMembers(element: VyperNamedElement?): Collection<VyperNamedElement> = when (element) {
+        // types that reference some global type
+        is VyperParamDef -> findMembers(element, element.type.text)
+        is VyperStateVariableDeclaration -> findMembers(element, element.stateVariableType.text)
+        is VyperImmutableDefinitionExpression -> findMembers(element, element.type?.text)
+        is VyperConstantDefinitionExpression -> findMembers(element, element.type?.text)
+        // types that directly have members
         is VyperInterfaceDeclaration -> element.childrenOfType<VyperInterfaceFunction>()
+        is VyperFlagDeclaration -> element.childrenOfType<VyperFlagOption>()
+        // the members themselves
+        is VyperFlagOption -> listOf(element)
         is VyperInterfaceFunction -> listOf(element)
         else -> emptyList()
     }
 
-    private fun findInterfaceMembers(element: VyperNamedElement, interfaceName: String?) =
-        resolveInterfaces(element).filter { it.name == interfaceName }.flatMap { findInterfaceMembers(it) }
+    private fun findMembers(element: VyperNamedElement, typeName: String?): Collection<VyperNamedElement> =
+        resolveInterfaces(element)
+            .filter { it.name == typeName }
+            .flatMap { resolveMembers(it) }
 
     /**
      * Returns all the interfaces in the file. They may be either an import or a declaration.

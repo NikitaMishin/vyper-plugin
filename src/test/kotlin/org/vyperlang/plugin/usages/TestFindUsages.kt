@@ -66,7 +66,7 @@ class TestFindUsages : BasePlatformTestCase() {
         checkUsages(code, 51 to 54, 67 to 70)
     }
 
-    fun testStructMember() {
+    fun testStructMemberDict() {
         val code = """
             struct Foo:
                 a<caret>b: uint256
@@ -76,6 +76,42 @@ class TestFindUsages : BasePlatformTestCase() {
                 return Foo({ab: ab})
         """
         checkUsages(code, 92 to 94)
+    }
+
+//    fun testStructMemberKwarg() {
+//        val code = """
+//            struct Foo:
+//                a<caret>b: uint256
+//            @external
+//            def foo() -> Foo:
+//                ab: uint256 = 1
+//                return Foo(ab=ab)
+//        """
+//        checkUsages(code, 91 to 93)
+//    }
+
+    fun testEnum() {
+        val code = """
+            flag Action:
+                BUY
+            @external
+            @view
+            def buy() -> Act<caret>ion:
+                return Action.BUY
+        """
+        checkUsages(code, 50 to 56, 69 to 75)
+    }
+
+    fun testEnumMember() {
+        val code = """
+            enum Action:
+                BUY
+            @external
+            @view
+            def buy() -> Action:
+                return Action.BU<caret>Y
+        """
+        checkUsages(code, 76 to 79)
     }
 
     fun testLog() {

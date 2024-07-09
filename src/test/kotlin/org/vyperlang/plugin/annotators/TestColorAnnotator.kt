@@ -30,7 +30,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
                     return 0
             """.trimIndent(),
             "<function decorator> expected, got 'public'",
-            "<import directive>, '@', Identifier, event, implements, interface or struct expected, got 'def'",
+            "<flag declaration>, <import directive>, '@', Identifier, event, implements, interface or struct expected, got 'def'",
         )
     }
 

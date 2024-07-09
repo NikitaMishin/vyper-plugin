@@ -150,6 +150,34 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                 Vy3 to emptyList(),
                 Vy4 to listOf(RANGE_TYPE_REQUIRED_V4),
             ),
+            TestCase.create(
+                "enum",
+                """
+                    {pragma}
+                    enum Action:
+                        BUY
+                    @external
+                    @view
+                    def buy() -> Action:
+                        return Action.BUY
+                """,
+                Vy3 to emptyList(),
+                Vy4 to listOf(ENUM_NOT_V4),
+            ),
+            TestCase.create(
+                "flags",
+                """
+                    {pragma}
+                    flag Action:
+                        BUY
+                    @external
+                    @view
+                    def buy() -> Action:
+                        return Action.BUY
+                """,
+                Vy3 to listOf(FLAGS_NOT_V3),
+                Vy4 to emptyList(),
+            ),
         ).flatten().toTypedArray()
     }
 
