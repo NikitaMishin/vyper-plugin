@@ -97,28 +97,6 @@ class TestColorAnnotator : BasePlatformTestCase() {
         )
     }
 
-//    fun testExtcallVyper3() {
-//        checkErrors(VyperFileType.INSTANCE, """
-//                #pragma version ^0.3.0
-//                @external
-//                def foo() -> uint256:
-//                    extcall self.foo()
-//            """.trimIndent(),
-//            "Keyword `extcall` not supported in Vyper 0.3",
-//        )
-//    }
-//
-//    fun testStaticcallVyper3() {
-//        checkErrors(VyperFileType.INSTANCE, """
-//                #pragma version ^0.3.0
-//                @external
-//                def foo() -> uint256:
-//                    staticcall self.foo()
-//            """.trimIndent(),
-//            "Keyword `staticcall` not supported in Vyper 0.3",
-//        )
-//    }
-
     private fun checkErrors(type: FileType, code: String, vararg expected: String) {
         myFixture.configureByText(type, code)
         val messages = myFixture.doHighlighting()

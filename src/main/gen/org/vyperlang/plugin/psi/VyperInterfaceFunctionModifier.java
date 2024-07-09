@@ -5,9 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperExtCallExpression extends VyperExpression {
-
-  @Nullable
-  VyperExpression getExpression();
+public interface VyperInterfaceFunctionModifier extends VyperElement {
 
 }

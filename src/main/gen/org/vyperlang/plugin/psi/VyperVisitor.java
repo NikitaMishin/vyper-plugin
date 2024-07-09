@@ -164,6 +164,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitNamedElement(o);
   }
 
+  public void visitInterfaceFunctionModifier(@NotNull VyperInterfaceFunctionModifier o) {
+    visitElement(o);
+  }
+
   public void visitListType(@NotNull VyperListType o) {
     visitElement(o);
   }

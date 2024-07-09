@@ -8,29 +8,23 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperStaticCallExpressionImpl extends VyperExpressionImpl implements VyperStaticCallExpression {
+public class VyperInterfaceFunctionModifierImpl extends ASTWrapperPsiElement implements VyperInterfaceFunctionModifier {
 
-  public VyperStaticCallExpressionImpl(@NotNull ASTNode node) {
+  public VyperInterfaceFunctionModifierImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitStaticCallExpression(this);
+    visitor.visitInterfaceFunctionModifier(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof VyperVisitor) accept((VyperVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public VyperExpression getExpression() {
-    return findChildByClass(VyperExpression.class);
   }
 
 }

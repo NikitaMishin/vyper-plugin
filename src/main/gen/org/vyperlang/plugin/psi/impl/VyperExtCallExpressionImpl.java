@@ -29,8 +29,8 @@ public class VyperExtCallExpressionImpl extends VyperExpressionImpl implements V
 
   @Override
   @Nullable
-  public VyperCallExpression getCallExpression() {
-    return findChildByClass(VyperCallExpression.class);
+  public VyperExpression getExpression() {
+    return findChildByClass(VyperExpression.class);
   }
 
 }

@@ -95,7 +95,6 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "public"                     { return PUBLIC; }
   "immutable"                  { return IMMUTABLE; }
   "constant"                   { return CONSTANT; }
-  "nonreentrant"               { return NONREENTRANT; }
   "payable"                    { return PAYABLE; }
   "nonpayable"                 { return NONPAYABLE; }
   "external"                   { return EXTERNAL; }
@@ -103,6 +102,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "deploy"                     { return DEPLOY; }
   "pure"                       { return PURE; }
   "view"                       { return VIEW; }
+  "nonreentrant"               { return NONREENTRANT; }
   "event"                      { return EVENT; }
   "range"                      { return RANGE; }
   "string"                     { return STRING; }
@@ -124,6 +124,8 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "return"                     { return RETURN; }
   "raise"                      { return RAISE; }
   "log"                        { return LOG; }
+  "extcall"                    { return EXTCALL; }
+  "staticcall"                 { return STATICCALL; }
   "clear"                      { return CLEAR; }
   "assert"                     { return ASSERT; }
   "address"                    { return ADDRESS; }

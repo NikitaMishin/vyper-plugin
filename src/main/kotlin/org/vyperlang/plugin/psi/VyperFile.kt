@@ -10,7 +10,7 @@ import org.vyperlang.plugin.psi.VyperTypes.COMMENT
 
 private val CommentTokens = TokenSet.create(COMMENT)
 private val PragmaRegex = "#\\s*(?:pragma\\s+|@)version\\s+\\^?(\\d+\\.\\d+\\.\\d+)".toRegex()
-private val Vyper4 = SemVer.parseFromText("0.4.0")
+
 
 class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, VyperLanguage) {
 
@@ -32,8 +32,6 @@ class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Vype
             .map { it.first().groupValues[1] }
             .firstOrNull()
             .let { SemVer.parseFromText(it) }
-
-    val deprecateEntrancyKey: Boolean? get() = vyperVersion?.let { it >= Vyper4 }
 
     val elements: List<VyperElement> get() = PsiTreeUtil.getChildrenOfAnyType(this, VyperElement::class.java)
 

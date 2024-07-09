@@ -1,0 +1,112 @@
+package org.vyperlang.plugin.annotators
+
+import com.intellij.lang.annotation.HighlightSeverity
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameters
+import org.vyperlang.plugin.VyperFileType
+
+@RunWith(Parameterized::class)
+class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() {
+
+    data class TestCase(val name: String, val code: String, val pragma: String, val expectedErrors: List<String> = emptyList()) {
+        override fun toString() = "$name: ${pragma.ifEmpty {"#"}}"
+
+        val formattedCode get() = code.replace("{pragma}", pragma).trimIndent()
+
+        companion object {
+            fun create(name: String, code: String, vararg cases: Pair<String, List<String>>) =
+                cases.map { (pragma, errors) -> TestCase(name, code, pragma, errors) }
+        }
+    }
+
+    companion object {
+
+        @JvmStatic
+        @Parameters(name = "{0}")
+        fun data(): Array<TestCase> = listOf(
+            TestCase.create(
+                "extcall",
+                """
+                    {pragma}
+                    @external
+                    def foo() -> uint256:
+                        extcall self.foo()
+                """,
+                "" to emptyList(),
+                "# pragma version ^0.3.10" to listOf("Keyword `extcall` not supported in Vyper 0.3"),
+                "# pragma version ^0.4.1" to emptyList(),
+            ),
+            TestCase.create(
+                "staticcall",
+                """
+                    {pragma}
+                    x: address
+                    @external
+                    def foo() -> uint256:
+                        staticcall self.x.foo()
+                """,
+                "" to emptyList(),
+                "#@version 0.3.9" to listOf("Keyword `staticcall` not supported in Vyper 0.3"),
+                "#@version ^0.4.0" to emptyList(),
+            ),
+            TestCase.create(
+                "nonreentrant",
+                """
+                    {pragma}
+                    @external
+                    @nonreentrant('lock')
+                    def foo() -> uint256:
+                        return 0
+                """,
+                "" to emptyList(),
+                "#pragma version ^0.3.0" to emptyList(),
+                "#pragma version ^0.4.0" to listOf("Named locks are not supported in Vyper 0.4"),
+            ),
+            TestCase.create(
+                "require extcall",
+                """
+                    {pragma}
+                    interface Foo:
+                        def foo(x: decimal) -> decimal: payable
+                    @external
+                    def foo(a: Foo) -> int256:
+                        return ceil(a.foo(2.5))
+                """,
+                "" to emptyList(),
+                "#pragma version 0.3.0" to emptyList(),
+                "#pragma version 0.4.0" to listOf("Missing `extcall`"),
+            ),
+            TestCase.create(
+                "require staticcall",
+                """
+                    {pragma}
+                    a: Foo
+                    interface Foo:
+                        def foo(x: uint256) -> uint256: nonpayable
+                    @external
+                    def foo() -> uint256:
+                        return self.a.foo(2)
+                """,
+                "" to emptyList(),
+                "#pragma version ^0.3.20" to emptyList(),
+                "#pragma version 0.4.0" to listOf("Missing `extcall`"),
+            ),
+        ).flatten().toTypedArray()
+    }
+
+    @Test
+    fun test() {
+        myFixture.configureByText(VyperFileType.INSTANCE, case.formattedCode)
+        if (case.expectedErrors.isEmpty()) {
+            myFixture.checkHighlighting()
+            return
+        }
+        val messages = myFixture.doHighlighting()
+            .filter { it.severity == HighlightSeverity.ERROR }
+            .map { it.description }
+        assertSameElements(messages, *case.expectedErrors.toTypedArray())
+    }
+}

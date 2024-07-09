@@ -41,6 +41,12 @@ public class VyperInterfaceFunctionImpl extends VyperNamedElementImpl implements
 
   @Override
   @Nullable
+  public VyperInterfaceFunctionModifier getInterfaceFunctionModifier() {
+    return findChildByClass(VyperInterfaceFunctionModifier.class);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getIdentifier() {
     return findChildByType(IDENTIFIER);
   }

@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface VyperStaticCallExpression extends VyperExpression {
 
   @Nullable
-  VyperCallExpression getCallExpression();
+  VyperExpression getExpression();
 
 }

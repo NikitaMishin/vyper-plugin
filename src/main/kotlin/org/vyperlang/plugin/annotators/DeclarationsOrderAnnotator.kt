@@ -11,7 +11,7 @@ private const val GLOBAL_BEFORE_FUNCTION = "Global variables must all come befor
 private const val IMPORT_BEFORE_GLOBAL = "Imports must come before global variables"
 private val GlobalTypes = arrayOf(VyperStateVariableDeclaration::class, VyperConstantDefinitionExpression::class, VyperImmutableDefinitionExpression::class);
 
-class VyperDeclarationsOrderAnnotator : Annotator {
+class DeclarationsOrderAnnotator : Annotator {
 
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         when {

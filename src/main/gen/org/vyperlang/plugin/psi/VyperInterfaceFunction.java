@@ -14,6 +14,9 @@ public interface VyperInterfaceFunction extends VyperNamedElement {
   VyperFunctionArgs getFunctionArgs();
 
   @Nullable
+  VyperInterfaceFunctionModifier getInterfaceFunctionModifier();
+
+  @Nullable
   PsiElement getIdentifier();
 
 }

@@ -46,6 +46,7 @@ public interface VyperTypes {
   IElementType INLINE_ARRAY_EXPRESSION = new VyperElementType("INLINE_ARRAY_EXPRESSION");
   IElementType INTERFACE_DECLARATION = new VyperElementType("INTERFACE_DECLARATION");
   IElementType INTERFACE_FUNCTION = new VyperElementType("INTERFACE_FUNCTION");
+  IElementType INTERFACE_FUNCTION_MODIFIER = new VyperElementType("INTERFACE_FUNCTION_MODIFIER");
   IElementType IN_EXPRESSION = new VyperElementType("IN_EXPRESSION");
   IElementType LIST_TYPE = new VyperElementType("LIST_TYPE");
   IElementType LOCAL_VARIABLE_DEFINITION = new VyperElementType("LOCAL_VARIABLE_DEFINITION");
@@ -288,6 +289,9 @@ public interface VyperTypes {
       }
       else if (type == INTERFACE_FUNCTION) {
         return new VyperInterfaceFunctionImpl(node);
+      }
+      else if (type == INTERFACE_FUNCTION_MODIFIER) {
+        return new VyperInterfaceFunctionModifierImpl(node);
       }
       else if (type == IN_EXPRESSION) {
         return new VyperInExpressionImpl(node);

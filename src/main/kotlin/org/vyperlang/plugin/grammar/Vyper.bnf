@@ -177,7 +177,7 @@ InterfaceFunction ::= ( def &INDNONE Identifier FunctionArgs FunTypeAnnotation? 
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
-private InterfaceFunctionModifier ::= pure | view | nonpayable | payable
+InterfaceFunctionModifier ::= pure | view | nonpayable | payable
 
 FunctionArgs ::= '(' (ParamDef (',' (ParamDef | & ')'))*)? ')' {pin(".*")=1}
 
@@ -340,8 +340,8 @@ EventLogExpression ::= log &INDNONE VarLiteral '(' Expression (',' Expression)* 
 InExpression ::= Expression &INDNONE 'in' &INDNONE Expression
 
 TernaryExpression ::= Expression &INDNONE if &INDNONE Expression &INDNONE else &INDNONE Expression { pin = 1 }
-ExtCallExpression ::= extcall CallExpression
-StaticCallExpression ::= staticcall CallExpression
+ExtCallExpression ::= extcall Expression
+StaticCallExpression ::= staticcall Expression
 
 //self function call?
 

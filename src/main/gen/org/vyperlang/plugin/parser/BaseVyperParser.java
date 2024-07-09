@@ -2185,13 +2185,15 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // pure | view | nonpayable | payable
-  static boolean InterfaceFunctionModifier(PsiBuilder b, int l) {
+  public static boolean InterfaceFunctionModifier(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "InterfaceFunctionModifier")) return false;
     boolean r;
+    Marker m = enter_section_(b, l, _NONE_, INTERFACE_FUNCTION_MODIFIER, "<interface function modifier>");
     r = consumeToken(b, PURE);
     if (!r) r = consumeToken(b, VIEW);
     if (!r) r = consumeToken(b, NONPAYABLE);
     if (!r) r = consumeToken(b, PAYABLE);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -4165,7 +4167,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = consumeTokenSmart(b, EXTCALL);
     p = r;
-    r = p && Expression(b, l, 4);
+    r = p && Expression(b, l, 25);
     exit_section_(b, l, m, EXT_CALL_EXPRESSION, r, p, null);
     return r || p;
   }
@@ -4177,7 +4179,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = consumeTokenSmart(b, STATICCALL);
     p = r;
-    r = p && Expression(b, l, 4);
+    r = p && Expression(b, l, -1);
     exit_section_(b, l, m, STATIC_CALL_EXPRESSION, r, p, null);
     return r || p;
   }
