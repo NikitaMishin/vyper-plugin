@@ -100,7 +100,7 @@ class VyperCompilerDocker(
             .id
 
         PluginDockerClient.startContainerCmd(containerId).exec()
-        LOG.info("Container $containerId started")
+        LOG.info("Container $containerId started with $image:$imageTag")
 
         val frames = VyperFrameStreamAdapter()
         PluginDockerClient

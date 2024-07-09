@@ -32,6 +32,9 @@ class VyperFindUsagesProvider : FindUsagesProvider {
             is VyperImmutableDefinitionExpression -> "immutable"
             is VyperImplementsDirective -> "implements"
             is VyperInterfaceFunction -> "interface function"
+            is VyperFlagOption -> "flag option"
+            is VyperFlagDeclaration -> "flag"
+            is VyperFunctionCallArgument -> "function call argument"
             else -> throw IllegalArgumentException("Unknown element type: $element")
         }
         else -> ""

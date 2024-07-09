@@ -1,12 +1,10 @@
 package org.vyperlang.plugin.usages
 
-import com.intellij.lang.cacheBuilder.WordOccurrence
 import com.intellij.psi.impl.DebugUtil
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.intellij.util.Processor
 import org.vyperlang.plugin.VyperFileType
 
-class TestFindUsages : BasePlatformTestCase() {
+class TestFindUsagesProvider : BasePlatformTestCase() {
     fun testConstant() {
         val code = """
             a<caret>b: constant(uint256) = 1
@@ -78,17 +76,30 @@ class TestFindUsages : BasePlatformTestCase() {
         checkUsages(code, 92 to 94)
     }
 
-//    fun testStructMemberKwarg() {
-//        val code = """
-//            struct Foo:
-//                a<caret>b: uint256
-//            @external
-//            def foo() -> Foo:
-//                ab: uint256 = 1
-//                return Foo(ab=ab)
-//        """
-//        checkUsages(code, 91 to 93)
-//    }
+    fun testLocalVarConflict() {
+        val code = """
+            struct Foo:
+                ab: uint256
+            @external
+            def foo() -> Foo:
+                a<caret>b: uint256 = 1
+                ab += 1
+                return Foo({ab: ab})
+        """
+        checkUsages(code, 80 to 82, 108 to 110)
+    }
+
+    fun testStructMemberKwarg() {
+        val code = """
+            struct Foo:
+                a<caret>b: uint256
+            @external
+            def foo() -> Foo:
+                ab: uint256 = 1
+                return Foo(ab=ab)
+        """
+        checkUsages(code, 91 to 93)
+    }
 
     fun testEnum() {
         val code = """
@@ -164,19 +175,8 @@ class TestFindUsages : BasePlatformTestCase() {
         val usages = try { myFixture.testFindUsages() } catch (e: AssertionError) { emptyList() }
         val expected = expectedRanges.toList().map { "${it.first}-${it.second}" }
         val actual = usages.map { "${it.navigationRange.startOffset}-${it.navigationRange.endOffset}" }
-        assertSameElements(getDebugMessage(), actual, expected)
-    }
 
-    /** Generates a debug message with the PSI tree and the words found in the file */
-    private fun getDebugMessage(): String {
-        val psi = DebugUtil.psiToString(myFixture.file, false, true)
-        val words = mutableListOf<String>()
-        VyperFindUsagesProvider().wordsScanner.processWords(myFixture.file.text, object : Processor<WordOccurrence> {
-            override fun process(t: WordOccurrence): Boolean {
-                words.add(myFixture.file.text.substring(t.start, t.end))
-                return true
-            }
-        });
-        return "$psi\nWords found: ${words.joinToString(",")}"
+        val psiString = DebugUtil.psiToString(myFixture.file, false, true)
+        assertSameElements(psiString, actual, expected)
     }
 }

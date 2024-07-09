@@ -25,7 +25,7 @@ class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Vype
      * @return the Vyper version or null if not found
      */
     internal val vyperVersion: SemVer? get() =
-        this.node.getChildren(null)
+        this.node.getChildren(null) // all children
             .asSequence()
             .takeWhile { CommentTokens.contains(it.elementType) }
             .map {  PragmaRegex.findAll(it.text) }

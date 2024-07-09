@@ -13,7 +13,7 @@ class VyperMemberAccessReference(element: VyperVarLiteral, private var member: V
 }
 
 class VyperStructReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
-    override fun getAlternatives() = element.file.structs
+    override fun getAlternatives() = VyperResolver.findStruct(element)
 }
 
 class VyperInterfaceReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
@@ -21,6 +21,10 @@ class VyperInterfaceReference(element: VyperVarLiteral) : VyperReferenceBase<Vyp
 }
 
 class VyperStructMemberReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+    override fun getAlternatives() = VyperResolver.resolveStructMembers(element)
+}
+
+class VyperKeywordArgumentReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
     override fun getAlternatives() = VyperResolver.resolveStructMembers(element)
 }
 

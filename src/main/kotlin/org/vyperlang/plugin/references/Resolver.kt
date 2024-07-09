@@ -26,8 +26,13 @@ object VyperResolver {
      * @param element The literal that might reference a struct.
      */
     fun resolveStructMembers(element: VyperVarLiteral) =
-        element.file.findStruct(element.parentOfType<VyperStructExpression>()?.varLiteral?.name)
+        findStruct(element)
             .flatMap { it.childrenOfType<VyperLocalVariableDefinition>() }
+
+    fun findStruct(element: VyperVarLiteral) =
+        element.file.findStruct(
+            element.parentOfType<VyperStructExpression>()?.varLiteral?.name
+                ?: element.parentOfType<VyperCallExpression>()?.let { getFirstLiteralName(it) })
 
     private fun lexicalDeclarations(scope: PsiElement, place: PsiElement): List<VyperNamedElement> = when (scope) {
         is VyperLocalVariableDefinition -> listOf(scope)
@@ -57,11 +62,11 @@ object VyperResolver {
         when (getFirstLiteralName(element.expression)) {
             "msg" -> VyperInternalTypeFactory(element.project).msg.children.filterIsInstance<VyperLocalVariableDefinition>()
             "self" -> element.file.selfElements
-            is String -> resolveInterfaceMembers(element, getFirstLiteralName(element.expression))
+            is String -> resolveMembers(element, getFirstLiteralName(element.expression))
             else -> emptyList() // todo #37: `block` built-in
         }
 
-    private fun resolveInterfaceMembers(element: VyperMemberAccessExpression, name: String?) =
+    private fun resolveMembers(element: VyperMemberAccessExpression, name: String?) =
         lexicalDeclarations(element)
             .filter { it.name == name }
             .flatMap { resolveMembers(it) }

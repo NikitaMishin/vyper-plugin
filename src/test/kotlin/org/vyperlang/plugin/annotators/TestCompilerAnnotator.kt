@@ -2,12 +2,14 @@ package org.vyperlang.plugin.annotators
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.HighlightSeverity
+import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import io.mockk.checkUnnecessaryStub
 import io.mockk.every
 import io.mockk.mockk
+import org.vyperlang.plugin.psi.file
 
 data class ExpectedError(val message: String, val range: Pair<Int, Int>, val tooltip: String="")
 
@@ -41,7 +43,7 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
 
     fun testModuleNotFound() = testCase(
         "module-not-found.vy",
-        ExpectedError("Unknown interface: foobar", 23 to 27, "UndeclaredDefinition"),
+        ExpectedError("Unknown interface: foobar. Did you mean 'ERC20Detailed', or maybe 'ERC165'?", 24 to 28, "UndeclaredDefinition"),
     )
 
     fun testInvalidType() = testCase(
@@ -56,7 +58,7 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
 
     fun testIteratorException() = testCase(
         "iterator-error.vy",
-        ExpectedError("Cannot iterate over the result of a function call", 57 to 60, "IteratorException"),
+        ExpectedError("Cannot iterate over the result of a function call", 58 to 61, "IteratorException"),
     )
 
     fun testVy3() = testCase(
@@ -73,7 +75,8 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
     fun testOK() = testCase("ok.vy")
 
     private fun testCase(fileName: String, vararg expectedErrors: ExpectedError) {
-        val info = fileInfo(fileName)
+        myFixture.configureByFile(fileName)
+        val info = fileInfo()
         val errors = CompilerAnnotator().doAnnotate(info)
         assertSize(expectedErrors.size, errors)
         annotate(fileName, errors, *expectedErrors)
@@ -89,13 +92,13 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
                 }
             }
         }
-        myFixture.configureByFile(fileName)
         CompilerAnnotator().apply(myFixture.file, errors, holder)
         checkUnnecessaryStub(holder)
     }
 
-    private fun fileInfo(fileName: String): FileInfo {
-        val file = LocalFileSystem.getInstance().findFileByPath("${testDataPath}/$fileName")!!
-        return FileInfo(project, file, mockk(relaxed = true))
+    // we don't call annotator.collectInformation() directly, because the fixture gets a temp:// path
+    private fun fileInfo(): FileInfo {
+        val file = LocalFileSystem.getInstance().findFileByPath("${testDataPath}/${myFixture.file.name}")!!
+        return FileInfo(project, file, myFixture.file.file.vyperVersion, mockk<ProgressIndicator>(relaxed = true))
     }
 }

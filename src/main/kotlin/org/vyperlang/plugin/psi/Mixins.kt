@@ -15,12 +15,18 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
      */
     override fun getReference(): VyperReference = getReference(node.psi.parent)
 
-    private fun getReference(parent: PsiElement?) = when (parent) {
+    private fun getReference(parent: PsiElement?): VyperReference = when (parent) {
         is VyperImplementsDirective -> VyperInterfaceReference(this)
         is VyperEventLogExpression -> VyperEventLogReference(this)
         is VyperStructExpression -> VyperStructReference(this)
         is VyperStructExpressionMember -> VyperStructMemberReference(this)
         is VyperMemberAccessExpression -> VyperMemberAccessReference(this, parent)
+        is VyperPrimaryExpression ->
+            if (parent.parent is VyperAssignmentExpression && parent.parent.parent is VyperFunctionCallArgument && parent == parent.parent.firstChild) {
+                VyperKeywordArgumentReference(this)
+            } else {
+                VyperVarLiteralReference(this)
+            }
         else -> VyperVarLiteralReference(this) // reference itself
     }
 }

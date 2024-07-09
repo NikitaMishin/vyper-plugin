@@ -41,7 +41,10 @@ class VersionAnnotator : Annotator {
 
         val firstChild = element.containingFile.firstChild // show warning on the first line
         if (fileType is VyperFileType && element == firstChild && element.file.vyperVersion == null) {
-            holder.newAnnotation(HighlightSeverity.WARNING, VYPER_VERSION_NOT_SPECIFIED).create()
+            holder.newAnnotation(HighlightSeverity.WARNING, VYPER_VERSION_NOT_SPECIFIED)
+                .withFix(AddVersionPragmaFix("^0.3.0"))
+                .withFix(AddVersionPragmaFix("^0.4.0"))
+                .create()
         }
     }
 
@@ -56,7 +59,8 @@ class VersionAnnotator : Annotator {
                     holder.newAnnotation(HighlightSeverity.ERROR, STRUCT_DICT_NOT_VY3).create()
             is VyperForStatement ->
                 if(element.type != null)
-                    holder.newAnnotation(HighlightSeverity.ERROR, RANGE_TYPE_NOT_V3).create()
+                    holder.newAnnotation(HighlightSeverity.ERROR, RANGE_TYPE_NOT_V3)
+                        .range(element.firstChild).create()
             is VyperFlagDeclaration ->
                 if (element.firstChild.text == "flag")
                     holder.newAnnotation(HighlightSeverity.ERROR, FLAGS_NOT_V3).create()
@@ -73,7 +77,8 @@ class VersionAnnotator : Annotator {
                 holder.newAnnotation(HighlightSeverity.WARNING, STRUCT_DICT_WARN_V4).create()
             is VyperForStatement ->
                 if(element.type == null)
-                    holder.newAnnotation(HighlightSeverity.ERROR, RANGE_TYPE_REQUIRED_V4).create()
+                    holder.newAnnotation(HighlightSeverity.ERROR, RANGE_TYPE_REQUIRED_V4)
+                        .range(element.firstChild).create()
             is VyperFlagDeclaration ->
                 if (element.firstChild.text == "enum")
                     holder.newAnnotation(HighlightSeverity.ERROR, ENUM_NOT_V4).create()
