@@ -28,10 +28,12 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
     }
 }
 
-abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperStructType {
-    override val referenceNameElement: PsiElement get() = findChildByType(IDENTIFIER)!!
-    override val referenceName: String get() = referenceNameElement.text
-}
+//abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperStructType {
+//    override val referenceNameElement: PsiElement get() = findChildByType(IDENTIFIER)!!
+//    override val referenceName: String get() = referenceNameElement.text
+//
+//    override fun getReference(): VyperReference? = VyperStructReference(this.node.psi as VyperStructType)
+//}
 
 abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperFunctionDefinition {
     override val referenceNameElement: PsiElement get() = findChildByType(IDENTIFIER)!!

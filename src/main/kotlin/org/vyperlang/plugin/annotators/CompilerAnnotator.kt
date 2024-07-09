@@ -12,7 +12,9 @@ import org.vyperlang.plugin.docker.VyperCompilerDocker
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.findPsiFile
 import org.vyperlang.plugin.docker.CompilerMissingError
+import org.vyperlang.plugin.psi.file
 
 data class FileInfo(val project: Project, val file: VirtualFile, val indicator: ProgressIndicator? = null)
 
@@ -44,8 +46,9 @@ class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), Du
         if (info?.file?.exists() != true) {
             return emptyList() // file may not be written to disk yet, also occurs in unit tests with `configureByText`
         }
+        val version = info.file.findPsiFile(info.project)?.file?.vyperVersion;
         val result = try {
-            VyperCompilerDocker(info.project, info.file, info.indicator).run()
+            VyperCompilerDocker(info.project, info.file, version, info.indicator).run()
         } catch (e: CompilerMissingError) {
             LOG.error("Error while running compiler annotator", e)
             null

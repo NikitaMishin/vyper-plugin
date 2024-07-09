@@ -1,3 +1,4 @@
+# pragma version 0.4.0
 ### Press F or not to press F contract example
 initial_distribution:constant(int128) = 100
 
@@ -6,7 +7,7 @@ address_to_tokens : HashMap[address,int128]
 
 address_is_vote : HashMap[address,bool]
 
-current_proposal : bytes[100]
+current_proposal : Bytes[100]
 
 vote_for_yes:int128
 vote_for_no:int128
@@ -18,7 +19,7 @@ is_accepted: bool
 
 
 @external
-def __init__(proposal : bytes[100]):
+def __init__(proposal : Bytes[100]):
     self.creator = msg.sender
     self.current_proposal = proposal
 
@@ -65,5 +66,5 @@ def finish_vote():
     self.is_finished = True
 
 @external
-def get_current_proposal()->bytes[100]:
+def get_current_proposal()->Bytes[100]:
     return self.current_proposal

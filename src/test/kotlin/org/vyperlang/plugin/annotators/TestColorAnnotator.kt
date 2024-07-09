@@ -11,6 +11,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
 
     fun testVySyntax() {
         checkErrors(VyperFileType.INSTANCE, """
+                # pragma version ^0.3.0
                 @view
                 @external
                 def totalSupply() -> uint256:
@@ -22,6 +23,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
 
     fun testOldDecorator() {
         checkErrors(VyperFileType.INSTANCE, """
+                # pragma version ^0.3.0
                 @view
                 @public
                 def totalSupply() -> uint256:
@@ -35,7 +37,10 @@ class TestColorAnnotator : BasePlatformTestCase() {
     fun testVyiStateVar() {
         checkErrors(
             VyperInterfaceFileType.INSTANCE,
-            "a: public(address)",
+            """
+                # pragma version ^0.3.0
+                a: public(address)
+            """,
             "State variables forbidden in `.vyi` files",
         )
     }
@@ -44,6 +49,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
         checkErrors(
             VyperInterfaceFileType.INSTANCE,
             """
+                # pragma version ^0.3.0
                 @view
                 @external
                 def totalSupply() -> uint256:
@@ -57,6 +63,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
         checkErrors(
             VyperInterfaceFileType.INSTANCE,
             """
+                # pragma version ^0.3.0
                 @view
                 @internal
                 def balanceOf(_owner: address) -> uint256:
@@ -68,6 +75,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
 
     fun testVyiStatement() {
         checkErrors(VyperInterfaceFileType.INSTANCE, """
+                # pragma version ^0.3.0
                 @view
                 @external
                 def allowance(_owner: address, _spender: address) -> uint256:
@@ -79,6 +87,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
 
     fun testImportAfterStateVar() {
         checkErrors(VyperFileType.INSTANCE, """
+                # pragma version ^0.3.0
                 a: uint256
                 from vyper.interfaces import ERC20
             """.trimIndent(),
@@ -88,6 +97,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
 
     fun testFunctionBeforeStateVar() {
         checkErrors(VyperFileType.INSTANCE, """
+                # pragma version ^0.3.0
                 @external
                 def foo() -> uint256:
                     return 0

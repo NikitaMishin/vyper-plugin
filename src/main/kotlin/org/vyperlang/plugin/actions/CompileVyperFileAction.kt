@@ -9,10 +9,12 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
+import com.intellij.openapi.vfs.findPsiFile
 import org.vyperlang.plugin.VyperFileType
 import org.vyperlang.plugin.compile.VyperCompiler
 import org.vyperlang.plugin.compile.VyperParameters
 import org.vyperlang.plugin.gui.NoFilesWithVyperAreSelectedDialogue
+import org.vyperlang.plugin.psi.file
 import org.vyperlang.plugin.settings.VyperSettings
 
 private const val COMPILING_MESSAGE = "Compiling Vyper"

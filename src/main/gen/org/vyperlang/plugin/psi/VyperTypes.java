@@ -85,7 +85,7 @@ public interface VyperTypes {
   IElementType BOOLEANLITERAL = new VyperTokenType("booleanLiteral");
   IElementType BREAK = new VyperTokenType("break");
   IElementType BREAK_LINE = new VyperTokenType("BREAK_LINE");
-  IElementType BYTES = new VyperTokenType("bytes");
+  IElementType BYTES = new VyperTokenType("Bytes");
   IElementType BYTESM = new VyperTokenType("bytesM");
   IElementType CARET = new VyperTokenType("^");
   IElementType CLEAR = new VyperTokenType("clear");
@@ -164,7 +164,7 @@ public interface VyperTypes {
   IElementType SCIENTIFICNUMBER = new VyperTokenType("scientificNumber");
   IElementType SEMICOLON = new VyperTokenType(";");
   IElementType STATICCALL = new VyperTokenType("staticcall");
-  IElementType STRING = new VyperTokenType("string");
+  IElementType STRING = new VyperTokenType("String");
   IElementType STRINGLITERALDOUBLE = new VyperTokenType("stringLiteralDouble");
   IElementType STRINGLITERALDOUBLEB = new VyperTokenType("stringLiteralDoubleB");
   IElementType STRINGLITERALSINGLE = new VyperTokenType("stringLiteralSingle");

@@ -38,7 +38,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                     def foo() -> uint256:
                         extcall self.foo()
                 """,
-                "" to emptyList(),
+                "# pragma version" to listOf(VYPER_VERSION_NOT_SPECIFIED),
                 "# pragma version ^0.3.10" to listOf(EXTCALL_NOT_VY3),
                 "# pragma version ^0.4.1" to emptyList(),
             ),
@@ -51,7 +51,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                     def foo() -> uint256:
                         staticcall self.x.foo()
                 """,
-                "" to emptyList(),
+                "#@version" to listOf(VYPER_VERSION_NOT_SPECIFIED),
                 "#@version 0.3.9" to listOf(STATICCALL_NOT_VY3),
                 "#@version ^0.4.0" to emptyList(),
             ),
@@ -64,7 +64,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                     def foo() -> uint256:
                         return 0
                 """,
-                "" to emptyList(),
+                "" to listOf(VYPER_VERSION_NOT_SPECIFIED),
                 "#pragma version ^0.3.0" to emptyList(),
                 "#pragma version ^0.4.0" to listOf(NAMED_LOCKS_NOT_V4),
             ),
@@ -78,7 +78,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                     def foo(a: Foo) -> int256:
                         return ceil(a.foo(2.5))
                 """,
-                "" to emptyList(),
+                "" to listOf(VYPER_VERSION_NOT_SPECIFIED),
                 Vy3 to emptyList(),
                 "#pragma version 0.4.0" to listOf(MISSING_EXTCALL),
             ),
@@ -93,7 +93,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                     def foo() -> uint256:
                         return self.a.foo(2)
                 """,
-                "" to emptyList(),
+                "" to listOf(VYPER_VERSION_NOT_SPECIFIED),
                 "#pragma version ^0.3.20" to emptyList(),
                 "#pragma version 0.4.0" to listOf(MISSING_STATICCALL),
             ),

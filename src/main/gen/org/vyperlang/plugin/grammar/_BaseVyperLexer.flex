@@ -105,8 +105,8 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "nonreentrant"               { return NONREENTRANT; }
   "event"                      { return EVENT; }
   "range"                      { return RANGE; }
-  "string"                     { return STRING; }
-  "bytes"                      { return BYTES; }
+  "String"                     { return STRING; }
+  "Bytes"                      { return BYTES; }
   "DynArray"                   { return DYNARRAY; }
   "HashMap"                    { return HASHMAP; }
   "as"                         { return AS; }

@@ -7,12 +7,15 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.findPsiFile
+import com.intellij.util.text.SemVer
 import org.vyperlang.plugin.VyperMessageProcessor
 import org.vyperlang.plugin.VyperStubGenerator
 import org.vyperlang.plugin.docker.CompilerMissingError
 import org.vyperlang.plugin.docker.StatusDocker
 import org.vyperlang.plugin.docker.ToolResult
 import org.vyperlang.plugin.docker.VyperCompilerDocker
+import org.vyperlang.plugin.psi.file
 import org.vyperlang.plugin.toolWindow.VyperWindow
 
 data class VyperParameters(
@@ -32,8 +35,9 @@ object VyperCompiler {
     fun compile(params: VyperParameters, indicator: ProgressIndicator? = null) =
         try {
             params.files.map {
+                val version = it.findPsiFile(params.project)?.file?.vyperVersion
                 val compiler =
-                    VyperCompilerDocker(params.project, it, indicator, *params.compilerParameters.toTypedArray())
+                    VyperCompilerDocker(params.project, it, version, indicator, *params.compilerParameters.toTypedArray())
                 reportResult(it, params, compiler.run())
             }
         } catch(e: CompilerMissingError) {

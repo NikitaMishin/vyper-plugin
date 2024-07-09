@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.vyperlang.plugin.psi.VyperVarLiteralMixin;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperStructTypeImpl extends ASTWrapperPsiElement implements VyperStructType {
+public class VyperStructTypeImpl extends VyperVarLiteralMixin implements VyperStructType {
 
   public VyperStructTypeImpl(@NotNull ASTNode node) {
     super(node);
@@ -29,8 +29,8 @@ public class VyperStructTypeImpl extends ASTWrapperPsiElement implements VyperSt
 
   @Override
   @NotNull
-  public VyperVarLiteral getVarLiteral() {
-    return findNotNullChildByClass(VyperVarLiteral.class);
+  public PsiElement getIdentifier() {
+    return findNotNullChildByType(IDENTIFIER);
   }
 
 }

@@ -1,10 +1,9 @@
-
-
 # pragma version ^0.4.0
+
 x: constant(uint256) = max_value(uint256)
 y: immutable(address)
 
-@deploy
+@external
 def __init__():
     self.y = empty(address)
 

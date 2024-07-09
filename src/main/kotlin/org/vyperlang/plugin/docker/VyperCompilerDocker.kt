@@ -8,6 +8,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.util.text.SemVer
 import org.vyperlang.plugin.VyperMessageProcessor
 import javax.swing.event.HyperlinkEvent
 
@@ -37,12 +38,13 @@ val LOG: Logger = Logger.getInstance(VyperCompilerDocker::class.java)
 class VyperCompilerDocker(
     private val project: Project,
     private val file: VirtualFile,
+    version: SemVer?,
     private val indicator: ProgressIndicator?,
     vararg args: String
 ) {
     private val args = arrayOf(*args)
     private val image = "vyperlang/vyper"
-    private val imageTag = "0.3.10"
+    private val imageTag = version?.toString() ?: "latest"
     private val dockerBindDir = "/app/s"
 
     /**
@@ -64,7 +66,7 @@ class VyperCompilerDocker(
         }
 
     private fun hasImage() =
-        PluginDockerClient.listImagesCmd().exec().any { it.repoTags.any { k -> k.contains(image, true) } }
+        PluginDockerClient.listImagesCmd().exec().any { it.repoTags.any { tag -> tag.contains("$image:$imageTag") } }
 
     private fun downloadImage(): ResultCallback.Adapter<PullResponseItem>? {
         VyperMessageProcessor.notificateInBalloon(

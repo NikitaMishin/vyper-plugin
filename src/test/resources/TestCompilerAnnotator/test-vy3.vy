@@ -1,6 +1,5 @@
+# pragma version ^0.3.10
 
-
-# pragma version ^0.4.0
 x: constant(uint256) = max_value(uint256)
 y: immutable(address)
 

@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.findParentOfType
 import com.intellij.util.text.SemVer
 import org.vyperlang.plugin.VyperFileType
+import org.vyperlang.plugin.VyperInterfaceFileType
 import org.vyperlang.plugin.psi.*
 import org.vyperlang.plugin.references.VyperResolver
 
@@ -24,6 +25,8 @@ internal const val NAMED_LOCKS_NOT_V4 = "Named locks are not supported in Vyper 
 internal const val MISSING_STATICCALL = "Missing `staticcall`"
 internal const val MISSING_EXTCALL = "Missing `extcall`"
 
+internal const val VYPER_VERSION_NOT_SPECIFIED = "Vyper version not specified. Please add `# pragma version ^0.4.0` to the top of the file"
+
 class VersionAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         when (element.containingFile.fileType) {
@@ -34,6 +37,9 @@ class VersionAnnotator : Annotator {
                         it < Vyper4 -> highlightVyper3(element, holder)
                     }
                 }
+        }
+        if (element.containingFile.fileType is VyperFileType && element == element.containingFile.firstChild && element.file.vyperVersion == null) {
+            holder.newAnnotation(HighlightSeverity.ERROR, VYPER_VERSION_NOT_SPECIFIED).create()
         }
     }
 

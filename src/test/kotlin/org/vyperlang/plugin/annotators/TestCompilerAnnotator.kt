@@ -28,36 +28,46 @@ class TestCompilerAnnotator : BasePlatformTestCase() {
 
     fun testFunctionDeclarationException() = testCase(
         "function-declaration-exception.vy",
-        ExpectedError("Function does not return any values", 23 to 29, "FunctionDeclarationException"),
+        ExpectedError("Function should not return any values", 23 to 29, "FunctionDeclarationException"),
     )
 
     fun testOverflowException() = testCase(
         "overflow-exception.vy",
         ExpectedError(
-            "Result of exponentiation (115792089237316195423570985008687907853269984665640564039457584007913129639936)" +
-                    " is outside bounds of all numeric types",
+            "Numeric literal is outside of allowable range for number types",
             62 to 63, "OverflowException"
         ),
     )
 
     fun testModuleNotFound() = testCase(
         "module-not-found.vy",
-        ExpectedError("Unknown interface: foobar. Did you mean 'ERC20Detailed', or maybe 'ERC165'?", 0 to 4, "UndeclaredDefinition"),
+        ExpectedError("Unknown interface: foobar", 23 to 27, "UndeclaredDefinition"),
     )
 
     fun testInvalidType() = testCase(
         "invalid-type.vy",
-        ExpectedError("Expected uint256 but literal can only be cast as bool.", 50 to 55, "InvalidType"),
+        ExpectedError("Expected uint256 but literal can only be cast as bool.", 50 to 55, "TypeMismatch"),
     )
 
     fun testStructureException() = testCase(
         "structure-exception.vy",
-        ExpectedError("Second value must be > first value", 41 to 42, "StructureException"),
+        ExpectedError("Second value must be > first value", 65 to 66, "StructureException"),
     )
 
     fun testIteratorException() = testCase(
         "iterator-error.vy",
-        ExpectedError("Cannot iterate over the result of a function call", 34 to 37, "IteratorException"),
+        ExpectedError("Cannot iterate over the result of a function call", 57 to 60, "IteratorException"),
+    )
+
+    fun testVy3() = testCase(
+        "test-vy3.vy",
+        ExpectedError("Unknown decorator: deploy", 92 to 98, "FunctionDeclarationException"),
+    )
+
+    fun testVy4() = testCase(
+        "test-vy4.vy",
+        ExpectedError("Immutable variables must be accessed without 'self'", 67 to 68, "ImmutableViolation"),
+        ExpectedError("Constructor must be marked as `@deploy`", 100 to 103, "FunctionDeclarationException"),
     )
 
     fun testOK() = testCase("ok.vy")

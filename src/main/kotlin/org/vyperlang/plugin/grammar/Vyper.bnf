@@ -97,8 +97,8 @@
         intM = 'regexp:(int[0-9]+)'
         uintM = 'regexp:(uint[0-9]+)'
         bytesM = 'regexp:(bytes[0-9]+)'
-        string = 'string'
-        bytes = 'bytes'
+        string = 'String'
+        bytes = 'Bytes'
         DynArray = 'DynArray'
         HashMap = 'HashMap'
 
@@ -418,7 +418,11 @@ ValueType ::= intM | uintM | bytesM | address | bool | ((string | bytes) &INDNON
 ListType ::= ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier) ']'
                     (&INDNONE '[' (DecimalNumber | Identifier) ']')*
 
-StructType ::= VarLiteral
+StructType ::= Identifier
+{
+    implements = "org.vyperlang.plugin.psi.VyperReferenceElement"
+    mixin = "org.vyperlang.plugin.psi.VyperVarLiteralMixin"
+}
 
 private DynArrayType ::= DynArray &INDNONE '[' TYPE ',' (VarLiteral | NumberLiteral) ']'
 private HashMapType ::= HashMap &INDNONE '[' ValueType ',' TYPE ']'

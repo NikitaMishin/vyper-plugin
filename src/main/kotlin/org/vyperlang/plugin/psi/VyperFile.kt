@@ -2,13 +2,14 @@ package org.vyperlang.plugin.psi
 
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.text.SemVer
 import org.vyperlang.plugin.VyperLanguage
 import org.vyperlang.plugin.psi.VyperTypes.COMMENT
 
-private val CommentTokens = TokenSet.create(COMMENT)
+private val CommentTokens = TokenSet.create(COMMENT, WHITE_SPACE)
 private val PragmaRegex = "#\\s*(?:pragma\\s+|@)version\\s+\\^?(\\d+\\.\\d+\\.\\d+)".toRegex()
 
 

@@ -2991,13 +2991,13 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // VarLiteral
+  // Identifier
   public static boolean StructType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StructType")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = VarLiteral(b, l + 1);
+    r = consumeToken(b, IDENTIFIER);
     exit_section_(b, m, STRUCT_TYPE, r);
     return r;
   }
