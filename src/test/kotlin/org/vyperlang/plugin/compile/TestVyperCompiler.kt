@@ -1,4 +1,4 @@
-package org.vyperlang.plugin.parser
+package org.vyperlang.plugin.compile
 
 import com.intellij.mock.MockProgressIndicator
 import com.intellij.openapi.module.ModuleManager
@@ -11,8 +11,6 @@ import io.mockk.mockk
 import org.junit.Assert.assertTrue
 import org.vyperlang.plugin.VyperIcons
 import org.vyperlang.plugin.annotators.VYPER_ERROR_REGEX
-import org.vyperlang.plugin.compile.VyperCompiler
-import org.vyperlang.plugin.compile.VyperParameters
 import org.vyperlang.plugin.docker.CompilerMissingError
 import org.vyperlang.plugin.docker.StatusDocker
 import org.vyperlang.plugin.docker.ToolResult

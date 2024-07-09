@@ -23,6 +23,7 @@ public interface VyperTypes {
   IElementType EVENT_PROPERTY = new VyperElementType("EVENT_PROPERTY");
   IElementType EXPONENT_EXPRESSION = new VyperElementType("EXPONENT_EXPRESSION");
   IElementType EXPRESSION = new VyperElementType("EXPRESSION");
+  IElementType EXT_CALL_EXPRESSION = new VyperElementType("EXT_CALL_EXPRESSION");
   IElementType FOR_STATEMENT = new VyperElementType("FOR_STATEMENT");
   IElementType FUNCTION_ARGS = new VyperElementType("FUNCTION_ARGS");
   IElementType FUNCTION_BODY = new VyperElementType("FUNCTION_BODY");
@@ -62,6 +63,7 @@ public interface VyperTypes {
   IElementType STATEMENT = new VyperElementType("STATEMENT");
   IElementType STATE_VARIABLE_DECLARATION = new VyperElementType("STATE_VARIABLE_DECLARATION");
   IElementType STATE_VARIABLE_TYPE = new VyperElementType("STATE_VARIABLE_TYPE");
+  IElementType STATIC_CALL_EXPRESSION = new VyperElementType("STATIC_CALL_EXPRESSION");
   IElementType STRUCT_DECLARATION = new VyperElementType("STRUCT_DECLARATION");
   IElementType STRUCT_EXPRESSION = new VyperElementType("STRUCT_EXPRESSION");
   IElementType STRUCT_EXPRESSION_MEMBER = new VyperElementType("STRUCT_EXPRESSION_MEMBER");
@@ -105,6 +107,7 @@ public interface VyperTypes {
   IElementType EQ = new VyperTokenType("==");
   IElementType EVENT = new VyperTokenType("event");
   IElementType EXPONENT = new VyperTokenType("**");
+  IElementType EXTCALL = new VyperTokenType("extcall");
   IElementType EXTERNAL = new VyperTokenType("external");
   IElementType FIXEDNUMBER = new VyperTokenType("fixedNumber");
   IElementType FOR = new VyperTokenType("for");
@@ -159,6 +162,7 @@ public interface VyperTypes {
   IElementType RSHIFT = new VyperTokenType(">>");
   IElementType SCIENTIFICNUMBER = new VyperTokenType("scientificNumber");
   IElementType SEMICOLON = new VyperTokenType(";");
+  IElementType STATICCALL = new VyperTokenType("staticcall");
   IElementType STRING = new VyperTokenType("string");
   IElementType STRINGLITERALDOUBLE = new VyperTokenType("stringLiteralDouble");
   IElementType STRINGLITERALDOUBLEB = new VyperTokenType("stringLiteralDoubleB");
@@ -215,6 +219,9 @@ public interface VyperTypes {
       }
       else if (type == EXPONENT_EXPRESSION) {
         return new VyperExponentExpressionImpl(node);
+      }
+      else if (type == EXT_CALL_EXPRESSION) {
+        return new VyperExtCallExpressionImpl(node);
       }
       else if (type == FOR_STATEMENT) {
         return new VyperForStatementImpl(node);
@@ -332,6 +339,9 @@ public interface VyperTypes {
       }
       else if (type == STATE_VARIABLE_TYPE) {
         return new VyperStateVariableTypeImpl(node);
+      }
+      else if (type == STATIC_CALL_EXPRESSION) {
+        return new VyperStaticCallExpressionImpl(node);
       }
       else if (type == STRUCT_DECLARATION) {
         return new VyperStructDeclarationImpl(node);

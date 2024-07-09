@@ -1,4 +1,4 @@
-package org.vyperlang.plugin.parser
+package org.vyperlang.plugin
 
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -9,7 +9,7 @@ import org.junit.runners.Parameterized.Parameters
 
 @TestDataPath("\$CONTENT_ROOT/src/examples")
 @RunWith(Parameterized::class)
-class TestExamplesHighlighting(private val file: String) :
+class TestHighlighter(private val file: String) :
     BasePlatformTestCase() {
     override fun getTestDataPath() = "src/test/resources/examples"
 

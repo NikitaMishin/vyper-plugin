@@ -49,7 +49,7 @@ class VyperCompilerDocker(
      * preferred way to run docker within a project
      * handles downloading image if not found
      * this function handle docker exceptions and notify uses about possible solution
-     * TODO add timeout, use long-running containers for performance
+     * todo #15: add timeout, use long-running containers for performance
      */
     fun run(): ToolResult =
         try {

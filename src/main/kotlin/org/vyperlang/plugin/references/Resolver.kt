@@ -29,29 +29,12 @@ object VyperResolver {
             .toList()
 
     /**
-     * Resolves a struct to its declaration.
-     * @param element The variable literal that is referencing a struct.
+     * Resolves the members of a struct.
+     * @param element The literal that might reference a struct.
      */
-    fun resolveStruct(element: VyperVarLiteral) = findStructByName(element.file, element.name)
-
-    /**
-     * Resolves a struct member to its declaration.
-     * @param element The variable literal that is a member of a struct.
-     */
-    fun resolveStructMember(element: VyperVarLiteral) =
-        // find the definition of the struct
-        findStructByName(element.file, element.parentOfType<VyperStructExpression>()?.varLiteral?.name)
-            // then find the member in it
+    fun resolveStructMembers(element: VyperVarLiteral) =
+        element.file.findStruct(element.parentOfType<VyperStructExpression>()?.varLiteral?.name)
             .flatMap { it.childrenOfType<VyperLocalVariableDefinition>() }
-            .filter { it.name == element.name }
-
-    private fun findStructByName(file: PsiFile, structName: String?) =
-        file.childrenOfType<VyperStructDeclaration>()
-            .filter { it.name == structName }
-
-    fun resolveEventLog(element: VyperVarLiteral) =
-        element.file.childrenOfType<VyperEventDeclaration>()
-            .filter { it.name == element.name }
 
     private fun lexicalDeclarations(scope: PsiElement, place: PsiElement): List<VyperNamedElement> = when (scope) {
         is VyperLocalVariableDefinition -> listOf(scope)
@@ -76,27 +59,26 @@ object VyperResolver {
         else -> emptyList()
     }
 
-    fun resolveMemberAccess(element: VyperMemberAccessExpression): List<VyperNamedElement> = when (getFirstLiteralName(element.expression)) {
-        "msg" -> VyperInternalTypeFactory(element.project).msg.children.filterIsInstance<VyperLocalVariableDefinition>()
-        "self" -> element.file.selfElements
-        is String -> resolveInterfaceMember(element, getFirstLiteralName(element.expression))
-        else -> emptyList() // todo: support interfaces, structs and `block` built-in
-    }
+    fun resolveMemberAccess(element: VyperMemberAccessExpression): List<VyperNamedElement> =
+        when (getFirstLiteralName(element.expression)) {
+            "msg" -> VyperInternalTypeFactory(element.project).msg.children.filterIsInstance<VyperLocalVariableDefinition>()
+            "self" -> element.file.selfElements
+            is String -> resolveInterfaceMembers(element, getFirstLiteralName(element.expression))
+            else -> emptyList() // todo #37: `block` built-in
+        }
 
-    private fun resolveInterfaceMember(element: VyperMemberAccessExpression, name: String?) =
+    private fun resolveInterfaceMembers(element: VyperMemberAccessExpression, interfaceName: String?) =
         element.file.interfaces
-            .filter { it.name == name }
+            .filter { it.name == interfaceName }
             .flatMap { it.childrenOfType<VyperInterfaceFunction>() }
-            .filter { it.name == element.varLiteral.name }
             .toList()
 
-    fun resolveInterface(element: VyperVarLiteral): List<VyperNamedElement> = findInterface(element.file, element.name)
-
-    private fun findInterface(file: VyperFile, name: String?): List<VyperNamedElement> =
-        sequenceOf(file.interfaces, file.imports)
-            .flatten()
-            .filter { it.name == name }
-            .toList()
+    /**
+     * Returns all the interfaces in the file. They may be either an import or a declaration.
+     * Import declarations are not resolved to their actual interfaces.
+     */
+    fun resolveInterfaces(element: VyperVarLiteral): List<VyperNamedElement> =
+        sequenceOf(element.file.interfaces, element.file.imports).flatten().toList()
 
     private fun getFirstLiteralName(element: VyperExpression?): String? = when (element) {
         is VyperPrimaryExpression -> element.varLiteral?.text

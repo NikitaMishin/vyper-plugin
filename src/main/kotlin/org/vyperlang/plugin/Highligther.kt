@@ -58,7 +58,7 @@ class VyperHighlighter : SyntaxHighlighterBase() {
                 .plus(identifier().map { it to VYPER_IDENTIFIER })
                 .plus(comment().map { it to VYPER_COMMENT }).toMutableMap()
 
-        // todo: min, max, empty, constant, range are built-in functions
+        // todo #29: min, max, empty, constant, range are built-in functions
         private fun keywords() = setOf<IElementType>(
             IMPORT, FROM, AS, INTERFACE, IMPLEMENTS, STRUCT, DEF,
             IF, ELSE, FOR, BREAK, CONTINUE, RAISE, RETURN,
@@ -78,7 +78,6 @@ class VyperHighlighter : SyntaxHighlighterBase() {
 
         private fun modificators() = setOf<IElementType>(
             PUBLIC, NONREENTRANT, EXTERNAL, INTERNAL, IMMUTABLE, CONSTANT,
-            // todo: the following are (also) for interfaces
             PAYABLE, NONPAYABLE, VIEW, PURE,
         )
 

@@ -1,11 +1,10 @@
-package org.vyperlang.plugin.parser
+package org.vyperlang.plugin.usages
 
 import com.intellij.lang.cacheBuilder.WordOccurrence
 import com.intellij.psi.impl.DebugUtil
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.Processor
 import org.vyperlang.plugin.VyperFileType
-import org.vyperlang.plugin.usages.VyperFindUsagesProvider
 
 class TestFindUsages : BasePlatformTestCase() {
     fun testConstant() {
@@ -64,7 +63,7 @@ class TestFindUsages : BasePlatformTestCase() {
             def foo() -> Foo:
                 return Fo<caret>o({ab: 1})
         """
-        checkUsages(code, 67 to 70)
+        checkUsages(code, 51 to 54, 67 to 70)
     }
 
     fun testStructMember() {

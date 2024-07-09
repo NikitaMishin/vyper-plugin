@@ -1,4 +1,4 @@
-package org.vyperlang.plugin.parser
+package org.vyperlang.plugin.completion
 
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.testFramework.fixtures.BasePlatformTestCase

@@ -39,11 +39,11 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     create_token_set_(AND_EXPRESSION, ASSERT_EXPRESSION, ASSIGNMENT_EXPRESSION, BIN_EXPRESSION,
       CALL_EXPRESSION, CLEAR_EXPRESSION, COMP_EXPRESSION, CONSTANT_DEFINITION_EXPRESSION,
       EQ_EXPRESSION, EVENT_LOG_EXPRESSION, EXPONENT_EXPRESSION, EXPRESSION,
-      FUNCTION_CALL_EXPRESSION, IMMUTABLE_DEFINITION_EXPRESSION, INDEX_ACCESS_EXPRESSION, INLINE_ARRAY_EXPRESSION,
-      IN_EXPRESSION, MEMBER_ACCESS_EXPRESSION, MEMBER_INDEX_ACCESS, MULT_DIV_EXPRESSION,
-      OR_EXPRESSION, PARENTHESIZIED_EXPRESSION, PLUS_MIN_EXPRESSION, PRIMARY_EXPRESSION,
-      RANGE_EXPRESSION, STRUCT_EXPRESSION, TERNARY_EXPRESSION, TUPLE_ASSIGNMENT_EXPRESSION,
-      UNARY_EXPRESSION),
+      EXT_CALL_EXPRESSION, FUNCTION_CALL_EXPRESSION, IMMUTABLE_DEFINITION_EXPRESSION, INDEX_ACCESS_EXPRESSION,
+      INLINE_ARRAY_EXPRESSION, IN_EXPRESSION, MEMBER_ACCESS_EXPRESSION, MEMBER_INDEX_ACCESS,
+      MULT_DIV_EXPRESSION, OR_EXPRESSION, PARENTHESIZIED_EXPRESSION, PLUS_MIN_EXPRESSION,
+      PRIMARY_EXPRESSION, RANGE_EXPRESSION, STATIC_CALL_EXPRESSION, STRUCT_EXPRESSION,
+      TERNARY_EXPRESSION, TUPLE_ASSIGNMENT_EXPRESSION, UNARY_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -2989,13 +2989,13 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Identifier
+  // VarLiteral
   public static boolean StructType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StructType")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
+    r = VarLiteral(b, l + 1);
     exit_section_(b, m, STRUCT_TYPE, r);
     return r;
   }
@@ -3277,6 +3277,8 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   // 22: ATOM(PrimaryExpression)
   // 23: ATOM(EventLogExpression)
   // 24: BINARY(InExpression)
+  // 25: PREFIX(ExtCallExpression)
+  // 26: PREFIX(StaticCallExpression)
   public static boolean Expression(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "Expression")) return false;
     addVariant(b, "<expression>");
@@ -3292,6 +3294,8 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     if (!r) r = InlineArrayExpression(b, l + 1);
     if (!r) r = PrimaryExpression(b, l + 1);
     if (!r) r = EventLogExpression(b, l + 1);
+    if (!r) r = ExtCallExpression(b, l + 1);
+    if (!r) r = StaticCallExpression(b, l + 1);
     p = r;
     r = r && Expression_0(b, l + 1, g);
     exit_section_(b, l, m, null, r, p, null);
@@ -4152,6 +4156,30 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     r = indNone(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  public static boolean ExtCallExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ExtCallExpression")) return false;
+    if (!nextTokenIsSmart(b, EXTCALL)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = consumeTokenSmart(b, EXTCALL);
+    p = r;
+    r = p && Expression(b, l, 4);
+    exit_section_(b, l, m, EXT_CALL_EXPRESSION, r, p, null);
+    return r || p;
+  }
+
+  public static boolean StaticCallExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "StaticCallExpression")) return false;
+    if (!nextTokenIsSmart(b, STATICCALL)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = consumeTokenSmart(b, STATICCALL);
+    p = r;
+    r = p && Expression(b, l, 4);
+    exit_section_(b, l, m, STATIC_CALL_EXPRESSION, r, p, null);
+    return r || p;
   }
 
 }

@@ -1,4 +1,4 @@
-package org.vyperlang.plugin.parser
+package org.vyperlang.plugin.annotators
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.HighlightSeverity
@@ -8,9 +8,6 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import io.mockk.checkUnnecessaryStub
 import io.mockk.every
 import io.mockk.mockk
-import org.vyperlang.plugin.annotators.CompilerAnnotator
-import org.vyperlang.plugin.annotators.CompilerError
-import org.vyperlang.plugin.annotators.FileInfo
 
 data class ExpectedError(val message: String, val range: Pair<Int, Int>, val tooltip: String="")
 
