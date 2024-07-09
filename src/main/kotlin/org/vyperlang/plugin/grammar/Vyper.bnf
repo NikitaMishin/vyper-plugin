@@ -356,9 +356,9 @@ StaticCallExpression ::= staticcall Expression
 
 //self function call?
 
-private RangeInterval ::= (Identifier | NumberLiteral) (&INDNONE ',' &INDNONE Expression)?
-
-RangeExpression ::= range &INDNONE '(' RangeInterval (',' 'bound' '=' Identifier)? ')'
+private RangeInterval ::= (VarLiteral | NumberLiteral) (&INDNONE ',' &INDNONE Expression)?
+RangeExpression ::= range &INDNONE '(' RangeInterval RangeBound? ')'
+RangeBound ::= ',' 'bound' '=' (VarLiteral | NumberLiteral)
 
 StructExpressionMember ::= VarLiteral &INDNONE ':' &INDNONE Expression
 

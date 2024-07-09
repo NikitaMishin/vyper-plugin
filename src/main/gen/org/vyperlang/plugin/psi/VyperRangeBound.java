@@ -5,13 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperRangeExpression extends VyperExpression {
-
-  @Nullable
-  VyperExpression getExpression();
-
-  @Nullable
-  VyperRangeBound getRangeBound();
+public interface VyperRangeBound extends VyperElement {
 
   @Nullable
   VyperVarLiteral getVarLiteral();

@@ -8,35 +8,23 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperRangeExpressionImpl extends VyperExpressionImpl implements VyperRangeExpression {
+public class VyperRangeBoundImpl extends ASTWrapperPsiElement implements VyperRangeBound {
 
-  public VyperRangeExpressionImpl(@NotNull ASTNode node) {
+  public VyperRangeBoundImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitRangeExpression(this);
+    visitor.visitRangeBound(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof VyperVisitor) accept((VyperVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public VyperExpression getExpression() {
-    return findChildByClass(VyperExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public VyperRangeBound getRangeBound() {
-    return findChildByClass(VyperRangeBound.class);
   }
 
   @Override

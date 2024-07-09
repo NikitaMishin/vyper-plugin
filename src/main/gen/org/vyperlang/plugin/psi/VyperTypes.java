@@ -62,6 +62,7 @@ public interface VyperTypes {
   IElementType PARENTHESIZIED_EXPRESSION = new VyperElementType("PARENTHESIZIED_EXPRESSION");
   IElementType PLUS_MIN_EXPRESSION = new VyperElementType("PLUS_MIN_EXPRESSION");
   IElementType PRIMARY_EXPRESSION = new VyperElementType("PRIMARY_EXPRESSION");
+  IElementType RANGE_BOUND = new VyperElementType("RANGE_BOUND");
   IElementType RANGE_EXPRESSION = new VyperElementType("RANGE_EXPRESSION");
   IElementType STATEMENT = new VyperElementType("STATEMENT");
   IElementType STATE_VARIABLE_DECLARATION = new VyperElementType("STATE_VARIABLE_DECLARATION");
@@ -341,6 +342,9 @@ public interface VyperTypes {
       }
       else if (type == PRIMARY_EXPRESSION) {
         return new VyperPrimaryExpressionImpl(node);
+      }
+      else if (type == RANGE_BOUND) {
+        return new VyperRangeBoundImpl(node);
       }
       else if (type == RANGE_EXPRESSION) {
         return new VyperRangeExpressionImpl(node);

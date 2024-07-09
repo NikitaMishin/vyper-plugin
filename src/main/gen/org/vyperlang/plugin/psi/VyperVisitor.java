@@ -224,6 +224,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitRangeBound(@NotNull VyperRangeBound o) {
+    visitElement(o);
+  }
+
   public void visitRangeExpression(@NotNull VyperRangeExpression o) {
     visitExpression(o);
   }

@@ -2601,7 +2601,31 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (Identifier | NumberLiteral) (&INDNONE ',' &INDNONE Expression)?
+  // ',' 'bound' '=' (VarLiteral | NumberLiteral)
+  public static boolean RangeBound(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "RangeBound")) return false;
+    if (!nextTokenIs(b, COMMA)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && consumeToken(b, "bound");
+    r = r && consumeToken(b, ASSIGN);
+    r = r && RangeBound_3(b, l + 1);
+    exit_section_(b, m, RANGE_BOUND, r);
+    return r;
+  }
+
+  // VarLiteral | NumberLiteral
+  private static boolean RangeBound_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "RangeBound_3")) return false;
+    boolean r;
+    r = VarLiteral(b, l + 1);
+    if (!r) r = NumberLiteral(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // (VarLiteral | NumberLiteral) (&INDNONE ',' &INDNONE Expression)?
   static boolean RangeInterval(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RangeInterval")) return false;
     boolean r;
@@ -2612,11 +2636,11 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // Identifier | NumberLiteral
+  // VarLiteral | NumberLiteral
   private static boolean RangeInterval_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RangeInterval_0")) return false;
     boolean r;
-    r = consumeToken(b, IDENTIFIER);
+    r = VarLiteral(b, l + 1);
     if (!r) r = NumberLiteral(b, l + 1);
     return r;
   }
@@ -3679,7 +3703,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // range &INDNONE '(' RangeInterval (',' 'bound' '=' Identifier)? ')'
+  // range &INDNONE '(' RangeInterval RangeBound? ')'
   public static boolean RangeExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RangeExpression")) return false;
     if (!nextTokenIsSmart(b, RANGE)) return false;
@@ -3705,23 +3729,11 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (',' 'bound' '=' Identifier)?
+  // RangeBound?
   private static boolean RangeExpression_4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RangeExpression_4")) return false;
-    RangeExpression_4_0(b, l + 1);
+    RangeBound(b, l + 1);
     return true;
-  }
-
-  // ',' 'bound' '=' Identifier
-  private static boolean RangeExpression_4_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "RangeExpression_4_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokenSmart(b, COMMA);
-    r = r && consumeToken(b, "bound");
-    r = r && consumeTokensSmart(b, 0, ASSIGN, IDENTIFIER);
-    exit_section_(b, m, null, r);
-    return r;
   }
 
   // '(' Expression ')'

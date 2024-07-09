@@ -178,6 +178,20 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                 Vy3 to listOf(FLAGS_NOT_V3),
                 Vy4 to emptyList(),
             ),
+            TestCase.create(
+                "range with bound",
+                """
+                    {pragma}
+                    @external
+                    def repeat(n: uint256) -> uint256:
+                        x: uint256 = 0
+                        for i: uint256 in range(n, 7, bound=6):
+                            x += i + 1
+                        return x
+                """,
+                Vy3 to listOf(RANGE_BOUND_NOT_V3, RANGE_TYPE_NOT_V3),
+                Vy4 to emptyList()
+            ),
         ).flatten().toTypedArray()
     }
 
