@@ -85,6 +85,9 @@ compileJava {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+// Include the generated files in the source set
+sourceSets.main.java.srcDirs 'src/main/gen'
+
 // Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
 kover {
     reports {

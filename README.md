@@ -36,15 +36,13 @@ To test the plugin without installation you might run `runIde` task in gradle, w
 
 To generate files for the plugin we use the [Grammar Kit](https://plugins.jetbrains.com/plugin/6606-grammar-kit) plugin.
 To generate the files, you should have the plugin installed.
-- Run the `Generate Parser Code` task in the `Vyper.bnf` file.
-  That generates `VyperParser.java` and `psi` files.
-  - However, the generator is not fully Kotlin compatible.
-    We need to add a `Companion` call to [`parseLight`](./src/main/java/com/vyperplugin/parser/VyperParser.java) (line 24) manually.
-  - If some grammar elements are removed, old `psi` files may be left in the project.
-    They should be removed manually.
-- Run the `Generate JFlex Lexer` task in the `Vyper.bnf` file.
-  That generates `_VyperLexer.flex` file.
-- Run the `Run JFlex Generator` task in the `_VyperLexer.flex` file.
-  That generates `VyperLexer.java` file.
+- Run the "_Generate Parser Code_" task in the [`Vyper.bnf` file](./src/main/kotlin/org/vyperlang/plugin/grammar/Vyper.bnf).
+  That generates [`BaseVyperParser.java` file](./src/main/gen/org/vyperlang/plugin/parser/BaseVyperParser.java) and [`psi` files](./src/main/gen/org/vyperlang/plugin/psi).
+  - When grammar elements are removed, old [`psi` files](./src/main/gen/org/vyperlang/plugin/psi) are not deleted automatically.
+    Just delete the whole [`psi` folder](./src/main/gen/org/vyperlang/plugin/psi) and regenerate it.
+- Run the "Generate JFlex Lexer" task in the [`Vyper.bnf` file](./src/main/kotlin/org/vyperlang/plugin/grammar/Vyper.bnf).
+  That generates [`_BaseVyperLexer.flex` file](./src/main/gen/org/vyperlang/plugin/grammar/_BaseVyperLexer.flex).
+- Run the "_Run JFlex Generator_" task in the [`_BaseVyperLexer.flex` file](./src/main/gen/org/vyperlang/plugin/grammar/_BaseVyperLexer.flex).
+  That generates [`_BaseVyperLexer.java` file](./src/main/gen/org/vyperlang/plugin/grammar/_BaseVyperLexer.java).
 
-More documentation: [Grammar-Kit](https://github.com/JetBrains/Grammar-Kit/blob/master/README.md).
+More documentation: See [JetBrains Grammar-Kit](https://github.com/JetBrains/Grammar-Kit/blob/master/README.md).

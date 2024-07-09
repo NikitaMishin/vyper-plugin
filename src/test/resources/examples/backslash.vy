@@ -1,5 +1,6 @@
 x: constant(int256) =\
     100
+ab: uint256
 
 @internal
 def set_x(new_val: uint256):
@@ -11,7 +12,6 @@ def set_x(new_val: uint256):
         (100 / 100)
     )
 
-ab: uint256
 @external
 def foo() -> uint256:
     return self.ab

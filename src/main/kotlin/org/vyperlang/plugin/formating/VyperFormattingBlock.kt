@@ -10,7 +10,7 @@ import com.intellij.psi.formatter.FormatterUtil
 import org.vyperlang.plugin.psi.VyperFunctionDefinition
 import org.vyperlang.plugin.psi.VyperLocalVariableDefinition
 import org.vyperlang.plugin.psi.VyperStatement
-import org.vyperlang.plugin.psi.VyperStructDefinition
+import org.vyperlang.plugin.psi.VyperStructDeclaration
 import org.vyperlang.plugin.psi.VyperTypes.*
 import java.util.*
 
@@ -58,15 +58,15 @@ class VyperFormattingBlock(
         val result = when {
             child is PsiComment && type in listOf(
                 FUNCTION_DEFINITION,
-                STRUCT_DEFINITION
+                STRUCT_DECLARATION
             ) -> Indent.getNormalIndent()
-            childType is org.vyperlang.plugin.psi.VyperStatement && type is org.vyperlang.plugin.psi.VyperFunctionDefinition -> Indent.getNormalIndent()
-            childType is org.vyperlang.plugin.psi.VyperLocalVariableDefinition && type is org.vyperlang.plugin.psi.VyperStructDefinition -> Indent.getNormalIndent()
+            childType is VyperStatement && type is VyperFunctionDefinition -> Indent.getNormalIndent()
+            childType is VyperLocalVariableDefinition && type is VyperStructDeclaration -> Indent.getNormalIndent()
 
             // fields inside structs
-//            type == VyperTypes.STRUCT_DEFINITION && childType == VyperTypes.LOCAL_VARIABLE_DEFINITION -> Indent.getNormalIndent()
+//            type == VyperTypes.STRUCT_DECLARATION && childType == VyperTypes.LOCAL_VARIABLE_DEFINITION -> Indent.getNormalIndent()
 
-            // inside a block, list of parameters, etc..
+            // inside a block, list of parameters, etc.
 //            parentType in listOf(BLOCK, ENUM_DEFINITION, ASSEMBLY_BLOCK, PARAMETER_LIST, INDEXED_PARAMETER_LIST) -> Indent.getNormalIndent()
 
             // all expressions inside parens should have indentation when lines are split
@@ -82,7 +82,7 @@ class VyperFormattingBlock(
     }
 
     private fun newChildIndent(childIndex: Int): Indent? = when (node.elementType) {
-        in listOf(STRUCT_DEFINITION, FUNCTION_DEFINITION) -> {
+        in listOf(STRUCT_DECLARATION, FUNCTION_DEFINITION) -> {
             val lbraceIndex = subBlocks.indexOfFirst { it is ASTBlock && it.node!!.elementType == COLON }
             if (lbraceIndex != -1 && lbraceIndex < childIndex) {
                 Indent.getNormalIndent()
@@ -108,7 +108,5 @@ class VyperFormattingBlock(
 
     override fun isIncomplete(): Boolean = isNodeIncomplete
 
-
     override fun isLeaf(): Boolean = astNode.firstChildNode == null
-
 }

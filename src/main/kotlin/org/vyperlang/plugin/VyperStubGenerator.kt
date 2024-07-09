@@ -13,7 +13,6 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import org.vyperlang.plugin.settings.VyperSettings
 import java.io.File
 
-
 object VyperStubGenerator {
 
     fun createStubInGenSourceFolder(
@@ -50,7 +49,6 @@ object VyperStubGenerator {
     private fun getGeneratedSourceRoot(module: Module): VirtualFile? =
         ModuleRootManager.getInstance(module).sourceRoots
             .firstOrNull { it.name == VyperSettings.INSTANCE.genarateOutputPath }
-
 
     private fun generateFolder(module: Module, project: Project) {
         WriteCommandAction.runWriteCommandAction(project) {

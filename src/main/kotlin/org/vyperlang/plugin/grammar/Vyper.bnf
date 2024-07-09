@@ -1,5 +1,5 @@
 {
-    parserClass="org.vyperlang.plugin.parser.VyperParser"
+    parserClass="org.vyperlang.plugin.parser.BaseVyperParser"
     extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
     implements="org.vyperlang.plugin.psi.VyperElement"
 
@@ -75,16 +75,23 @@
         scientificNumber='regexp:((([0-9][_0-9]*)+|([0-9][_0-9]*)+\.[_0-9]*|([0-9][_0-9]*|[0-9])*\.[_0-9]+)[Ee][+-]?[_0-9]+)'
         hexNumber='regexp:(0[xX][_0-9a-fA-F]+)'
 
+        // variable modifiers
         public='public'
         immutable='immutable'
         constant='constant'
-        private='private'
         nonreentrant='nonreentrant'
         payable='payable'
         nonpayable='nonpayable'
+
+        // function modifiers
         external='external'
-        view='view'
+        internal='internal'
+        deploy='deploy'
         pure='pure'
+        view='view'
+        payable='payable'
+        nonreentrant='nonreentrant'
+
         event='event'
         range = 'range'
 
@@ -115,44 +122,63 @@ external INDLT ::= indLt
 external INDGT ::= indGt
 external INDNONE ::= indNone
 
-// : External interface and struct declarations must come before event declarations, global declarations,
-// and function definitions
+// Order is handled by `VyperDeclarationsOrderAnnotator`
 private SourceUnit ::= ( ImportDirective
-                        | UserDefinedConstantsExpression
+                        | ConstantDefinitionExpression
+                        | ImmutableDefinitionExpression
                         | ImplementsDirective
-                        | StructDefinition
-                        | ExternalInterfaces
+                        | StructDeclaration
+                        | InterfaceDeclaration
                         | EventDeclaration
                         | FunctionDefinition
                         | StateVariableDeclaration)
                         { recoverWhile = structRecover }
 
-private Parenthesis ::= '(' &INDNONE ')'
-
-
-UserDefinedConstantsExpression ::= Identifier &INDNONE ':' &INDNONE constant &INDNONE'(' TYPE ')' &INDNONE'=' &INDNONE Expression  {
+// constant type and immutable type are the same
+private ConstantType ::= (&INDNONE constant &INDNONE '(' TYPE ')') | (public &INDNONE '(' &INDNONE ConstantType &INDNONE ')')
+private ImmutableType ::= (&INDNONE immutable &INDNONE '(' TYPE ')') | (public &INDNONE '(' &INDNONE ImmutableType &INDNONE ')')
+// constant type requires setting a value (semantic)
+ConstantDefinitionExpression ::= Identifier &INDNONE ':' ConstantType &INDNONE '=' &INDNONE Expression  {
+    pin=5
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
+}
+// immutable type requires setting a value in constructor
+ImmutableDefinitionExpression ::= Identifier &INDNONE ':' ImmutableType {
     pin=5
     mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
-private ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
+ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
                    | ( from &INDNONE IMPORT_PATH &INDNONE import &INDNONE Identifier ) {
     pin(".*")=1
+    mixin = "org.vyperlang.plugin.psi.VyperImportImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
 IMPORT_PATH ::= Identifier  (&INDNONE '.' &INDNONE Identifier)*
 
 // implements statements
-ImplementsDirective ::= implements &INDNONE ':' &INDNONE Identifier (&INDNONE ',' &INDNONE Identifier )* {pin=1}
+ImplementsDirective ::= implements &INDNONE ':' &INDNONE VarLiteral (&INDNONE ',' &INDNONE VarLiteral)* {
+    pin=1
+}
 
 // external interfaces ok
-ExternalInterfaces ::= interface &INDNONE Identifier &INDNONE ':'
-                        <<indented (ExternalInterfaceBody+) >> {pin=1}
+InterfaceDeclaration ::= interface &INDNONE Identifier &INDNONE ':'
+                        <<indented (InterfaceFunction+) >> {
+    pin=1
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
+}
 
-private ExternalInterfaceBody ::= ( def &INDNONE Identifier FunctionArgs FunTypeAnnotation? &INDNONE ':' &INDNONE ExternalFunStatus ) {pin = 1}
+InterfaceFunction ::= ( def &INDNONE Identifier FunctionArgs FunTypeAnnotation? &INDNONE ':' &INDNONE InterfaceFunctionModifier )  {
+    pin=1
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
+}
 
-private ExternalFunStatus ::= pure | view | nonpayable | payable
+private InterfaceFunctionModifier ::= pure | view | nonpayable | payable
 
 FunctionArgs ::= '(' (ParamDef (',' (ParamDef | & ')'))*)? ')' {pin(".*")=1}
 
@@ -162,46 +188,42 @@ ParamDef ::= Identifier ':' TYPE ('=' Expression)? {
 }
 
 // could be default assignment
-StructDefinition ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
+StructDeclaration ::= struct &INDNONE Identifier &INDNONE COLON  StructBody {
     pin = 1
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
 private StructBody ::= StructSingleDef | <<indented (StructMultipleDef) >>
 private StructSingleDef ::= (&INDNONE StructLocalVariableDefinition)
 
-private StructMultipleDef ::= StructLocalVariableDefinition (&INDEQ StructLocalVariableDefinition )*
-private StructLocalVariableDefinition ::= LocalVariableDefinition | Identifier | StringLiteral
-{recoverWhile=structRecover}
-
+private StructMultipleDef ::= StructLocalVariableDefinition ( &INDEQ StructLocalVariableDefinition )*
+private StructLocalVariableDefinition ::= LocalVariableDefinition | Identifier | StringLiteral {recoverWhile=structRecover}
 private structRecover ::= !(&INDEQ | &INDLT |<<eof>>)
 
 //ok
 //Events must all come before global declarations and function definitions
 EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProperty?) | (&INDNONE PassStatement))  {
     pin=5
+    mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
+    implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
 EventProperty ::= Identifier ':' (IndexedData | TYPE) (Identifier ':' (IndexedData |TYPE))*
-IndexedData ::= IndexedType '(' TYPE ')'
-
-private IndexedType ::= 'indexed'
+IndexedData ::= 'indexed' '(' TYPE ')'
 
 // VARIABLES
 
 // state variables  May not assign value whilst defining type
-StateVariableType ::= TYPE | StateVariableModifier &INDNONE '(' &INDNONE StateVariableType &INDNONE ')'
+StateVariableType ::= TYPE | public &INDNONE '(' &INDNONE StateVariableType &INDNONE ')'
 StateVariableDeclaration ::= Identifier &INDNONE ':' StateVariableType (&INDNONE '=' &INDNONE Expression)?
 {
     mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
-// StateVariableModifier if omitted then it's private. () to not shadow private
-StateVariableModifier ::= public | private | immutable | constant
-
-// semantic : map could not be inside functions
-LocalVariableDefinition ::=  ( LocalVariableDeclaration (&INDNONE '=') (&INDNONE Expression) ) | LocalVariableDeclaration
-LocalVariableDeclaration ::= Identifier &INDNONE ':' &INDNONE TYPE
+// semantic : HashMap may only be state variable
+LocalVariableDefinition ::=  Identifier &INDNONE ':' &INDNONE TYPE ((&INDNONE '=') (&INDNONE Expression))?
 {
     mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
@@ -216,7 +238,7 @@ private FunDef ::= def (&INDNONE Identifier) FunctionArgs FunTypeAnnotation? (&I
 }
 
 FunctionImplementation ::= (&INDNONE Statement) | <<indented ((MultiLineString)? &INDEQ Statement (&INDEQ Statement)*) >>
-FunctionBody ::= (ELLIPSIS|FunctionImplementation)
+FunctionBody ::= (ELLIPSIS|FunctionImplementation)  // ELLIPSIS is used for vyi files
 FunTypeAnnotation ::= &INDNONE '->' &INDNONE ( TYPE | '(' TYPE (',' TYPE)* ')' )
 FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef FunctionBody
 {
@@ -224,7 +246,6 @@ FunctionDefinition ::= FunctionModifier (&INDEQ FunctionModifier)* FunDef Functi
     implements = "org.vyperlang.plugin.psi.VyperFunctionDefElement"
     mixin = "org.vyperlang.plugin.psi.VyperFunctionDefMixin"
 }
-
 
 private FunctionVisibility ::= external | internal | deploy
 private FunctionMutability ::= pure | view | nonpayable | payable
@@ -246,7 +267,6 @@ Statement ::= PassStatement
               {recoverWhile = recoverStatement}
 
 private recoverStatement ::= !(&INDEQ|&INDLT)
-
 
 private CondStmt ::= Expression &INDNONE ':' ((&INDNONE Statement)
                                      | <<indented (Statement (&INDEQ Statement)*)>>)
@@ -272,7 +292,6 @@ ForStatement ::= for &INDNONE Identifier &INDNONE in &INDNONE Expression &INDNON
     pin=1
 }
 
-
 private Continue ::= continue
 
 private Break ::= break
@@ -295,7 +314,7 @@ Expression ::=
   | RangeExpression
   | ParenthesiziedExpression
   | CallExpression
-  | NewExpression
+  | StructExpression
   | AssertExpression
   | EqExpression
   | OrExpression
@@ -315,7 +334,7 @@ Expression ::=
   | EventLogExpression
   | InExpression
 
-EventLogExpression ::= log &INDNONE Identifier '(' Expression (',' Expression)* ')'
+EventLogExpression ::= log &INDNONE VarLiteral '(' Expression (',' Expression)* ')'
 
 InExpression ::= Expression &INDNONE 'in' &INDNONE Expression
 
@@ -327,8 +346,9 @@ private RangeInterval ::= (Identifier | NumberLiteral) (&INDNONE ',' &INDNONE Ex
 
 RangeExpression ::= range &INDNONE '(' RangeInterval (',' 'bound' '=' Identifier)? ')'
 
-NewExpression ::= Identifier (&INDNONE'(') '{' (  ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression)
-                             (',' ((Identifier &INDNONE ':' &INDNONE Expression) | NewExpression))*)? '}' ')'
+StructExpressionMember ::= VarLiteral &INDNONE ':' &INDNONE Expression
+
+StructExpression ::= VarLiteral (&INDNONE'(') '{' StructExpressionMember (',' StructExpressionMember)* '}' ')'
 
 AssignmentExpression ::=
     Expression (&INDNONE ('=' | '+=' | '-=' | '*=' | '/=' | '%='))
@@ -336,22 +356,13 @@ AssignmentExpression ::=
 
 TupleAssignmentExpression ::= Identifier (',' Identifier)+ &INDNONE '=' Expression
 
-//??
 CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
                   &INDNONE FunctionCallArguments (&INDNONE FunctionCallArguments)*
-{
-    implements = "org.vyperlang.plugin.psi.VyperReferenceElement"
-    mixin = "org.vyperlang.plugin.psi.VyperCallElement"
-}
 
-//??
-FunctionCallExpression ::= (Identifier &INDNONE FunctionCallArguments) |
-                           ( ( PrimaryExpression | NewExpression | TypeName  )
-                           ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )*
-                                     &INDNONE FunctionCallArguments )  {
-   //implements and mixin
-}
 
+private SimpleFunctionCall ::= Identifier &INDNONE FunctionCallArguments
+private ComplexFunctionCall ::= ( PrimaryExpression ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )* &INDNONE FunctionCallArguments )
+FunctionCallExpression ::= SimpleFunctionCall | ComplexFunctionCall
 
 //left recursion?
 MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral) {
@@ -364,7 +375,6 @@ IndexAccessExpression ::= Expression &INDNONE '[' Expression']'
 ParenthesiziedExpression ::= '(' Expression ')' {pin = 1}
 
 ClearExpression ::= clear &INDNONE '(' Expression ')' {pin=1}
-
 
 UnaryExpression ::=  (NOT | '~'  |  '+' | '-') &INDNONE Expression
 InlineArrayExpression ::= '[' Expression (',' Expression)*  ']' {pin = 1}
@@ -384,7 +394,7 @@ AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {
 }
 private AssertMessage ::= ',' ( stringLiteralDouble | stringLiteralSingle | MultiLineString )
 
-FunctionCallArgument ::= Expression | ( Identifier '=' Expression )
+FunctionCallArgument ::= Expression | ( VarLiteral '=' Expression )
 FunctionCallArguments ::= '(' (FunctionCallArgument (',' (FunctionCallArgument | &')'))*)? ')' {pin(".*")=1}
 
 PrimaryExpression ::= VarLiteral | BooleanLiteral | NumberLiteral | HexLiteral | StringLiteral
@@ -397,7 +407,6 @@ VarLiteral ::= Identifier {implements = "org.vyperlang.plugin.psi.VyperReference
 
 //BuiltIn ::= 'bitwise_and' | 'bitwise_not' | 'bitwise_or' | 'bitwise_xor' | 'shift' | 'create_minimal_proxy_to' | 'create_copy_of' | 'create_from_blueprint' | 'raw_call' | 'raw_log' | 'raw_revert' | 'selfdestruct' | 'send' | 'ecadd' | 'ecmul' | 'ecrecover' | 'keccak256' | 'sha256' | 'concat' | 'convert' | 'uint2str' | 'extract32' | 'slice' | 'abs' | 'ceil' | 'epsilon' | 'floor' | 'max' | 'max_value' | 'min' | 'min_value' | 'pow_mod256' | 'sqrt' | 'isqrt' | 'uint256_addmod' | 'uint256_mulmod' | 'unsafe_add' | 'unsafe_sub' | 'unsafe_mul' | 'unsafe_div' | 'as_wei_value' | 'blockhash' | 'empty' | 'len' | 'method_id' | '_abi_encode' | '_abi_decode' | 'print'
 
-
 // TYPES seems okay
 TYPE ::=  ListType | MapType | ValueType | StructType
 
@@ -406,20 +415,19 @@ ValueType ::= intM | uintM | bytesM | address | bool | ((string | bytes) &INDNON
 ListType ::= ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier) ']'
                     (&INDNONE '[' (DecimalNumber | Identifier) ']')*
 
-StructType ::= Identifier
+StructType ::= Identifier  // todo: this is the same as `VarLiteral`
 {
     implements = "org.vyperlang.plugin.psi.VyperReferenceElement"
     mixin = "org.vyperlang.plugin.psi.VyperStructTypeMixin"
 }
 
-MapType ::= ( ( DynArray | HashMap ) &INDNONE '[' ValueType ',' TYPE ']' )
-{
-    pin=1
-}
+private DynArrayType ::= DynArray &INDNONE '[' TYPE ',' (VarLiteral | NumberLiteral) ']'
+private HashMapType ::= HashMap &INDNONE '[' ValueType ',' TYPE ']'
+MapType ::= DynArrayType | HashMapType { pin=1 }
 
 private BooleanLiteral ::= booleanLiteral
-private NumberLiteral ::= HexNumber | DecimalNumber |FixedNumber
-private StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB|MultiLineString
+private NumberLiteral ::= HexNumber | DecimalNumber | FixedNumber
+private StringLiteral ::= stringLiteralDouble | stringLiteralDoubleB | stringLiteralSingle | stringLiteralSingleB | MultiLineString
 private DecimalNumber ::= decimalNumber
 private HexNumber ::= hexNumber
 private HexLiteral ::= hexLiteral

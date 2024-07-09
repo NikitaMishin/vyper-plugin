@@ -1,6 +1,5 @@
 package org.vyperlang.plugin
 
-
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiParser

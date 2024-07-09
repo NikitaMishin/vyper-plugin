@@ -8,8 +8,9 @@ import com.intellij.psi.util.PsiTreeUtil
 
 val PsiElement.ancestors: Sequence<PsiElement> get() = generateSequence(this) { it.parent }
 val PsiElement.siblings: Sequence<PsiElement> get() = generateSequence(this) { it.nextSibling }
+val PsiElement.prevSiblings: Sequence<PsiElement> get() = generateSequence(this.prevSibling) { it.prevSibling }
 
-val PsiElement.file get() = this.containingFile
+val PsiElement.file get() = this.containingFile as VyperFile
 
 inline fun <reified T : PsiElement> PsiElement.childOfType(strict: Boolean = true): T? =
     PsiTreeUtil.findChildOfType(this, T::class.java, strict)

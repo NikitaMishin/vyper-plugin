@@ -11,7 +11,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import org.vyperlang.plugin.VyperMessageProcessor
 import javax.swing.event.HyperlinkEvent
 
-
 /**
  * status code of execution
  */

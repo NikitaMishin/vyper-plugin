@@ -18,25 +18,26 @@ class VyperFindUsagesProvider : FindUsagesProvider {
         TokenSet.create(VyperTypes.VAR_LITERAL)
     )
 
-    override fun canFindUsagesFor(psiElement: PsiElement): Boolean = psiElement is PsiNamedElement
+    override fun canFindUsagesFor(psiElement: PsiElement) = psiElement is PsiNamedElement
 
     override fun getHelpId(psiElement: PsiElement): String? = null
 
     override fun getType(element: PsiElement): String = when (element) {
-        is VyperStateVariableDeclaration -> "state variable"
-        is VyperLocalVariableDeclaration -> "local variable"
-        is VyperFunctionDefinition -> "function"
-        is VyperStructDefinition -> "struct"
+        is VyperNamedElement -> when(element) {
+            is VyperStateVariableDeclaration -> "state variable"
+            is VyperLocalVariableDefinition -> "local variable"
+            is VyperFunctionDefinition -> "function"
+            is VyperStructDeclaration -> "struct"
+            is VyperConstantDefinitionExpression -> "constant"
+            is VyperImmutableDefinitionExpression -> "immutable"
+            is VyperImplementsDirective -> "implements"
+            is VyperInterfaceFunction -> "interface function"
+            else -> throw IllegalArgumentException("Unknown element type: $element")
+        }
         else -> ""
     }
 
-    override fun getDescriptiveName(element: PsiElement): String = ""
+    override fun getDescriptiveName(element: PsiElement): String = getType(element)
 
-    override fun getNodeText(element: PsiElement, useFullName: Boolean): String = when (element) {
-        is VyperStateVariableDeclaration -> element.name + "state variable"
-        is VyperLocalVariableDeclaration -> element.name + "local variable"
-        is VyperFunctionDefinition -> element.name + "function"
-        is VyperStructDefinition -> element.text + "struct"
-        else -> ""
-    }
+    override fun getNodeText(element: PsiElement, useFullName: Boolean): String = element.text
 }

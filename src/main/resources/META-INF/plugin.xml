@@ -3,7 +3,7 @@
     <name>Vyper</name>
     <version>0.0.0<!-- updated by changelog plugin --></version>
     <vendor url="https://github.com/NikitaMishin/vyper-plugin">
-        VyperPluginSupport
+        Vyper Plugin Team
     </vendor>
     <idea-version since-build="223.7571.182"/>
 
@@ -35,15 +35,14 @@
         <lang.braceMatcher language="Vyper"
                            implementationClass="org.vyperlang.plugin.editorActions.PairedBraceMatcherVyper"/>
         <lang.commenter language="Vyper" implementationClass="org.vyperlang.plugin.commenter.VyperCommenter"/>
-        <completion.contributor language="Vyper"
-                                implementationClass="org.vyperlang.plugin.completion.VyperBaseTypesCompletionContributor"/>
-        <completion.contributor language="Vyper"
-                                implementationClass="org.vyperlang.plugin.completion.VyperInFileContributor"/>
-        <completion.contributor language="Vyper"
-                                implementationClass="org.vyperlang.plugin.completion.VyperFunModifierContributor"/>
 
-        <annotator language="Vyper"
-                   implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
+        <completion.contributor language="Vyper" implementationClass="org.vyperlang.plugin.completion.VyperBaseTypesCompletionContributor"/>
+        <completion.contributor language="Vyper" implementationClass="org.vyperlang.plugin.completion.VyperFunModifierContributor"/>
+        <completion.contributor language="Vyper" implementationClass="org.vyperlang.plugin.completion.VyperInFileContributor"/>
+        <completion.contributor language="Vyper" implementationClass="org.vyperlang.plugin.completion.VyperReferenceTypesCompletionContributor"/>
+        <completion.contributor language="Vyper" implementationClass="org.vyperlang.plugin.completion.VyperVariableModifierContributor"/>
+
+        <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperDeclarationsOrderAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VyperColorAnnotator"/>
         <externalAnnotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.CompilerAnnotator"/>
 

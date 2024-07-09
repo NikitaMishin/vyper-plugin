@@ -46,7 +46,6 @@ class VyperSettings : PersistentStateComponent<VyperSettings> {
     }
 }
 
-
 class VyperSettingsConfigurable : Configurable {
     private var component: VyperConfigurablePanel? = null
     private val name: String = "Vyper"
@@ -80,7 +79,6 @@ class VyperSettingsConfigurable : Configurable {
     override fun disposeUIResources() {
         component = null
     }
-
 
 //    fun getQuickFix(project: Project): Runnable =
 //            Runnable { ShowSettingsUtil.getInstance().editConfigurable(project, this) }

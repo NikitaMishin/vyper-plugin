@@ -46,7 +46,6 @@ object VyperWindow {
             getToolWindow(project).show()
         }
 
-
     /**
      * Creates  tab with scrollable panel with JTextPane for specified @param toolWindow
      */
@@ -62,7 +61,6 @@ object VyperWindow {
         val content = toolWindow.contentManager.factory.createContent(scrollPane, tabName, false)
         toolWindow.contentManager.addContent(content)
     }
-
 
     /**
      * Return concrete component where output would be written
