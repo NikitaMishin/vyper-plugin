@@ -63,7 +63,7 @@ class TestColorAnnotator : BasePlatformTestCase() {
         checkErrors(
             VyperInterfaceFileType.INSTANCE,
             """
-                # pragma version ^0.3.0
+                # pragma version >0.3.0
                 @view
                 @internal
                 def balanceOf(_owner: address) -> uint256:

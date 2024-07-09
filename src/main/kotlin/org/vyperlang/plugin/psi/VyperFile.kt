@@ -10,7 +10,7 @@ import org.vyperlang.plugin.VyperLanguage
 import org.vyperlang.plugin.psi.VyperTypes.COMMENT
 
 private val CommentTokens = TokenSet.create(COMMENT, WHITE_SPACE)
-private val PragmaRegex = "#\\s*(?:pragma\\s+|@)version\\s+\\^?(\\d+\\.\\d+\\.\\d+)".toRegex()
+private val PragmaRegex = "#\\s*(?:pragma\\s+|@)version\\s+[\\^><~]?(\\d+\\.\\d+\\.\\d+)".toRegex()
 
 
 class VyperFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, VyperLanguage) {

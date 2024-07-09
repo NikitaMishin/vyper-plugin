@@ -51,7 +51,7 @@ class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), Du
             VyperCompilerDocker(info.project, info.file, info.version, info.indicator).run()
         } catch (e: CompilerMissingError) {
             LOG.error("Error while running compiler annotator", e)
-            null
+            null // todo: return warning to the editor
         }
         if (result?.statusDocker == StatusDocker.FAILED) {
             return parseErrors(info, result);
