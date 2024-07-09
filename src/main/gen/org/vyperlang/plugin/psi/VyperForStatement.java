@@ -14,6 +14,9 @@ public interface VyperForStatement extends VyperElement {
   VyperStatement getStatement();
 
   @Nullable
+  VyperType getType();
+
+  @Nullable
   PsiElement getIdentifier();
 
 }

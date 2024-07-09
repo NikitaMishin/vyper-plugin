@@ -4,6 +4,7 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.findParentOfType
 import com.intellij.util.text.SemVer
 import org.vyperlang.plugin.VyperFileType
@@ -19,11 +20,13 @@ internal const val EXTCALL_NOT_VY3 = "Keyword `extcall` not supported in Vyper 0
 internal const val STATICCALL_NOT_VY3 = "Keyword `staticcall` not supported in Vyper 0.3"
 internal const val STRUCT_DICT_NOT_VY3 =
     "Instantiating a struct using a dictionary is not supported until Vyper 0.4. Use kwargs instead e.g. Foo(a=1, b=2)"
+internal const val RANGE_TYPE_NOT_V3 = "Range type not supported in Vyper 0.3"
 
 internal const val STRUCT_DICT_WARN_V4 = "Instantiating a struct using a dictionary is deprecated. Use kwargs instead e.g. Foo(a=1, b=2)"
 internal const val NAMED_LOCKS_NOT_V4 = "Named locks are not supported in Vyper 0.4"
 internal const val MISSING_STATICCALL = "Missing `staticcall`"
 internal const val MISSING_EXTCALL = "Missing `extcall`"
+internal const val RANGE_TYPE_REQUIRED_V4 = "Range type required in Vyper 0.4"
 
 internal const val VYPER_VERSION_NOT_SPECIFIED = "Vyper version not specified. Please add `# pragma version ^0.4.0` to the top of the file"
 
@@ -52,6 +55,9 @@ class VersionAnnotator : Annotator {
             is VyperCallExpression ->
                 if (VyperResolver.resolveStructCall(element).isNotEmpty())
                     holder.newAnnotation(HighlightSeverity.ERROR, STRUCT_DICT_NOT_VY3).create()
+            is VyperForStatement ->
+                if(element.type != null)
+                    holder.newAnnotation(HighlightSeverity.ERROR, RANGE_TYPE_NOT_V3).create()
         }
     }
 
@@ -62,6 +68,9 @@ class VersionAnnotator : Annotator {
             is VyperMemberAccessExpression ->
                 highlightVy4Modifiers(VyperResolver.resolveInterfaceFunctionModifiers(element), element, holder)
             is VyperStructExpression -> holder.newAnnotation(HighlightSeverity.WARNING, STRUCT_DICT_WARN_V4).create()
+            is VyperForStatement ->
+                if(element.type == null)
+                    holder.newAnnotation(HighlightSeverity.ERROR, RANGE_TYPE_REQUIRED_V4).create()
         }
     }
 

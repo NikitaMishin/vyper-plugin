@@ -41,6 +41,12 @@ public class VyperForStatementImpl extends ASTWrapperPsiElement implements Vyper
 
   @Override
   @Nullable
+  public VyperType getType() {
+    return findChildByClass(VyperType.class);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getIdentifier() {
     return findChildByType(IDENTIFIER);
   }

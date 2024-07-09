@@ -788,7 +788,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // for &INDNONE Identifier &INDNONE in &INDNONE Expression &INDNONE ':'
+  // for &INDNONE Identifier (&INDNONE  ':' TYPE)? &INDNONE in &INDNONE Expression &INDNONE ':'
   //                     (&INDNONE Statement | <<indented (Statement (&INDEQ Statement)*)>>)
   public static boolean ForStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ForStatement")) return false;
@@ -800,12 +800,13 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     r = r && report_error_(b, ForStatement_1(b, l + 1));
     r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
     r = p && report_error_(b, ForStatement_3(b, l + 1)) && r;
+    r = p && report_error_(b, ForStatement_4(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, IN)) && r;
-    r = p && report_error_(b, ForStatement_5(b, l + 1)) && r;
+    r = p && report_error_(b, ForStatement_6(b, l + 1)) && r;
     r = p && report_error_(b, Expression(b, l + 1, -1)) && r;
-    r = p && report_error_(b, ForStatement_7(b, l + 1)) && r;
+    r = p && report_error_(b, ForStatement_8(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, COLON)) && r;
-    r = p && ForStatement_9(b, l + 1) && r;
+    r = p && ForStatement_10(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -820,9 +821,28 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // &INDNONE
+  // (&INDNONE  ':' TYPE)?
   private static boolean ForStatement_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ForStatement_3")) return false;
+    ForStatement_3_0(b, l + 1);
+    return true;
+  }
+
+  // &INDNONE  ':' TYPE
+  private static boolean ForStatement_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ForStatement_3_0_0(b, l + 1);
+    r = r && consumeToken(b, COLON);
+    r = r && TYPE(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ForStatement_3_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_3_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -831,8 +851,8 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE
-  private static boolean ForStatement_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_5")) return false;
+  private static boolean ForStatement_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_4")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -841,8 +861,18 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE
-  private static boolean ForStatement_7(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_7")) return false;
+  private static boolean ForStatement_6(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_6")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ForStatement_8(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_8")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -851,30 +881,30 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE Statement | <<indented (Statement (&INDEQ Statement)*)>>
-  private static boolean ForStatement_9(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_9")) return false;
+  private static boolean ForStatement_10(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_10")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = ForStatement_9_0(b, l + 1);
-    if (!r) r = indented(b, l + 1, BaseVyperParser::ForStatement_9_1_0);
+    r = ForStatement_10_0(b, l + 1);
+    if (!r) r = indented(b, l + 1, BaseVyperParser::ForStatement_10_1_0);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // &INDNONE Statement
-  private static boolean ForStatement_9_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_9_0")) return false;
+  private static boolean ForStatement_10_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_10_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = ForStatement_9_0_0(b, l + 1);
+    r = ForStatement_10_0_0(b, l + 1);
     r = r && Statement(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // &INDNONE
-  private static boolean ForStatement_9_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_9_0_0")) return false;
+  private static boolean ForStatement_10_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_10_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -883,41 +913,41 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   // Statement (&INDEQ Statement)*
-  private static boolean ForStatement_9_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_9_1_0")) return false;
+  private static boolean ForStatement_10_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_10_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = Statement(b, l + 1);
-    r = r && ForStatement_9_1_0_1(b, l + 1);
+    r = r && ForStatement_10_1_0_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // (&INDEQ Statement)*
-  private static boolean ForStatement_9_1_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_9_1_0_1")) return false;
+  private static boolean ForStatement_10_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_10_1_0_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!ForStatement_9_1_0_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "ForStatement_9_1_0_1", c)) break;
+      if (!ForStatement_10_1_0_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "ForStatement_10_1_0_1", c)) break;
     }
     return true;
   }
 
   // &INDEQ Statement
-  private static boolean ForStatement_9_1_0_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_9_1_0_1_0")) return false;
+  private static boolean ForStatement_10_1_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_10_1_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = ForStatement_9_1_0_1_0_0(b, l + 1);
+    r = ForStatement_10_1_0_1_0_0(b, l + 1);
     r = r && Statement(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // &INDEQ
-  private static boolean ForStatement_9_1_0_1_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ForStatement_9_1_0_1_0_0")) return false;
+  private static boolean ForStatement_10_1_0_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ForStatement_10_1_0_1_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indEq(b, l + 1);

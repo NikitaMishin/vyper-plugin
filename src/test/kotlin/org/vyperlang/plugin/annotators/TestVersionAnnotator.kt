@@ -124,6 +124,32 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                 Vy3 to listOf(STRUCT_DICT_NOT_VY3),
                 Vy4 to emptyList(),
             ),
+            TestCase.create(
+                "range with type",
+                """
+                    {pragma}
+                    @external
+                    def write_junk_to_memory():
+                        xs: int128[1024] = empty(int128[1024])
+                        for i: uint256 in range(1024):
+                            xs[i] = -(i + 1)
+                """,
+                Vy3 to listOf(RANGE_TYPE_NOT_V3),
+                Vy4 to emptyList(),
+            ),
+            TestCase.create(
+                "range without type",
+                """
+                    {pragma}
+                    @external
+                    def write_junk_to_memory():
+                        xs: int128[1024] = empty(int128[1024])
+                        for i in range(1024):
+                            xs[i] = -(i + 1)
+                """,
+                Vy3 to emptyList(),
+                Vy4 to listOf(RANGE_TYPE_REQUIRED_V4),
+            ),
         ).flatten().toTypedArray()
     }
 

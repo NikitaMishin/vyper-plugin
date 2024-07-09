@@ -285,7 +285,7 @@ IfStatement ::= if &INDNONE CondStmt
 private SimpleStatement ::= LocalVariableDefinition | ExpressionStatement
 private ExpressionStatement ::= Expression
 
-ForStatement ::= for &INDNONE Identifier &INDNONE in &INDNONE Expression &INDNONE ':'
+ForStatement ::= for &INDNONE Identifier (&INDNONE  ':' TYPE)? &INDNONE in &INDNONE Expression &INDNONE ':'
                     (&INDNONE Statement | <<indented (Statement (&INDEQ Statement)*)>>)
 {
     pin=1
