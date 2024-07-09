@@ -8,7 +8,6 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findPsiFile
-import com.intellij.util.text.SemVer
 import org.vyperlang.plugin.VyperMessageProcessor
 import org.vyperlang.plugin.VyperStubGenerator
 import org.vyperlang.plugin.docker.CompilerMissingError

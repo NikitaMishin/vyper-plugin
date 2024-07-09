@@ -1,6 +1,8 @@
 package org.vyperlang.plugin.references
 
-import org.vyperlang.plugin.psi.*
+import org.vyperlang.plugin.psi.VyperMemberAccessExpression
+import org.vyperlang.plugin.psi.VyperVarLiteral
+import org.vyperlang.plugin.psi.file
 
 class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
     override fun getAlternatives() = VyperResolver.lexicalDeclarations(element)

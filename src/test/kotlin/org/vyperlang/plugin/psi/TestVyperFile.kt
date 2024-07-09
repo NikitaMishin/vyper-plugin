@@ -1,6 +1,5 @@
 package org.vyperlang.plugin.psi
 
-import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.junit.Test
 import org.junit.runner.RunWith

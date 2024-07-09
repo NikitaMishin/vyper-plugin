@@ -40,7 +40,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                 """,
                 "# pragma version" to listOf(VYPER_VERSION_NOT_SPECIFIED),
                 "# pragma version ^0.3.10" to listOf(EXTCALL_NOT_VY3),
-                "# pragma version ^0.4.1" to emptyList(),
+                "# pragma version ^0.4.0" to emptyList(),
             ),
             TestCase.create(
                 "staticcall",
@@ -65,7 +65,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                         return 0
                 """,
                 "" to listOf(VYPER_VERSION_NOT_SPECIFIED),
-                "#pragma version ^0.3.0" to emptyList(),
+                "#pragma version ^0.3.9" to emptyList(),
                 "#pragma version ^0.4.0" to listOf(NAMED_LOCKS_NOT_V4),
             ),
             TestCase.create(
@@ -94,7 +94,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                         return self.a.foo(2)
                 """,
                 "" to listOf(VYPER_VERSION_NOT_SPECIFIED),
-                "#pragma version ^0.3.20" to emptyList(),
+                "#pragma version ^0.3.10" to emptyList(),
                 "#pragma version 0.4.0" to listOf(MISSING_STATICCALL),
             ),
 
