@@ -8,21 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface VyperMapType extends VyperElement {
 
   @NotNull
+  VyperExpression getExpression();
+
+  @NotNull
   VyperType getType();
-
-  @Nullable
-  VyperValueType getValueType();
-
-  @Nullable
-  VyperVarLiteral getVarLiteral();
-
-  @Nullable
-  PsiElement getDecimalNumber();
-
-  @Nullable
-  PsiElement getFixedNumber();
-
-  @Nullable
-  PsiElement getHexNumber();
 
 }

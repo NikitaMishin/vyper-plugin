@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface VyperEventLogExpression extends VyperExpression {
 
   @NotNull
-  List<VyperExpression> getExpressionList();
+  VyperFunctionCallArguments getFunctionCallArguments();
 
   @NotNull
   VyperVarLiteral getVarLiteral();

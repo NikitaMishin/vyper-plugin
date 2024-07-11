@@ -29,8 +29,8 @@ public class VyperEventLogExpressionImpl extends VyperExpressionImpl implements 
 
   @Override
   @NotNull
-  public List<VyperExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
+  public VyperFunctionCallArguments getFunctionCallArguments() {
+    return findNotNullChildByClass(VyperFunctionCallArguments.class);
   }
 
   @Override

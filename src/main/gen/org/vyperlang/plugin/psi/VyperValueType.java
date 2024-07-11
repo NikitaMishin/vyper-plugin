@@ -8,13 +8,10 @@ import com.intellij.psi.PsiElement;
 public interface VyperValueType extends VyperElement {
 
   @Nullable
-  PsiElement getIdentifier();
+  VyperExpression getExpression();
 
   @Nullable
   PsiElement getBytesM();
-
-  @Nullable
-  PsiElement getDecimalNumber();
 
   @Nullable
   PsiElement getIntM();

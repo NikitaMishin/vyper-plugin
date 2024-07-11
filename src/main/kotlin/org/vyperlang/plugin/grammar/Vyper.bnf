@@ -150,7 +150,8 @@ ImmutableDefinitionExpression ::= Identifier &INDNONE ':' ImmutableType {
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
-ImportDirective ::= ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
+ImportDirective ::= ( import &INDNONE Identifier )
+                   | ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
                    | ( from &INDNONE IMPORT_PATH &INDNONE import &INDNONE Identifier ) {
     pin(".*")=1
     mixin = "org.vyperlang.plugin.psi.VyperImportImpl"
@@ -180,7 +181,8 @@ InterfaceFunction ::= ( def &INDNONE Identifier FunctionArgs FunTypeAnnotation? 
 
 InterfaceFunctionModifier ::= pure | view | nonpayable | payable
 
-FunctionArgs ::= '(' (ParamDef (',' (ParamDef | & ')'))*)? ')' {pin(".*")=1}
+// Trailing commas: https://github.com/JetBrains/Grammar-Kit/blob/master/HOWTO.md#41-trailing-commas
+FunctionArgs ::= '(' (ParamDef (',' (ParamDef | &')'))*)? ')' {pin(".*")=1}
 
 ParamDef ::= Identifier ':' TYPE ('=' Expression)? {
     mixin = "org.vyperlang.plugin.psi.VyperNamedElementImpl"
@@ -220,7 +222,7 @@ EventDeclaration ::= event &INDNONE Identifier &INDNONE ':' ((&INDGT EventProper
 }
 
 EventProperty ::= Identifier ':' (IndexedData | TYPE) (Identifier ':' (IndexedData |TYPE))*
-IndexedData ::= 'indexed' '(' TYPE ')'
+IndexedData ::= indexed '(' TYPE ')'
 
 // VARIABLES
 
@@ -271,7 +273,6 @@ Statement ::= PassStatement
               | Break
               | Return
               | Raise
-              | EmitStatement
               | SimpleStatement
               | MultiLineString // docstring
               {recoverWhile = recoverStatement}
@@ -309,11 +310,7 @@ private Break ::= break
 private Return ::= return (&INDNONE Expression (',' Expression)*)? {
     pin=1
 }
-private Raise ::= raise
-
-EmitStatement ::= 'log.' &INDNONE FunctionCallExpression {
-    pin=1
-}
+private Raise ::= raise StringLiteral?
 
 private PassStatement ::= PASS
 
@@ -346,23 +343,20 @@ Expression ::=
   | ExtCallExpression
   | StaticCallExpression
 
-EventLogExpression ::= log &INDNONE VarLiteral '(' Expression (',' Expression)* ')'
 
-InExpression ::= Expression &INDNONE 'in' &INDNONE Expression
-
+EventLogExpression ::= log &INDNONE VarLiteral FunctionCallArguments
+InExpression ::= Expression (&INDNONE not)? &INDNONE in &INDNONE Expression
 TernaryExpression ::= Expression &INDNONE if &INDNONE Expression &INDNONE else &INDNONE Expression { pin = 1 }
 ExtCallExpression ::= extcall Expression
 StaticCallExpression ::= staticcall Expression
-
-//self function call?
 
 private RangeInterval ::= (VarLiteral | NumberLiteral) (&INDNONE ',' &INDNONE Expression)?
 RangeExpression ::= range &INDNONE '(' RangeInterval RangeBound? ')'
 RangeBound ::= ',' 'bound' '=' (VarLiteral | NumberLiteral)
 
 StructExpressionMember ::= VarLiteral &INDNONE ':' &INDNONE Expression
-
-StructExpression ::= VarLiteral (&INDNONE'(') '{' StructExpressionMember (',' StructExpressionMember)* '}' ')'
+private StructExpressionMembers ::= '{' StructExpressionMember (',' (StructExpressionMember | &'}'))* '}' {pin(".*")=1}
+StructExpression ::= VarLiteral (&INDNONE'(') StructExpressionMembers ')'
 
 AssignmentExpression ::=
     Expression (&INDNONE ('=' | '+=' | '-=' | '*=' | '/=' | '%='))
@@ -373,25 +367,21 @@ TupleAssignmentExpression ::= Identifier (',' Identifier)+ &INDNONE '=' Expressi
 CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
                   &INDNONE FunctionCallArguments (&INDNONE FunctionCallArguments)*
 
-
 private SimpleFunctionCall ::= Identifier &INDNONE FunctionCallArguments
 private ComplexFunctionCall ::= PrimaryExpression ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )* &INDNONE FunctionCallArguments
 FunctionCallExpression ::= SimpleFunctionCall | ComplexFunctionCall // TODO: currently only used for `log`, otherwise see `CallExpression`
 
-//left recursion?
 MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral) {
     name = "member access"
 }
 MemberIndexAccess ::=  Expression &INDNONE '.' Expression &INDNONE '[' Expression']' {extends=Expression}
-//recover?
 IndexAccessExpression ::= Expression &INDNONE '[' Expression']'
-//recover?
 ParenthesiziedExpression ::= '(' Expression ')' {pin = 1}
 
 ClearExpression ::= clear &INDNONE '(' Expression ')' {pin=1}
 
-UnaryExpression ::=  (NOT | '~'  |  '+' | '-') &INDNONE Expression
-InlineArrayExpression ::= '[' Expression (',' Expression)*  ']' {pin = 1}
+UnaryExpression ::=  ('not' | '~' | '+' | '-') &INDNONE Expression
+InlineArrayExpression ::= '[' Expression (',' (Expression | &']'))* ']' {pin(".*")=1}
 AndExpression ::=  Expression AND Expression
 OrExpression ::= Expression OR Expression
 EqExpression ::= Expression ('==' | '!=') Expression
@@ -400,7 +390,7 @@ CompExpression ::= Expression ('<' | '>' | '<=' | '>=') Expression
 PlusMinExpression ::= Expression ('+' | '-') Expression
 MultDivExpression ::= Expression ('*' | '/' | '%') Expression
 ExponentExpression ::= Expression '**' Expression
-BinExpression ::= Expression (UNION | INTERSECTION | RSHIFT | LSHIFT) Expression
+BinExpression ::= Expression (UNION | INTERSECTION | RSHIFT | LSHIFT | CARET) Expression
 
 AssertExpression ::= assert &INDNONE Expression (&INDNONE AssertMessage)? {
     pin = 1
@@ -424,10 +414,9 @@ VarLiteral ::= Identifier {implements = "org.vyperlang.plugin.psi.VyperReference
 // TYPES seems okay
 TYPE ::=  ListType | MapType | ValueType | StructType
 
-ValueType ::= intM | uintM | bytesM | address | bool | ((string | bytes) &INDNONE '[' ( DecimalNumber | Identifier ) ']')
+ValueType ::= intM | uintM | bytesM | address | bool | ((string | bytes) &INDNONE '[' Expression ']')
 
-ListType ::= ( ValueType | StructType ) &INDNONE '[' (DecimalNumber | Identifier) ']'
-                    (&INDNONE '[' (DecimalNumber | Identifier) ']')*
+ListType ::= ( ValueType | StructType ) &INDNONE '[' Expression ']' (&INDNONE '[' Expression ']')*
 
 StructType ::= Identifier
 {
@@ -435,8 +424,8 @@ StructType ::= Identifier
     mixin = "org.vyperlang.plugin.psi.VyperVarLiteralMixin"
 }
 
-private DynArrayType ::= DynArray &INDNONE '[' TYPE ',' (VarLiteral | NumberLiteral) ']'
-private HashMapType ::= HashMap &INDNONE '[' ValueType ',' TYPE ']'
+private DynArrayType ::= DynArray &INDNONE '[' TYPE ',' Expression ']'
+private HashMapType ::= HashMap &INDNONE '[' Expression ',' TYPE ']'
 MapType ::= DynArrayType | HashMapType { pin=1 }
 
 private BooleanLiteral ::= booleanLiteral

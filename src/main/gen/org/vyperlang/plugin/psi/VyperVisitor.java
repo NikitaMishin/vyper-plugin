@@ -39,10 +39,6 @@ public class VyperVisitor extends PsiElementVisitor {
     // visitNamedElement(o);
   }
 
-  public void visitEmitStatement(@NotNull VyperEmitStatement o) {
-    visitElement(o);
-  }
-
   public void visitEqExpression(@NotNull VyperEqExpression o) {
     visitExpression(o);
   }

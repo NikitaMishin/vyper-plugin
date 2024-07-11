@@ -7,6 +7,9 @@ import com.intellij.psi.PsiElement;
 
 public interface VyperListType extends VyperElement {
 
+  @NotNull
+  List<VyperExpression> getExpressionList();
+
   @Nullable
   VyperStructType getStructType();
 

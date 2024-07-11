@@ -16,7 +16,6 @@ public interface VyperTypes {
   IElementType CLEAR_EXPRESSION = new VyperElementType("CLEAR_EXPRESSION");
   IElementType COMP_EXPRESSION = new VyperElementType("COMP_EXPRESSION");
   IElementType CONSTANT_DEFINITION_EXPRESSION = new VyperElementType("CONSTANT_DEFINITION_EXPRESSION");
-  IElementType EMIT_STATEMENT = new VyperElementType("EMIT_STATEMENT");
   IElementType EQ_EXPRESSION = new VyperElementType("EQ_EXPRESSION");
   IElementType EVENT_DECLARATION = new VyperElementType("EVENT_DECLARATION");
   IElementType EVENT_LOG_EXPRESSION = new VyperElementType("EVENT_LOG_EXPRESSION");
@@ -127,6 +126,7 @@ public interface VyperTypes {
   IElementType IMPLEMENTS = new VyperTokenType("implements");
   IElementType IMPORT = new VyperTokenType("import");
   IElementType IN = new VyperTokenType("in");
+  IElementType INDEXED = new VyperTokenType("indexed");
   IElementType INTERFACE = new VyperTokenType("interface");
   IElementType INTERNAL = new VyperTokenType("internal");
   IElementType INTERSECTION = new VyperTokenType("&");
@@ -207,9 +207,6 @@ public interface VyperTypes {
       }
       else if (type == CONSTANT_DEFINITION_EXPRESSION) {
         return new VyperConstantDefinitionExpressionImpl(node);
-      }
-      else if (type == EMIT_STATEMENT) {
-        return new VyperEmitStatementImpl(node);
       }
       else if (type == EQ_EXPRESSION) {
         return new VyperEqExpressionImpl(node);

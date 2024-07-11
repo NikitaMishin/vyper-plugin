@@ -7,9 +7,6 @@ import com.intellij.psi.PsiElement;
 
 public interface VyperStatement extends VyperElement {
 
-  @Nullable
-  VyperEmitStatement getEmitStatement();
-
   @NotNull
   List<VyperExpression> getExpressionList();
 
@@ -24,5 +21,17 @@ public interface VyperStatement extends VyperElement {
 
   @Nullable
   VyperMultiLineString getMultiLineString();
+
+  @Nullable
+  PsiElement getStringLiteralDouble();
+
+  @Nullable
+  PsiElement getStringLiteralDoubleB();
+
+  @Nullable
+  PsiElement getStringLiteralSingle();
+
+  @Nullable
+  PsiElement getStringLiteralSingleB();
 
 }
