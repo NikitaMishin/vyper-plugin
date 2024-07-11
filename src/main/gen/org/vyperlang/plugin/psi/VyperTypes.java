@@ -30,7 +30,6 @@ public interface VyperTypes {
   IElementType FUNCTION_BODY = new VyperElementType("FUNCTION_BODY");
   IElementType FUNCTION_CALL_ARGUMENT = new VyperElementType("FUNCTION_CALL_ARGUMENT");
   IElementType FUNCTION_CALL_ARGUMENTS = new VyperElementType("FUNCTION_CALL_ARGUMENTS");
-  IElementType FUNCTION_CALL_EXPRESSION = new VyperElementType("FUNCTION_CALL_EXPRESSION");
   IElementType FUNCTION_DECORATOR = new VyperElementType("FUNCTION_DECORATOR");
   IElementType FUNCTION_DEFINITION = new VyperElementType("FUNCTION_DEFINITION");
   IElementType FUNCTION_ENTRANCY_KEY = new VyperElementType("FUNCTION_ENTRANCY_KEY");
@@ -246,9 +245,6 @@ public interface VyperTypes {
       }
       else if (type == FUNCTION_CALL_ARGUMENTS) {
         return new VyperFunctionCallArgumentsImpl(node);
-      }
-      else if (type == FUNCTION_CALL_EXPRESSION) {
-        return new VyperFunctionCallExpressionImpl(node);
       }
       else if (type == FUNCTION_DECORATOR) {
         return new VyperFunctionDecoratorImpl(node);

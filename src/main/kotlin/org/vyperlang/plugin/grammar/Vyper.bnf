@@ -151,14 +151,13 @@ ImmutableDefinitionExpression ::= Identifier &INDNONE ':' ImmutableType {
 }
 
 ImportDirective ::= ( import &INDNONE Identifier )
-                   | ( import &INDNONE IMPORT_PATH &INDNONE as &INDNONE Identifier )
-                   | ( from &INDNONE IMPORT_PATH &INDNONE import &INDNONE Identifier ) {
+                   | ( import &INDNONE ImportPath &INDNONE as &INDNONE Identifier )
+                   | ( from &INDNONE ImportPath &INDNONE import &INDNONE Identifier ) {
     pin(".*")=1
     mixin = "org.vyperlang.plugin.psi.VyperImportImpl"
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
-
-IMPORT_PATH ::= Identifier  (&INDNONE '.' &INDNONE Identifier)*
+ImportPath ::= Identifier  (&INDNONE '.' &INDNONE Identifier)*
 
 // implements statements
 ImplementsDirective ::= implements &INDNONE ':' &INDNONE VarLiteral (&INDNONE ',' &INDNONE VarLiteral)* {
@@ -366,10 +365,6 @@ TupleAssignmentExpression ::= Identifier (',' Identifier)+ &INDNONE '=' Expressi
 
 CallExpression ::= Expression ( &INDNONE '[' Expression ']'  )*
                   &INDNONE FunctionCallArguments (&INDNONE FunctionCallArguments)*
-
-private SimpleFunctionCall ::= Identifier &INDNONE FunctionCallArguments
-private ComplexFunctionCall ::= PrimaryExpression ( ( &INDNONE '.' Identifier ) | ( &INDNONE '[' Expression? ']' ) )* &INDNONE FunctionCallArguments
-FunctionCallExpression ::= SimpleFunctionCall | ComplexFunctionCall // TODO: currently only used for `log`, otherwise see `CallExpression`
 
 MemberAccessExpression ::= Expression &INDNONE '.' (&INDNONE VarLiteral) {
     name = "member access"

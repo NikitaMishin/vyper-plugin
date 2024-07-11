@@ -27,7 +27,7 @@ internal const val MISSING_EXTCALL = "Missing `extcall`"
 internal const val RANGE_TYPE_REQUIRED_V4 = "Range type required in Vyper 0.4"
 internal const val ENUM_NOT_V4 = "`enum` is not supported in Vyper 0.4. Please use flags instead"
 
-internal const val VYPER_VERSION_NOT_SPECIFIED = "Vyper version not specified. Please add `# pragma version ^0.4.0` to the top of the file"
+internal const val VYPER_VERSION_NOT_SPECIFIED = "Vyper version not specified. Please add version pragma to the top of the file"
 
 class VersionAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -43,8 +43,8 @@ class VersionAnnotator : Annotator {
         val firstChild = element.containingFile.firstChild // show warning on the first line when missing pragma
         if (fileType is VyperFileType && element == firstChild && element.file.vyperVersion == null) {
             holder.newAnnotation(HighlightSeverity.WARNING, VYPER_VERSION_NOT_SPECIFIED)
-                .withFix(AddVersionPragmaFix("^0.3.0"))
                 .withFix(AddVersionPragmaFix("^0.4.0"))
+                .withFix(AddVersionPragmaFix("^0.3.0"))
                 .create()
         }
     }

@@ -116,6 +116,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "struct"                     { return STRUCT; }
   "enum"                       { return ENUM; }
   "flag"                       { return FLAG; }
+  "indexed"                    { return INDEXED; }
   "elif"                       { return ELIF; }
   "else"                       { return ELSE; }
   "if"                         { return IF; }
