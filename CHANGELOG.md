@@ -5,6 +5,8 @@
 ## [Unreleased]
 
 - Support for Vyper 0.4.0 ([#15](https://github.com/NikitaMishin/vyper-plugin/issues/15))
+- Get rid of Vyper compile/stub menus and output window
+- Fix multiple parsing issues
 
 ## [0.2.0-alpha.4] - 2024-07-09
 

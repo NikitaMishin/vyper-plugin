@@ -11,6 +11,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.util.text.SemVer
+import org.vyperlang.plugin.VyperFileType
 import org.vyperlang.plugin.docker.CompilerMissingError
 import org.vyperlang.plugin.docker.StatusDocker
 import org.vyperlang.plugin.docker.ToolResult
@@ -44,13 +45,14 @@ class CompilerAnnotator : ExternalAnnotator<FileInfo, List<CompilerError>>(), Du
 
     /** 2nd step of the external annotator: Run the compiler and return the result. */
     override fun doAnnotate(info: FileInfo?): List<CompilerError> {
-        if (info?.file?.exists() != true) {
+        if (info?.file?.exists() != true || info.file.fileType !== VyperFileType.INSTANCE) {
             return emptyList() // file may not be written to disk yet, also occurs in unit tests with `configureByText`
         }
         val result = try {
             VyperCompilerDocker(info.project, info.file, info.version, info.indicator).run()
         } catch (e: CompilerMissingError) {
             LOG.error("Error while running compiler annotator", e)
+            e.notify(info.project)
             null // todo: return warning to the editor
         }
         if (result?.statusDocker == StatusDocker.FAILED) {

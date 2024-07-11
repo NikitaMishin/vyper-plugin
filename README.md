@@ -13,15 +13,13 @@ This plugin provides support for writing, compiling, and deploying Vyper smart c
 <!-- Plugin description end -->
 
 ## Features:
-* Syntax assistance with specified language grammar that facilitates *navigation*, *completion* and *highlighting*;
-* Development tools integration that includes: *Vyper compiler* with *projection* onto editor;
-* Fast function testing with *Vyper-debug/Vyper-run*
-* *Docker*  so you basically need only IDEA and Docker :) ;
+* Syntax highlighting for `.vy` and `.vyi` files
+* Action to create new Vyper files
+* Find references
+* Brace matcher
+* Auto-complete
+* Runs the compiler inside *Docker*, so you basically need only IDEA and Docker :) ;
 * Nevertheless, pre-alpha.
-
-## Demo
-See demo on [YouTube](https://www.youtube.com/watch?v=M6f6xgcP4Xo).
-**Note**: This video is extremely outdated.
 
 ## Build
 To build and run the project, open it in IntelliJ IDEA.

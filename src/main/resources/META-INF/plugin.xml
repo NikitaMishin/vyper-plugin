@@ -25,15 +25,11 @@
         <notificationGroup id="RUN" displayType="BALLOON"/>
         <notificationGroup id="COMMON" displayType="BALLOON"/>
         <notificationGroup id="ANALYZE" displayType="BALLOON"/>
-        <lang.findUsagesProvider language="Vyper"
-                                 implementationClass="org.vyperlang.plugin.usages.VyperFindUsagesProvider"/>
+
+        <lang.findUsagesProvider language="Vyper" implementationClass="org.vyperlang.plugin.usages.VyperFindUsagesProvider"/>
         <lang.parserDefinition language="Vyper" implementationClass="org.vyperlang.plugin.VyperParserDefinition"/>
-        <lang.syntaxHighlighterFactory language="Vyper"
-                                       implementationClass="org.vyperlang.plugin.VyperHighlighterFactory"/>
-        <toolWindow id="Vyper Tools" anchor="bottom" factoryClass="org.vyperlang.plugin.toolWindow.VyperToolFactory"
-                    canCloseContents="true" icon="org.vyperlang.plugin.VyperIcons.FILE"/>
-        <lang.braceMatcher language="Vyper"
-                           implementationClass="org.vyperlang.plugin.editorActions.PairedBraceMatcherVyper"/>
+        <lang.syntaxHighlighterFactory language="Vyper" implementationClass="org.vyperlang.plugin.VyperHighlighterFactory"/>
+        <lang.braceMatcher language="Vyper" implementationClass="org.vyperlang.plugin.editorActions.PairedBraceMatcherVyper"/>
         <lang.commenter language="Vyper" implementationClass="org.vyperlang.plugin.commenter.VyperCommenter"/>
 
         <completion.contributor language="Vyper" implementationClass="org.vyperlang.plugin.completion.VyperBaseTypesCompletionContributor"/>
@@ -46,10 +42,6 @@
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.ColorAnnotator"/>
         <annotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.VersionAnnotator"/>
         <externalAnnotator language="Vyper" implementationClass="org.vyperlang.plugin.annotators.CompilerAnnotator"/>
-
-        <applicationService serviceImplementation="org.vyperlang.plugin.settings.VyperSettings"/>
-        <applicationConfigurable groupId="language" displayName="Vyper" id="preferences.Vyper"
-                                 instance="org.vyperlang.plugin.settings.VyperSettingsConfigurable"/>
     </extensions>
 
     <actions>
@@ -59,27 +51,5 @@
                 description="Create new Vyper file">
             <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
         </action>
-
-        <!-- VyperActions -->
-        <group id="VyperActions"/>
-
-        <group id="VyperMenu" text="_Vyper" popup="true">
-            <separator/>
-            <reference ref="VyperActions"/>
-            <add-to-group group-id="MainMenu" anchor="after" relative-to-action="WindowMenu"/>
-        </group>
-
-        <group id="VyperGroup" text="Vyper Actions">
-            <action id="Vyper.Compile" text="Compile"
-                    description="Compile vyper file"
-                    class="org.vyperlang.plugin.actions.CompileVyperFileAction">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl S"/>
-            </action>
-            <add-to-group group-id="VyperMenu" anchor="first"/>
-        </group>
-
-        <reference ref="VyperMenu">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorPopupMenu1"/>
-        </reference>
     </actions>
 </idea-plugin>

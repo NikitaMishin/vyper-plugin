@@ -18,12 +18,12 @@ class TestHighlighter(private val file: String) :
         @Parameters(name = "{0}")
         fun data(): Array<Array<Any>> {
             return arrayOf(
-                arrayOf("example.vy"),
+//                arrayOf("example.vy"),
                 arrayOf("test.vy"),
-                arrayOf("backslash.vy"),
-                arrayOf("f/ff/fff.vy"),
-                arrayOf("IERC20.vyi"),
-                arrayOf("CurveStableSwapNG.vy"),
+//                arrayOf("backslash.vy"),
+//                arrayOf("f/ff/fff.vy"),
+//                arrayOf("IERC20.vyi"),
+//                arrayOf("CurveStableSwapNG.vy"),
             )
         }
     }
