@@ -59,9 +59,6 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "}"                          { return RBRACE; }
   "("                          { return LPAREN; }
   ")"                          { return RPAREN; }
-  "import"                     { return IMPORT; }
-  "from"                       { return FROM; }
-  "pass"                       { return PASS; }
   "..."                        { return ELLIPSIS; }
   "+"                          { return PLUS; }
   "-"                          { return MINUS; }
@@ -82,7 +79,6 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "<="                         { return LESSEQ; }
   ">"                          { return MORE; }
   ">="                         { return MOREEQ; }
-  "^"                          { return CARET; }
   "and"                        { return AND; }
   "or"                         { return OR; }
   "?"                          { return QUESTION; }
@@ -90,33 +86,35 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "~"                          { return TILDE; }
   "<<"                         { return LSHIFT; }
   ">>"                         { return RSHIFT; }
-  "&"                          { return INTERSECTION; }
-  "|"                          { return UNION; }
-  "public"                     { return PUBLIC; }
-  "immutable"                  { return IMMUTABLE; }
-  "constant"                   { return CONSTANT; }
-  "payable"                    { return PAYABLE; }
-  "nonpayable"                 { return NONPAYABLE; }
-  "external"                   { return EXTERNAL; }
-  "internal"                   { return INTERNAL; }
-  "deploy"                     { return DEPLOY; }
-  "pure"                       { return PURE; }
-  "view"                       { return VIEW; }
-  "nonreentrant"               { return NONREENTRANT; }
-  "event"                      { return EVENT; }
-  "range"                      { return RANGE; }
+  "&"                          { return AMPERSAND; }
+  "|"                          { return PIPE; }
+  "^"                          { return CARET; }
   "String"                     { return STRING; }
   "Bytes"                      { return BYTES; }
   "DynArray"                   { return DYNARRAY; }
   "HashMap"                    { return HASHMAP; }
+  "constant"                   { return CONSTANT; }
+  "public"                     { return PUBLIC; }
+  "immutable"                  { return IMMUTABLE; }
+  "import"                     { return IMPORT; }
   "as"                         { return AS; }
+  "from"                       { return FROM; }
   "implements"                 { return IMPLEMENTS; }
   "interface"                  { return INTERFACE; }
   "def"                        { return DEF; }
+  "pure"                       { return PURE; }
+  "view"                       { return VIEW; }
+  "nonpayable"                 { return NONPAYABLE; }
+  "payable"                    { return PAYABLE; }
   "struct"                     { return STRUCT; }
   "enum"                       { return ENUM; }
   "flag"                       { return FLAG; }
+  "event"                      { return EVENT; }
   "indexed"                    { return INDEXED; }
+  "external"                   { return EXTERNAL; }
+  "internal"                   { return INTERNAL; }
+  "deploy"                     { return DEPLOY; }
+  "nonreentrant"               { return NONREENTRANT; }
   "elif"                       { return ELIF; }
   "else"                       { return ELSE; }
   "if"                         { return IF; }
@@ -126,11 +124,13 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "break"                      { return BREAK; }
   "return"                     { return RETURN; }
   "raise"                      { return RAISE; }
+  "PASS"                       { return PASS; }
   "log"                        { return LOG; }
   "extcall"                    { return EXTCALL; }
   "staticcall"                 { return STATICCALL; }
-  "clear"                      { return CLEAR; }
+  "range"                      { return RANGE; }
   "assert"                     { return ASSERT; }
+  "self"                       { return SELF; }
   "address"                    { return ADDRESS; }
   "bool"                       { return BOOL; }
 

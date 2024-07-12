@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface VyperCallExpression extends VyperExpression {
 
   @NotNull
-  List<VyperExpression> getExpressionList();
+  VyperExpression getExpression();
 
   @NotNull
-  List<VyperFunctionCallArguments> getFunctionCallArgumentsList();
+  VyperFunctionCallArguments getFunctionCallArguments();
 
 }

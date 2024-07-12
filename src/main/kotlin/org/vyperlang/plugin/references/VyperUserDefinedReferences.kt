@@ -11,7 +11,7 @@ class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<Vy
 class VyperMemberAccessReference(element: VyperVarLiteral, private var member: VyperMemberAccessExpression) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
     override fun getAlternatives() = VyperResolver.resolveMemberAccess(member)
 
-    override fun multiResolve() = this.getAlternatives().filter { it.name == member.varLiteral.name }
+    override fun multiResolve() = this.getAlternatives().filter { it.name ==  member.varLiteral.name }
 }
 
 class VyperStructReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {

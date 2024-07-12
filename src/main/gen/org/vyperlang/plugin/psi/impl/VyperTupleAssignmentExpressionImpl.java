@@ -33,4 +33,10 @@ public class VyperTupleAssignmentExpressionImpl extends VyperExpressionImpl impl
     return findChildByClass(VyperExpression.class);
   }
 
+  @Override
+  @NotNull
+  public List<VyperVarLiteral> getVarLiteralList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperVarLiteral.class);
+  }
+
 }

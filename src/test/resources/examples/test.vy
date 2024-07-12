@@ -1,5 +1,7 @@
 # pragma version 0.4.0
 ### Press F or not to press F contract example
+import example
+
 initial_distribution: constant(int128) = 100
 test_calc: uint256[initial_distribution + 1]
 
@@ -69,6 +71,14 @@ def finish_vote():
 @external
 def get_current_proposal()->Bytes[100]:
     return self.current_proposal
+
+@external
+def get_proposal(test:uint256)->Bytes[100]:
+    res: int8 = self.current_proposal[test - 1]
+    log example.AuctionEnded(self, convert(
+        res, uint256
+    ))
+    return res
 
 @external
 def test_trailing_comma() -> uint256[1]:

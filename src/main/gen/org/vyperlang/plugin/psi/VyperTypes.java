@@ -13,7 +13,6 @@ public interface VyperTypes {
   IElementType ASSIGNMENT_EXPRESSION = new VyperElementType("ASSIGNMENT_EXPRESSION");
   IElementType BIN_EXPRESSION = new VyperElementType("BIN_EXPRESSION");
   IElementType CALL_EXPRESSION = new VyperElementType("CALL_EXPRESSION");
-  IElementType CLEAR_EXPRESSION = new VyperElementType("CLEAR_EXPRESSION");
   IElementType COMP_EXPRESSION = new VyperElementType("COMP_EXPRESSION");
   IElementType CONSTANT_DEFINITION_EXPRESSION = new VyperElementType("CONSTANT_DEFINITION_EXPRESSION");
   IElementType EQ_EXPRESSION = new VyperElementType("EQ_EXPRESSION");
@@ -52,12 +51,11 @@ public interface VyperTypes {
   IElementType LOCAL_VARIABLE_DEFINITION = new VyperElementType("LOCAL_VARIABLE_DEFINITION");
   IElementType MAP_TYPE = new VyperElementType("MAP_TYPE");
   IElementType MEMBER_ACCESS_EXPRESSION = new VyperElementType("MEMBER_ACCESS_EXPRESSION");
-  IElementType MEMBER_INDEX_ACCESS = new VyperElementType("MEMBER_INDEX_ACCESS");
   IElementType MULTI_LINE_STRING = new VyperElementType("MULTI_LINE_STRING");
   IElementType MULT_DIV_EXPRESSION = new VyperElementType("MULT_DIV_EXPRESSION");
   IElementType OR_EXPRESSION = new VyperElementType("OR_EXPRESSION");
   IElementType PARAM_DEF = new VyperElementType("PARAM_DEF");
-  IElementType PARENTHESIZIED_EXPRESSION = new VyperElementType("PARENTHESIZIED_EXPRESSION");
+  IElementType PARENTHESIZED_EXPRESSION = new VyperElementType("PARENTHESIZED_EXPRESSION");
   IElementType PLUS_MIN_EXPRESSION = new VyperElementType("PLUS_MIN_EXPRESSION");
   IElementType PRIMARY_EXPRESSION = new VyperElementType("PRIMARY_EXPRESSION");
   IElementType RANGE_BOUND = new VyperElementType("RANGE_BOUND");
@@ -78,6 +76,7 @@ public interface VyperTypes {
   IElementType VAR_LITERAL = new VyperElementType("VAR_LITERAL");
 
   IElementType ADDRESS = new VyperTokenType("address");
+  IElementType AMPERSAND = new VyperTokenType("&");
   IElementType AND = new VyperTokenType("and");
   IElementType AS = new VyperTokenType("as");
   IElementType ASSERT = new VyperTokenType("assert");
@@ -89,7 +88,6 @@ public interface VyperTypes {
   IElementType BYTES = new VyperTokenType("Bytes");
   IElementType BYTESM = new VyperTokenType("bytesM");
   IElementType CARET = new VyperTokenType("^");
-  IElementType CLEAR = new VyperTokenType("clear");
   IElementType COLON = new VyperTokenType(":");
   IElementType COMMA = new VyperTokenType(",");
   IElementType COMMENT = new VyperTokenType("comment");
@@ -128,7 +126,6 @@ public interface VyperTypes {
   IElementType INDEXED = new VyperTokenType("indexed");
   IElementType INTERFACE = new VyperTokenType("interface");
   IElementType INTERNAL = new VyperTokenType("internal");
-  IElementType INTERSECTION = new VyperTokenType("&");
   IElementType INTM = new VyperTokenType("intM");
   IElementType LBRACE = new VyperTokenType("{");
   IElementType LBRACKET = new VyperTokenType("[");
@@ -153,6 +150,7 @@ public interface VyperTypes {
   IElementType PAYABLE = new VyperTokenType("payable");
   IElementType PERCENT = new VyperTokenType("%");
   IElementType PERCENT_ASSIGN = new VyperTokenType("%=");
+  IElementType PIPE = new VyperTokenType("|");
   IElementType PLUS = new VyperTokenType("+");
   IElementType PLUS_ASSIGN = new VyperTokenType("+=");
   IElementType PUBLIC = new VyperTokenType("public");
@@ -166,6 +164,7 @@ public interface VyperTypes {
   IElementType RPAREN = new VyperTokenType(")");
   IElementType RSHIFT = new VyperTokenType(">>");
   IElementType SCIENTIFICNUMBER = new VyperTokenType("scientificNumber");
+  IElementType SELF = new VyperTokenType("self");
   IElementType SEMICOLON = new VyperTokenType(";");
   IElementType STATICCALL = new VyperTokenType("staticcall");
   IElementType STRING = new VyperTokenType("String");
@@ -177,7 +176,6 @@ public interface VyperTypes {
   IElementType TILDE = new VyperTokenType("~");
   IElementType TO = new VyperTokenType("=>");
   IElementType UINTM = new VyperTokenType("uintM");
-  IElementType UNION = new VyperTokenType("|");
   IElementType VIEW = new VyperTokenType("view");
 
   class Factory {
@@ -197,9 +195,6 @@ public interface VyperTypes {
       }
       else if (type == CALL_EXPRESSION) {
         return new VyperCallExpressionImpl(node);
-      }
-      else if (type == CLEAR_EXPRESSION) {
-        return new VyperClearExpressionImpl(node);
       }
       else if (type == COMP_EXPRESSION) {
         return new VyperCompExpressionImpl(node);
@@ -312,9 +307,6 @@ public interface VyperTypes {
       else if (type == MEMBER_ACCESS_EXPRESSION) {
         return new VyperMemberAccessExpressionImpl(node);
       }
-      else if (type == MEMBER_INDEX_ACCESS) {
-        return new VyperMemberIndexAccessImpl(node);
-      }
       else if (type == MULTI_LINE_STRING) {
         return new VyperMultiLineStringImpl(node);
       }
@@ -327,8 +319,8 @@ public interface VyperTypes {
       else if (type == PARAM_DEF) {
         return new VyperParamDefImpl(node);
       }
-      else if (type == PARENTHESIZIED_EXPRESSION) {
-        return new VyperParenthesiziedExpressionImpl(node);
+      else if (type == PARENTHESIZED_EXPRESSION) {
+        return new VyperParenthesizedExpressionImpl(node);
       }
       else if (type == PLUS_MIN_EXPRESSION) {
         return new VyperPlusMinExpressionImpl(node);

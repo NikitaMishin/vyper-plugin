@@ -39,4 +39,10 @@ public class VyperEventLogExpressionImpl extends VyperExpressionImpl implements 
     return findNotNullChildByClass(VyperVarLiteral.class);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getIdentifier() {
+    return findChildByType(IDENTIFIER);
+  }
+
 }

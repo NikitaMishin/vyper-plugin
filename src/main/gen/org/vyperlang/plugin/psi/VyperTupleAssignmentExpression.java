@@ -10,4 +10,7 @@ public interface VyperTupleAssignmentExpression extends VyperExpression {
   @Nullable
   VyperExpression getExpression();
 
+  @NotNull
+  List<VyperVarLiteral> getVarLiteralList();
+
 }

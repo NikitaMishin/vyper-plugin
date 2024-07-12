@@ -5,6 +5,7 @@ import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
 import org.vyperlang.plugin.psi.VyperTypes.*
+import org.vyperlang.plugin.psi.VyperTypes;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors as Defaults
 
 class VyperHighlighterFactory : SingleLazyInstanceSyntaxHighlighterFactory() {
@@ -60,9 +61,9 @@ class VyperHighlighter : SyntaxHighlighterBase() {
 
         // todo #29: min, max, empty, constant, range are built-in functions
         private fun keywords() = setOf<IElementType>(
-            IMPORT, FROM, AS, INTERFACE, IMPLEMENTS, STRUCT, DEF,
-            IF, ELSE, FOR, BREAK, CONTINUE, RAISE, RETURN,
-            ELIF, EVENT, PASS, ASSERT, CLEAR, RANGE, LOG
+            IMPORT, FROM, VyperTypes.AS, INTERFACE, IMPLEMENTS, STRUCT, DEF,
+            IF, ELSE, ELIF, FOR, BREAK, CONTINUE, RAISE, RETURN,
+            EVENT, PASS, ASSERT, RANGE, VyperTypes.LOG, SELF, ENUM, FLAG,
         )
 
         private fun boolLiteral() = setOf<IElementType>(BOOLEANLITERAL)

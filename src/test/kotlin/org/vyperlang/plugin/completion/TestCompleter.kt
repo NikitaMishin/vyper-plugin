@@ -4,7 +4,7 @@ import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.vyperlang.plugin.VyperFileType
 
-class TestCompletion : BasePlatformTestCase() {
+class TestCompleter : BasePlatformTestCase() {
     override fun getTestDataPath(): String {
         return "src/test/resources/examples"
     }

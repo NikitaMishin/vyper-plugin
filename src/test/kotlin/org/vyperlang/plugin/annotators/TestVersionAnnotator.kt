@@ -1,12 +1,14 @@
 package org.vyperlang.plugin.annotators
 
 import com.intellij.lang.annotation.HighlightSeverity
+import com.intellij.psi.impl.DebugUtil
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 import org.vyperlang.plugin.VyperFileType
+import java.util.logging.Logger
 
 private const val Vy3 = "#pragma version 0.3.10"
 private const val Vy4 = "#pragma version 0.4.0"
@@ -185,7 +187,7 @@ class TestVersionAnnotator(private val case: TestCase) : BasePlatformTestCase() 
                     @external
                     def repeat(n: uint256) -> uint256:
                         x: uint256 = 0
-                        for i: uint256 in range(n, 7, bound=6):
+                        for i: uint256 in range(n, 10 + 7, bound=6):
                             x += i + 1
                         return x
                 """,

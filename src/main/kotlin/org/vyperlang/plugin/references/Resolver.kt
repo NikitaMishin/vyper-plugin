@@ -108,9 +108,9 @@ object VyperResolver {
     fun resolveInterfaces(element: VyperElement): List<VyperNamedElement> =
         sequenceOf(element.file.interfaces, element.file.imports).flatten().toList()
 
-    private fun getFirstLiteralName(element: VyperExpression?): String? = when (element) {
-        is VyperPrimaryExpression -> element.varLiteral?.text
-        is VyperCallExpression -> getFirstLiteralName(element.expressionList.firstOrNull())
+    fun getFirstLiteralName(element: VyperExpression?): String? = when (element) {
+        is VyperPrimaryExpression -> element.varLiteral?.text ?: element.text // fallback to `text` e.g. for `self`
+        is VyperCallExpression -> getFirstLiteralName(element.expression)
         else -> null
     }
 

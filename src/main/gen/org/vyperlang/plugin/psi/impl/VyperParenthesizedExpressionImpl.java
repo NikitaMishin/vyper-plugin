@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperMemberIndexAccessImpl extends VyperExpressionImpl implements VyperMemberIndexAccess {
+public class VyperParenthesizedExpressionImpl extends VyperExpressionImpl implements VyperParenthesizedExpression {
 
-  public VyperMemberIndexAccessImpl(@NotNull ASTNode node) {
+  public VyperParenthesizedExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitMemberIndexAccess(this);
+    visitor.visitParenthesizedExpression(this);
   }
 
   @Override
@@ -28,9 +28,9 @@ public class VyperMemberIndexAccessImpl extends VyperExpressionImpl implements V
   }
 
   @Override
-  @NotNull
-  public List<VyperExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
+  @Nullable
+  public VyperExpression getExpression() {
+    return findChildByClass(VyperExpression.class);
   }
 
 }

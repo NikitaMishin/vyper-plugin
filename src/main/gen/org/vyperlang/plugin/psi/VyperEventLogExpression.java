@@ -13,4 +13,7 @@ public interface VyperEventLogExpression extends VyperExpression {
   @NotNull
   VyperVarLiteral getVarLiteral();
 
+  @Nullable
+  PsiElement getIdentifier();
+
 }

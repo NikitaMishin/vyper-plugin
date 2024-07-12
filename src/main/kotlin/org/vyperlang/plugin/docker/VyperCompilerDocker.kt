@@ -59,8 +59,10 @@ class VyperCompilerDocker(
                 downloadImage()
             }
             runContainer()
-        } catch (dockerException: DockerException) {
-            throw CompilerMissingError(dockerException)
+        } catch (e: DockerException) {
+            throw CompilerMissingError(e)
+        } catch (e: UnsatisfiedLinkError) {
+            throw CompilerMissingError(e)
         } catch (e: InterruptedException) {
             throw CompilerMissingError(e)
         }
@@ -159,7 +161,7 @@ private class VyperPullImageAdapter(private val indicator: ProgressIndicator?) :
     }
 }
 
-class CompilerMissingError(baseError: Exception) : Exception(baseError) {
+class CompilerMissingError(baseError: Throwable) : Exception(baseError) {
     companion object {
         const val ERROR_HTML = "<html>Error running docker.\n" +
                 " Do you install <a href=\"https://docs.docker.com/install/\">docker</a>" +
