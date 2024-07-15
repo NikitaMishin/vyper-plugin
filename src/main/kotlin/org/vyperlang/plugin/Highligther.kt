@@ -61,9 +61,10 @@ class VyperHighlighter : SyntaxHighlighterBase() {
 
         // todo #29: min, max, empty, constant, range are built-in functions
         private fun keywords() = setOf<IElementType>(
-            IMPORT, FROM, VyperTypes.AS, INTERFACE, IMPLEMENTS, STRUCT, DEF,
+            IMPORT, FROM, AS, INTERFACE, IMPLEMENTS, STRUCT, DEF,
             IF, ELSE, ELIF, FOR, BREAK, CONTINUE, RAISE, RETURN,
-            EVENT, PASS, ASSERT, RANGE, VyperTypes.LOG, SELF, ENUM, FLAG,
+            EVENT, PASS, ASSERT, RANGE, LOG, SELF, ENUM, FLAG,
+            IMPLEMENTS, USES, EXPORTS, INITIALIZES
         )
 
         private fun boolLiteral() = setOf<IElementType>(BOOLEANLITERAL)
@@ -96,7 +97,7 @@ class VyperHighlighter : SyntaxHighlighterBase() {
             NOT, ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MULT_ASSIGN, DIV_ASSIGN, PERCENT_ASSIGN,
             PLUS, MINUS, MULT, DIV, EXPONENT,
             LESS, MORE, LESSEQ, MOREEQ,
-            AND, OR, EQ, NEQ, TO, PERCENT, IN,
+            AND, OR, EQ, NEQ, TO, PERCENT, IN, WALRUS, ELLIPSIS,
         )
 
         private fun identifier() = setOf<IElementType>(
