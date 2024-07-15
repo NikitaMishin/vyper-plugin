@@ -29,14 +29,14 @@ public class VyperCallExpressionImpl extends VyperExpressionImpl implements Vype
 
   @Override
   @NotNull
-  public List<VyperExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
+  public VyperExpression getExpression() {
+    return findNotNullChildByClass(VyperExpression.class);
   }
 
   @Override
   @NotNull
-  public List<VyperFunctionCallArguments> getFunctionCallArgumentsList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperFunctionCallArguments.class);
+  public VyperFunctionCallArguments getFunctionCallArguments() {
+    return findNotNullChildByClass(VyperFunctionCallArguments.class);
   }
 
 }

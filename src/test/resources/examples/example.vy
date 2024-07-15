@@ -1,6 +1,5 @@
 # pragma version 0.3.10
 # Blind Auction # Adapted to Vyper from [Solidity by Example](https://github.com/ethereum/solidity/blob/develop/docs/solidity-by-example.rst#blind-auction-1)
-
 struct Bid:
     blindedBid: bytes32
     deposit: uint256
@@ -171,7 +170,10 @@ def auctionEnd():
     assert not self.ended
 
     # Log auction ending and set flag
-    log AuctionEnded(self.highestBidder, self.highestBid)
+    log AuctionEnded(
+        self.highestBidder,
+        self.highestBid,
+    )
     self.ended = True
 
     # Transfer funds to beneficiary

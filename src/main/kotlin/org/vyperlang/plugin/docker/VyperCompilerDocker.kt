@@ -8,6 +8,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.util.text.SemVer
 import org.vyperlang.plugin.VyperMessageProcessor
 import javax.swing.event.HyperlinkEvent
 
@@ -37,19 +38,20 @@ val LOG: Logger = Logger.getInstance(VyperCompilerDocker::class.java)
 class VyperCompilerDocker(
     private val project: Project,
     private val file: VirtualFile,
+    version: SemVer?,
     private val indicator: ProgressIndicator?,
     vararg args: String
 ) {
     private val args = arrayOf(*args)
     private val image = "vyperlang/vyper"
-    private val imageTag = "0.3.10"
+    private val imageTag = version?.toString() ?: "latest"
     private val dockerBindDir = "/app/s"
 
     /**
      * preferred way to run docker within a project
      * handles downloading image if not found
      * this function handle docker exceptions and notify uses about possible solution
-     * TODO add timeout, use long-running containers for performance
+     * todo #15: add timeout, use long-running containers for performance
      */
     fun run(): ToolResult =
         try {
@@ -57,14 +59,16 @@ class VyperCompilerDocker(
                 downloadImage()
             }
             runContainer()
-        } catch (dockerException: DockerException) {
-            throw CompilerMissingError(dockerException)
+        } catch (e: DockerException) {
+            throw CompilerMissingError(e)
+        } catch (e: UnsatisfiedLinkError) {
+            throw CompilerMissingError(e)
         } catch (e: InterruptedException) {
             throw CompilerMissingError(e)
         }
 
     private fun hasImage() =
-        PluginDockerClient.listImagesCmd().exec().any { it.repoTags.any { k -> k.contains(image, true) } }
+        PluginDockerClient.listImagesCmd().exec().any { it.repoTags.any { tag -> tag.contains("$image:$imageTag") } }
 
     private fun downloadImage(): ResultCallback.Adapter<PullResponseItem>? {
         VyperMessageProcessor.notificateInBalloon(
@@ -98,7 +102,7 @@ class VyperCompilerDocker(
             .id
 
         PluginDockerClient.startContainerCmd(containerId).exec()
-        LOG.info("Container $containerId started")
+        LOG.info("Container $containerId started with $image:$imageTag")
 
         val frames = VyperFrameStreamAdapter()
         PluginDockerClient
@@ -157,7 +161,7 @@ private class VyperPullImageAdapter(private val indicator: ProgressIndicator?) :
     }
 }
 
-class CompilerMissingError(baseError: Exception) : Exception(baseError) {
+class CompilerMissingError(baseError: Throwable) : Exception(baseError) {
     companion object {
         const val ERROR_HTML = "<html>Error running docker.\n" +
                 " Do you install <a href=\"https://docs.docker.com/install/\">docker</a>" +

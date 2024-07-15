@@ -1,3 +1,4 @@
+# pragma version 0.3.10
 x: constant(int256) =\
     100
 ab: uint256

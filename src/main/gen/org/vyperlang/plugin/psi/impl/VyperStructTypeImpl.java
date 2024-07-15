@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.vyperlang.plugin.psi.VyperTypes.*;
-import org.vyperlang.plugin.psi.VyperStructTypeMixin;
+import org.vyperlang.plugin.psi.VyperVarLiteralMixin;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperStructTypeImpl extends VyperStructTypeMixin implements VyperStructType {
+public class VyperStructTypeImpl extends VyperVarLiteralMixin implements VyperStructType {
 
   public VyperStructTypeImpl(@NotNull ASTNode node) {
     super(node);

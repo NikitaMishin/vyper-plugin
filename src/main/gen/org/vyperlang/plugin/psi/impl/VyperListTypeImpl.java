@@ -28,6 +28,12 @@ public class VyperListTypeImpl extends ASTWrapperPsiElement implements VyperList
   }
 
   @Override
+  @NotNull
+  public List<VyperExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
+  }
+
+  @Override
   @Nullable
   public VyperStructType getStructType() {
     return findChildByClass(VyperStructType.class);

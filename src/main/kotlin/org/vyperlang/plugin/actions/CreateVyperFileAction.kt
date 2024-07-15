@@ -9,7 +9,7 @@ import org.vyperlang.plugin.VyperIcons
 private const val name = "Vyper contract"
 private const val description = "Empty Vyper file"
 private const val kind = "Empty file"
-private const val templateName = "Vyper File"
+private const val templateName = "Vyper File" // src/main/resources/fileTemplates/internal/Vyper File.vy.ft
 
 class CreateVyperFileAction : CreateFileFromTemplateAction(name, description, VyperIcons.FILE) {
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {

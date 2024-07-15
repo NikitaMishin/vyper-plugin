@@ -1,35 +1,35 @@
 package org.vyperlang.plugin.references
 
-import org.vyperlang.plugin.completion.VyperCompleter
 import org.vyperlang.plugin.psi.VyperMemberAccessExpression
 import org.vyperlang.plugin.psi.VyperVarLiteral
+import org.vyperlang.plugin.psi.file
 
 class VyperVarLiteralReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
-    override fun multiResolve() = VyperResolver.resolveVarLiteral(element)
-
-    override fun getVariants() = VyperCompleter.completeVarLiteral(element)
+    override fun getAlternatives() = VyperResolver.lexicalDeclarations(element)
 }
 
-class VyperMemberAccessReference(element: VyperVarLiteral, var member: VyperMemberAccessExpression) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
-    override fun multiResolve() = VyperResolver.resolveMemberAccess(member)
-    
-    override fun getVariants() = VyperCompleter.completeMemberAccess(member)
-}
+class VyperMemberAccessReference(element: VyperVarLiteral, private var member: VyperMemberAccessExpression) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+    override fun getAlternatives() = VyperResolver.resolveMemberAccess(member)
 
-/* todo: implement getVariants for the types below */
+    override fun multiResolve() = this.getAlternatives().filter { it.name ==  member.varLiteral.name }
+}
 
 class VyperStructReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
-    override fun multiResolve() = VyperResolver.resolveStruct(element)
+    override fun getAlternatives() = VyperResolver.findStruct(element)
 }
 
 class VyperInterfaceReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
-    override fun multiResolve() = VyperResolver.resolveInterface(element)
+    override fun getAlternatives() = VyperResolver.resolveInterfaces(element)
 }
 
 class VyperStructMemberReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
-    override fun multiResolve() = VyperResolver.resolveStructMember(element)
+    override fun getAlternatives() = VyperResolver.resolveStructMembers(element)
+}
+
+class VyperKeywordArgumentReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
+    override fun getAlternatives() = VyperResolver.resolveStructMembers(element)
 }
 
 class VyperEventLogReference(element: VyperVarLiteral) : VyperReferenceBase<VyperVarLiteral>(element), VyperReference {
-    override fun multiResolve() = VyperResolver.resolveEventLog(element)
+    override fun getAlternatives() = element.file.events
 }

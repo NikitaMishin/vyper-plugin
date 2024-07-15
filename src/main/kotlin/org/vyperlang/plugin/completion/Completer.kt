@@ -7,34 +7,24 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.patterns.PlatformPatterns.psiElement
+import com.intellij.patterns.PsiElementPattern
 import com.intellij.patterns.StandardPatterns.or
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
 import org.vyperlang.plugin.VyperIcons
 import org.vyperlang.plugin.psi.*
 import org.vyperlang.plugin.psi.VyperTypes.*
-import org.vyperlang.plugin.references.VyperResolver
-import org.vyperlang.plugin.references.VyperResolver.resolveMemberAccess
 
 object VyperCompleter {
-
-    fun completeVarLiteral(element: VyperVarLiteral): Array<out LookupElement> =
-        VyperResolver.lexicalDeclarations(element)
-            .map { createLookup(it) }
-            .map { PrioritizedLookupElement.withPriority(it, 15.0) }
-            .toTypedArray()
-
-    fun completeMemberAccess(element: VyperMemberAccessExpression): Array<out LookupElement> =
-        resolveMemberAccess(element)
-            .map { PrioritizedLookupElement.withPriority(this.createLookup(it), 15.0) }
-            .toTypedArray()
+    fun createLookup(element: PsiElement, priority: Double=15.0): LookupElement =
+        PrioritizedLookupElement.withPriority(this.createLookupElement(element), priority)
 
     /**
      * Creates a lookup element for the given element.
      * @param elem The named element to target.
      * @return The lookup element.
      */
-    private fun createLookup(elem: VyperNamedElement): LookupElement = when (elem) {
+    private fun createLookupElement(elem: PsiElement): LookupElement = when (elem) {
         is VyperConstantDefinitionExpression ->
             LookupElementBuilder.create(elem, elem.name ?: "")
                 .withIcon(VyperIcons.FILE)
@@ -61,8 +51,8 @@ object VyperCompleter {
             .withTypeText(elem.stateVariableType.text)
 
         is VyperFunctionDefinition -> LookupElementBuilder.create(elem, elem.name + "()")
-                .withIcon(VyperIcons.FILE)
-                .withTypeText("->${elem.funTypeAnnotation?.text ?: "()"}")
+            .withIcon(VyperIcons.FILE)
+            .withTypeText("->${elem.funTypeAnnotation?.text ?: "()"}")
 
         else -> LookupElementBuilder.create(elem)
     }
@@ -120,11 +110,11 @@ val inFile by lazy {
         .and(psiElement().withSuperParent(2, PlatformPatterns.psiFile()))
 }
 
-val inStateVariableType by lazy {
+val inStateVariableType: PsiElementPattern.Capture<PsiElement> by lazy {
     psiElement().inside(psiElement(VyperStateVariableType::class.java))
 }
 
-val staticVarType by lazy {
+val staticVarType: PsiElementPattern.Capture<PsiElement> by lazy {
     psiElement().afterSibling(psiElement(LPAREN).afterLeaf(
         or(psiElement(CONSTANT), psiElement(IMMUTABLE))))
 }
@@ -140,7 +130,7 @@ val baseTypes by lazy {
     )
 }
 
-val refTypes by lazy {
+val refTypes: PsiElementPattern.Capture<PsiElement> by lazy {
     psiElement().inside(VyperStateVariableType::class.java)
 }
 

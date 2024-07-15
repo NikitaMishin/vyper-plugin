@@ -5,6 +5,7 @@ import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
 import org.vyperlang.plugin.psi.VyperTypes.*
+import org.vyperlang.plugin.psi.VyperTypes;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors as Defaults
 
 class VyperHighlighterFactory : SingleLazyInstanceSyntaxHighlighterFactory() {
@@ -58,11 +59,11 @@ class VyperHighlighter : SyntaxHighlighterBase() {
                 .plus(identifier().map { it to VYPER_IDENTIFIER })
                 .plus(comment().map { it to VYPER_COMMENT }).toMutableMap()
 
-        // todo: min, max, empty, constant, range are built-in functions
+        // todo #29: min, max, empty, constant, range are built-in functions
         private fun keywords() = setOf<IElementType>(
-            IMPORT, FROM, AS, INTERFACE, IMPLEMENTS, STRUCT, DEF,
-            IF, ELSE, FOR, BREAK, CONTINUE, RAISE, RETURN,
-            ELIF, EVENT, PASS, ASSERT, CLEAR, RANGE, LOG
+            IMPORT, FROM, VyperTypes.AS, INTERFACE, IMPLEMENTS, STRUCT, DEF,
+            IF, ELSE, ELIF, FOR, BREAK, CONTINUE, RAISE, RETURN,
+            EVENT, PASS, ASSERT, RANGE, VyperTypes.LOG, SELF, ENUM, FLAG,
         )
 
         private fun boolLiteral() = setOf<IElementType>(BOOLEANLITERAL)
@@ -78,7 +79,6 @@ class VyperHighlighter : SyntaxHighlighterBase() {
 
         private fun modificators() = setOf<IElementType>(
             PUBLIC, NONREENTRANT, EXTERNAL, INTERNAL, IMMUTABLE, CONSTANT,
-            // todo: the following are (also) for interfaces
             PAYABLE, NONPAYABLE, VIEW, PURE,
         )
 

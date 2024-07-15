@@ -26,10 +26,6 @@ public class VyperVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitClearExpression(@NotNull VyperClearExpression o) {
-    visitExpression(o);
-  }
-
   public void visitCompExpression(@NotNull VyperCompExpression o) {
     visitExpression(o);
   }
@@ -37,10 +33,6 @@ public class VyperVisitor extends PsiElementVisitor {
   public void visitConstantDefinitionExpression(@NotNull VyperConstantDefinitionExpression o) {
     visitExpression(o);
     // visitNamedElement(o);
-  }
-
-  public void visitEmitStatement(@NotNull VyperEmitStatement o) {
-    visitElement(o);
   }
 
   public void visitEqExpression(@NotNull VyperEqExpression o) {
@@ -67,6 +59,18 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitExtCallExpression(@NotNull VyperExtCallExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitFlagDeclaration(@NotNull VyperFlagDeclaration o) {
+    visitNamedElement(o);
+  }
+
+  public void visitFlagOption(@NotNull VyperFlagOption o) {
+    visitNamedElement(o);
+  }
+
   public void visitForStatement(@NotNull VyperForStatement o) {
     visitElement(o);
   }
@@ -91,10 +95,6 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitFunctionCallExpression(@NotNull VyperFunctionCallExpression o) {
-    visitExpression(o);
-  }
-
   public void visitFunctionDecorator(@NotNull VyperFunctionDecorator o) {
     visitElement(o);
   }
@@ -115,10 +115,6 @@ public class VyperVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitImportPath(@NotNull VyperImportPath o) {
-    visitElement(o);
-  }
-
   public void visitIfStatement(@NotNull VyperIfStatement o) {
     visitElement(o);
   }
@@ -134,6 +130,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitImportDirective(@NotNull VyperImportDirective o) {
     visitNamedElement(o);
+  }
+
+  public void visitImportPath(@NotNull VyperImportPath o) {
+    visitElement(o);
   }
 
   public void visitInExpression(@NotNull VyperInExpression o) {
@@ -160,6 +160,10 @@ public class VyperVisitor extends PsiElementVisitor {
     visitNamedElement(o);
   }
 
+  public void visitInterfaceFunctionModifier(@NotNull VyperInterfaceFunctionModifier o) {
+    visitElement(o);
+  }
+
   public void visitListType(@NotNull VyperListType o) {
     visitElement(o);
   }
@@ -173,10 +177,6 @@ public class VyperVisitor extends PsiElementVisitor {
   }
 
   public void visitMemberAccessExpression(@NotNull VyperMemberAccessExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitMemberIndexAccess(@NotNull VyperMemberIndexAccess o) {
     visitExpression(o);
   }
 
@@ -196,7 +196,7 @@ public class VyperVisitor extends PsiElementVisitor {
     visitNamedElement(o);
   }
 
-  public void visitParenthesiziedExpression(@NotNull VyperParenthesiziedExpression o) {
+  public void visitParenthesizedExpression(@NotNull VyperParenthesizedExpression o) {
     visitExpression(o);
   }
 
@@ -206,6 +206,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitPrimaryExpression(@NotNull VyperPrimaryExpression o) {
     visitExpression(o);
+  }
+
+  public void visitRangeBound(@NotNull VyperRangeBound o) {
+    visitElement(o);
   }
 
   public void visitRangeExpression(@NotNull VyperRangeExpression o) {
@@ -222,6 +226,10 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitStatement(@NotNull VyperStatement o) {
     visitElement(o);
+  }
+
+  public void visitStaticCallExpression(@NotNull VyperStaticCallExpression o) {
+    visitExpression(o);
   }
 
   public void visitStructDeclaration(@NotNull VyperStructDeclaration o) {

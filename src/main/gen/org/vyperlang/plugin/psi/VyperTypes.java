@@ -13,22 +13,22 @@ public interface VyperTypes {
   IElementType ASSIGNMENT_EXPRESSION = new VyperElementType("ASSIGNMENT_EXPRESSION");
   IElementType BIN_EXPRESSION = new VyperElementType("BIN_EXPRESSION");
   IElementType CALL_EXPRESSION = new VyperElementType("CALL_EXPRESSION");
-  IElementType CLEAR_EXPRESSION = new VyperElementType("CLEAR_EXPRESSION");
   IElementType COMP_EXPRESSION = new VyperElementType("COMP_EXPRESSION");
   IElementType CONSTANT_DEFINITION_EXPRESSION = new VyperElementType("CONSTANT_DEFINITION_EXPRESSION");
-  IElementType EMIT_STATEMENT = new VyperElementType("EMIT_STATEMENT");
   IElementType EQ_EXPRESSION = new VyperElementType("EQ_EXPRESSION");
   IElementType EVENT_DECLARATION = new VyperElementType("EVENT_DECLARATION");
   IElementType EVENT_LOG_EXPRESSION = new VyperElementType("EVENT_LOG_EXPRESSION");
   IElementType EVENT_PROPERTY = new VyperElementType("EVENT_PROPERTY");
   IElementType EXPONENT_EXPRESSION = new VyperElementType("EXPONENT_EXPRESSION");
   IElementType EXPRESSION = new VyperElementType("EXPRESSION");
+  IElementType EXT_CALL_EXPRESSION = new VyperElementType("EXT_CALL_EXPRESSION");
+  IElementType FLAG_DECLARATION = new VyperElementType("FLAG_DECLARATION");
+  IElementType FLAG_OPTION = new VyperElementType("FLAG_OPTION");
   IElementType FOR_STATEMENT = new VyperElementType("FOR_STATEMENT");
   IElementType FUNCTION_ARGS = new VyperElementType("FUNCTION_ARGS");
   IElementType FUNCTION_BODY = new VyperElementType("FUNCTION_BODY");
   IElementType FUNCTION_CALL_ARGUMENT = new VyperElementType("FUNCTION_CALL_ARGUMENT");
   IElementType FUNCTION_CALL_ARGUMENTS = new VyperElementType("FUNCTION_CALL_ARGUMENTS");
-  IElementType FUNCTION_CALL_EXPRESSION = new VyperElementType("FUNCTION_CALL_EXPRESSION");
   IElementType FUNCTION_DECORATOR = new VyperElementType("FUNCTION_DECORATOR");
   IElementType FUNCTION_DEFINITION = new VyperElementType("FUNCTION_DEFINITION");
   IElementType FUNCTION_ENTRANCY_KEY = new VyperElementType("FUNCTION_ENTRANCY_KEY");
@@ -45,23 +45,25 @@ public interface VyperTypes {
   IElementType INLINE_ARRAY_EXPRESSION = new VyperElementType("INLINE_ARRAY_EXPRESSION");
   IElementType INTERFACE_DECLARATION = new VyperElementType("INTERFACE_DECLARATION");
   IElementType INTERFACE_FUNCTION = new VyperElementType("INTERFACE_FUNCTION");
+  IElementType INTERFACE_FUNCTION_MODIFIER = new VyperElementType("INTERFACE_FUNCTION_MODIFIER");
   IElementType IN_EXPRESSION = new VyperElementType("IN_EXPRESSION");
   IElementType LIST_TYPE = new VyperElementType("LIST_TYPE");
   IElementType LOCAL_VARIABLE_DEFINITION = new VyperElementType("LOCAL_VARIABLE_DEFINITION");
   IElementType MAP_TYPE = new VyperElementType("MAP_TYPE");
   IElementType MEMBER_ACCESS_EXPRESSION = new VyperElementType("MEMBER_ACCESS_EXPRESSION");
-  IElementType MEMBER_INDEX_ACCESS = new VyperElementType("MEMBER_INDEX_ACCESS");
   IElementType MULTI_LINE_STRING = new VyperElementType("MULTI_LINE_STRING");
   IElementType MULT_DIV_EXPRESSION = new VyperElementType("MULT_DIV_EXPRESSION");
   IElementType OR_EXPRESSION = new VyperElementType("OR_EXPRESSION");
   IElementType PARAM_DEF = new VyperElementType("PARAM_DEF");
-  IElementType PARENTHESIZIED_EXPRESSION = new VyperElementType("PARENTHESIZIED_EXPRESSION");
+  IElementType PARENTHESIZED_EXPRESSION = new VyperElementType("PARENTHESIZED_EXPRESSION");
   IElementType PLUS_MIN_EXPRESSION = new VyperElementType("PLUS_MIN_EXPRESSION");
   IElementType PRIMARY_EXPRESSION = new VyperElementType("PRIMARY_EXPRESSION");
+  IElementType RANGE_BOUND = new VyperElementType("RANGE_BOUND");
   IElementType RANGE_EXPRESSION = new VyperElementType("RANGE_EXPRESSION");
   IElementType STATEMENT = new VyperElementType("STATEMENT");
   IElementType STATE_VARIABLE_DECLARATION = new VyperElementType("STATE_VARIABLE_DECLARATION");
   IElementType STATE_VARIABLE_TYPE = new VyperElementType("STATE_VARIABLE_TYPE");
+  IElementType STATIC_CALL_EXPRESSION = new VyperElementType("STATIC_CALL_EXPRESSION");
   IElementType STRUCT_DECLARATION = new VyperElementType("STRUCT_DECLARATION");
   IElementType STRUCT_EXPRESSION = new VyperElementType("STRUCT_EXPRESSION");
   IElementType STRUCT_EXPRESSION_MEMBER = new VyperElementType("STRUCT_EXPRESSION_MEMBER");
@@ -74,6 +76,7 @@ public interface VyperTypes {
   IElementType VAR_LITERAL = new VyperElementType("VAR_LITERAL");
 
   IElementType ADDRESS = new VyperTokenType("address");
+  IElementType AMPERSAND = new VyperTokenType("&");
   IElementType AND = new VyperTokenType("and");
   IElementType AS = new VyperTokenType("as");
   IElementType ASSERT = new VyperTokenType("assert");
@@ -82,10 +85,9 @@ public interface VyperTypes {
   IElementType BOOLEANLITERAL = new VyperTokenType("booleanLiteral");
   IElementType BREAK = new VyperTokenType("break");
   IElementType BREAK_LINE = new VyperTokenType("BREAK_LINE");
-  IElementType BYTES = new VyperTokenType("bytes");
+  IElementType BYTES = new VyperTokenType("Bytes");
   IElementType BYTESM = new VyperTokenType("bytesM");
   IElementType CARET = new VyperTokenType("^");
-  IElementType CLEAR = new VyperTokenType("clear");
   IElementType COLON = new VyperTokenType(":");
   IElementType COMMA = new VyperTokenType(",");
   IElementType COMMENT = new VyperTokenType("comment");
@@ -102,11 +104,14 @@ public interface VyperTypes {
   IElementType ELIF = new VyperTokenType("elif");
   IElementType ELLIPSIS = new VyperTokenType("...");
   IElementType ELSE = new VyperTokenType("else");
+  IElementType ENUM = new VyperTokenType("enum");
   IElementType EQ = new VyperTokenType("==");
   IElementType EVENT = new VyperTokenType("event");
   IElementType EXPONENT = new VyperTokenType("**");
+  IElementType EXTCALL = new VyperTokenType("extcall");
   IElementType EXTERNAL = new VyperTokenType("external");
   IElementType FIXEDNUMBER = new VyperTokenType("fixedNumber");
+  IElementType FLAG = new VyperTokenType("flag");
   IElementType FOR = new VyperTokenType("for");
   IElementType FROM = new VyperTokenType("from");
   IElementType HASHMAP = new VyperTokenType("HashMap");
@@ -118,9 +123,9 @@ public interface VyperTypes {
   IElementType IMPLEMENTS = new VyperTokenType("implements");
   IElementType IMPORT = new VyperTokenType("import");
   IElementType IN = new VyperTokenType("in");
+  IElementType INDEXED = new VyperTokenType("indexed");
   IElementType INTERFACE = new VyperTokenType("interface");
   IElementType INTERNAL = new VyperTokenType("internal");
-  IElementType INTERSECTION = new VyperTokenType("&");
   IElementType INTM = new VyperTokenType("intM");
   IElementType LBRACE = new VyperTokenType("{");
   IElementType LBRACKET = new VyperTokenType("[");
@@ -145,6 +150,7 @@ public interface VyperTypes {
   IElementType PAYABLE = new VyperTokenType("payable");
   IElementType PERCENT = new VyperTokenType("%");
   IElementType PERCENT_ASSIGN = new VyperTokenType("%=");
+  IElementType PIPE = new VyperTokenType("|");
   IElementType PLUS = new VyperTokenType("+");
   IElementType PLUS_ASSIGN = new VyperTokenType("+=");
   IElementType PUBLIC = new VyperTokenType("public");
@@ -158,8 +164,10 @@ public interface VyperTypes {
   IElementType RPAREN = new VyperTokenType(")");
   IElementType RSHIFT = new VyperTokenType(">>");
   IElementType SCIENTIFICNUMBER = new VyperTokenType("scientificNumber");
+  IElementType SELF = new VyperTokenType("self");
   IElementType SEMICOLON = new VyperTokenType(";");
-  IElementType STRING = new VyperTokenType("string");
+  IElementType STATICCALL = new VyperTokenType("staticcall");
+  IElementType STRING = new VyperTokenType("String");
   IElementType STRINGLITERALDOUBLE = new VyperTokenType("stringLiteralDouble");
   IElementType STRINGLITERALDOUBLEB = new VyperTokenType("stringLiteralDoubleB");
   IElementType STRINGLITERALSINGLE = new VyperTokenType("stringLiteralSingle");
@@ -168,7 +176,6 @@ public interface VyperTypes {
   IElementType TILDE = new VyperTokenType("~");
   IElementType TO = new VyperTokenType("=>");
   IElementType UINTM = new VyperTokenType("uintM");
-  IElementType UNION = new VyperTokenType("|");
   IElementType VIEW = new VyperTokenType("view");
 
   class Factory {
@@ -189,17 +196,11 @@ public interface VyperTypes {
       else if (type == CALL_EXPRESSION) {
         return new VyperCallExpressionImpl(node);
       }
-      else if (type == CLEAR_EXPRESSION) {
-        return new VyperClearExpressionImpl(node);
-      }
       else if (type == COMP_EXPRESSION) {
         return new VyperCompExpressionImpl(node);
       }
       else if (type == CONSTANT_DEFINITION_EXPRESSION) {
         return new VyperConstantDefinitionExpressionImpl(node);
-      }
-      else if (type == EMIT_STATEMENT) {
-        return new VyperEmitStatementImpl(node);
       }
       else if (type == EQ_EXPRESSION) {
         return new VyperEqExpressionImpl(node);
@@ -216,6 +217,15 @@ public interface VyperTypes {
       else if (type == EXPONENT_EXPRESSION) {
         return new VyperExponentExpressionImpl(node);
       }
+      else if (type == EXT_CALL_EXPRESSION) {
+        return new VyperExtCallExpressionImpl(node);
+      }
+      else if (type == FLAG_DECLARATION) {
+        return new VyperFlagDeclarationImpl(node);
+      }
+      else if (type == FLAG_OPTION) {
+        return new VyperFlagOptionImpl(node);
+      }
       else if (type == FOR_STATEMENT) {
         return new VyperForStatementImpl(node);
       }
@@ -230,9 +240,6 @@ public interface VyperTypes {
       }
       else if (type == FUNCTION_CALL_ARGUMENTS) {
         return new VyperFunctionCallArgumentsImpl(node);
-      }
-      else if (type == FUNCTION_CALL_EXPRESSION) {
-        return new VyperFunctionCallExpressionImpl(node);
       }
       else if (type == FUNCTION_DECORATOR) {
         return new VyperFunctionDecoratorImpl(node);
@@ -282,6 +289,9 @@ public interface VyperTypes {
       else if (type == INTERFACE_FUNCTION) {
         return new VyperInterfaceFunctionImpl(node);
       }
+      else if (type == INTERFACE_FUNCTION_MODIFIER) {
+        return new VyperInterfaceFunctionModifierImpl(node);
+      }
       else if (type == IN_EXPRESSION) {
         return new VyperInExpressionImpl(node);
       }
@@ -297,9 +307,6 @@ public interface VyperTypes {
       else if (type == MEMBER_ACCESS_EXPRESSION) {
         return new VyperMemberAccessExpressionImpl(node);
       }
-      else if (type == MEMBER_INDEX_ACCESS) {
-        return new VyperMemberIndexAccessImpl(node);
-      }
       else if (type == MULTI_LINE_STRING) {
         return new VyperMultiLineStringImpl(node);
       }
@@ -312,14 +319,17 @@ public interface VyperTypes {
       else if (type == PARAM_DEF) {
         return new VyperParamDefImpl(node);
       }
-      else if (type == PARENTHESIZIED_EXPRESSION) {
-        return new VyperParenthesiziedExpressionImpl(node);
+      else if (type == PARENTHESIZED_EXPRESSION) {
+        return new VyperParenthesizedExpressionImpl(node);
       }
       else if (type == PLUS_MIN_EXPRESSION) {
         return new VyperPlusMinExpressionImpl(node);
       }
       else if (type == PRIMARY_EXPRESSION) {
         return new VyperPrimaryExpressionImpl(node);
+      }
+      else if (type == RANGE_BOUND) {
+        return new VyperRangeBoundImpl(node);
       }
       else if (type == RANGE_EXPRESSION) {
         return new VyperRangeExpressionImpl(node);
@@ -332,6 +342,9 @@ public interface VyperTypes {
       }
       else if (type == STATE_VARIABLE_TYPE) {
         return new VyperStateVariableTypeImpl(node);
+      }
+      else if (type == STATIC_CALL_EXPRESSION) {
+        return new VyperStaticCallExpressionImpl(node);
       }
       else if (type == STRUCT_DECLARATION) {
         return new VyperStructDeclarationImpl(node);

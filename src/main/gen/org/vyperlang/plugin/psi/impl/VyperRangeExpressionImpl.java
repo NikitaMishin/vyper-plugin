@@ -28,27 +28,15 @@ public class VyperRangeExpressionImpl extends VyperExpressionImpl implements Vyp
   }
 
   @Override
-  @Nullable
-  public VyperExpression getExpression() {
-    return findChildByClass(VyperExpression.class);
+  @NotNull
+  public List<VyperExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperExpression.class);
   }
 
   @Override
   @Nullable
-  public PsiElement getDecimalNumber() {
-    return findChildByType(DECIMALNUMBER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getFixedNumber() {
-    return findChildByType(FIXEDNUMBER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getHexNumber() {
-    return findChildByType(HEXNUMBER);
+  public VyperRangeBound getRangeBound() {
+    return findChildByClass(VyperRangeBound.class);
   }
 
 }

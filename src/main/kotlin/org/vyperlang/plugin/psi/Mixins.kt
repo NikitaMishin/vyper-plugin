@@ -13,24 +13,22 @@ abstract class VyperVarLiteralMixin(node: ASTNode) : VyperNamedElementImpl(node)
     /**
      * Converts the var literal to a reference.
      */
-    override fun getReference(): VyperReference = when (node.psi.parent) {
+    override fun getReference(): VyperReference = getReference(node.psi.parent)
+
+    private fun getReference(parent: PsiElement?): VyperReference = when (parent) {
         is VyperImplementsDirective -> VyperInterfaceReference(this)
         is VyperEventLogExpression -> VyperEventLogReference(this)
-
         is VyperStructExpression -> VyperStructReference(this)
         is VyperStructExpressionMember -> VyperStructMemberReference(this)
-        is VyperMemberAccessExpression -> VyperMemberAccessReference(
-            this,
-            node.psi.parent as VyperMemberAccessExpression
-        )
-
+        is VyperMemberAccessExpression -> VyperMemberAccessReference(this, parent)
+        is VyperPrimaryExpression ->
+            if (parent.parent is VyperAssignmentExpression && parent.parent.parent is VyperFunctionCallArgument && parent == parent.parent.firstChild) {
+                VyperKeywordArgumentReference(this)
+            } else {
+                VyperVarLiteralReference(this)
+            }
         else -> VyperVarLiteralReference(this) // reference itself
     }
-}
-
-abstract class VyperStructTypeMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperStructType {
-    override val referenceNameElement: PsiElement get() = findChildByType(IDENTIFIER)!!
-    override val referenceName: String get() = referenceNameElement.text
 }
 
 abstract class VyperFunctionDefMixin(node: ASTNode) : VyperNamedElementImpl(node), VyperFunctionDefinition {
