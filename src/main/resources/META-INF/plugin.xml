@@ -26,6 +26,14 @@
         <notificationGroup id="COMMON" displayType="BALLOON"/>
         <notificationGroup id="ANALYZE" displayType="BALLOON"/>
 
+<!--        <applicationService serviceImplementation="org.vyperlang.plugin.settings.AppSettings"/>-->
+<!--        <applicationConfigurable-->
+<!--            parentId="tools"-->
+<!--            instance="org.vyperlang.plugin.settings.AppSettingsConfigurable"-->
+<!--            id="org.vyperlang.plugin.settings.AppSettingsConfigurable"-->
+<!--            displayName="Vyper"-->
+<!--        />-->
+
         <lang.findUsagesProvider language="Vyper" implementationClass="org.vyperlang.plugin.usages.VyperFindUsagesProvider"/>
         <lang.parserDefinition language="Vyper" implementationClass="org.vyperlang.plugin.VyperParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Vyper" implementationClass="org.vyperlang.plugin.VyperHighlighterFactory"/>

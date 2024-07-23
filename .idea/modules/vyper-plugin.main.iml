@@ -43,8 +43,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java:3.3.6" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-httpclient5:3.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java:3.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-httpclient5:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.fuel:fuel-coroutines:2.3.1" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.fuel:fuel:2.3.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.11.0" level="project" />
@@ -90,11 +90,11 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-jersey:3.3.6" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-netty:3.3.6" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-core:3.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-jersey:3.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-netty:3.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-core:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.30" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport:3.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents.client5:httpclient5:5.0.3" level="project" />
     <orderEntry type="library" name="Gradle: net.java.dev.jna:jna:5.13.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.result:result:3.1.0" level="project" />
@@ -112,7 +112,7 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-handler:4.1.46.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.46.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-transport-native-kqueue:osx-x86_64:4.1.46.Final" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-api:3.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-api:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.30" level="project" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.13.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-compress:1.21" level="project" />
