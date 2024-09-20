@@ -2,7 +2,8 @@
 <module external.linked.project.id="vyper-plugin:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="org.vyperlang.plugin" external.system.module.type="sourceSet" external.system.module.version="0.2.0-alpha.5" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet external-system-id="GRADLE" type="kotlin-language" name="Kotlin">
-      <configuration version="5" platform="JVM 17" allPlatforms="JVM [17]" useProjectSettings="false">
+      <configuration version="5" platform="JVM 17" allPlatforms="JVM [17]" useProjectSettings="false" pureKotlinSourceFolders="$MODULE_DIR$/../../src/test/kotlin;/home/schiavini/curve/vyper-plugin/src/main/kotlin">
+        <compilerSettings />
         <compilerArguments>
           <flagArguments>
             <flagArg name="allowNoSourceFiles" arg="true" />
@@ -19,11 +20,11 @@
           <arrayArguments>
             <arrayArg name="pluginClasspaths">
               <args>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/2.0.0/11209b97b2495fb3755f2e2e4fb64abb7cd9b4c0/kotlin-scripting-jvm-2.0.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/2.0.0/f90871227cdcd06fd4fecb086fa03e7fa375bae3/kotlin-scripting-common-2.0.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.0.0/b48df2c4aede9586cc931ead433bc02d6fd7879e/kotlin-stdlib-2.0.0.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/2.0.20/46b8d2d2028448f6596cc3ce0ad7b10b259ec236/kotlin-scripting-jvm-2.0.20.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/2.0.20/af6097b8ac359457ec1cf9b34bd9b5313b52eb6/kotlin-scripting-common-2.0.20.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.0.20/7388d355f7cceb002cd387ccb7ab3850e4e0a07f/kotlin-stdlib-2.0.20.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.0.0/fdc27dd047d592fa41d2dfa21e7621287a361612/kotlin-script-runtime-2.0.0.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.0.20/4aea042b39014e0a924c2e1d4a21b6fff7e4d35/kotlin-script-runtime-2.0.20.jar</arg>
               </args>
             </arrayArg>
             <arrayArg name="pluginOptions" />
@@ -43,8 +44,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java:3.3.6" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-httpclient5:3.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java:3.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-httpclient5:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.fuel:fuel-coroutines:2.3.1" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.fuel:fuel:2.3.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.11.0" level="project" />
@@ -52,7 +53,7 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library name="Gradle: com.jetbrains:ideaIC:2024.1.4">
         <ANNOTATIONS>
-          <root url="jar://$MAVEN_REPOSITORY$/com/jetbrains/intellij/idea/ideaIU/2024.1.4/ideaIU-2024.1.4-annotations.zip!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/jetbrains/intellij/idea/ideaIU/2024.2.2/ideaIU-2024.2.2-annotations.zip!/" />
         </ANNOTATIONS>
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2024.1.4/e7041e7a60bb861a5b982689f309c5c1aa6b3cfb/ideaIC-2024.1.4/lib/app.jar!/" />
@@ -90,11 +91,11 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-jersey:3.3.6" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-netty:3.3.6" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-core:3.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-jersey:3.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-netty:3.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-core:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.30" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport:3.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents.client5:httpclient5:5.0.3" level="project" />
     <orderEntry type="library" name="Gradle: net.java.dev.jna:jna:5.13.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.result:result:3.1.0" level="project" />
@@ -112,7 +113,7 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-handler:4.1.46.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.46.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-transport-native-kqueue:osx-x86_64:4.1.46.Final" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-api:3.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-api:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.30" level="project" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.13.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-compress:1.21" level="project" />
