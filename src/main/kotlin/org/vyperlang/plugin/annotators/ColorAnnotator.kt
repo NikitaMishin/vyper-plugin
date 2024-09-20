@@ -35,7 +35,9 @@ class ColorAnnotator : Annotator {
 
     private fun highlightInterfaceFile(element: PsiElement, holder: AnnotationHolder) {
         when (element) {
-            is VyperStatement -> addError(holder, "Statements forbidden in `.vyi` files")
+            is VyperStatement -> if (element.text != "return ...") {
+                addError(holder, "Statements forbidden in `.vyi` files")
+            }
             is VyperStateVariableDeclaration -> addError(holder, "State variables forbidden in `.vyi` files")
             is VyperFunctionDecorator -> if (element.text == "internal") {
                 addError(holder, "Internal methods forbidden in `.vyi` files")
