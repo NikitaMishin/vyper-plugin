@@ -103,7 +103,7 @@ tasks {
     patchPluginXml {
         version = property("pluginVersion").get()
         sinceBuild = "241"
-        untilBuild = "242.*"
+        untilBuild = "243.*"
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin"s manifest
         pluginDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
