@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.2.0-alpha.5] - 2024-09-20
+
 - Support for Vyper 0.4.0 ([#15](https://github.com/NikitaMishin/vyper-plugin/issues/15))
 - Get rid of Vyper compile/stub menus and output window
 - Fix multiple parsing issues
@@ -35,7 +37,8 @@
 - Add support for Vyper 0.3.0 ([#19](https://github.com/NikitaMishin/vyper-plugin/pull/19))
 - Renamed the plugin to `org.vyperlang.plugin` ([#21](https://github.com/NikitaMishin/vyper-plugin/pull/21))
 
-[Unreleased]: https://github.com/DanielSchiavini/vyper-plugin/compare/v0.2.0-alpha.4...HEAD
+[Unreleased]: https://github.com/DanielSchiavini/vyper-plugin/compare/v0.2.0-alpha.5...HEAD
+[0.2.0-alpha.5]: https://github.com/DanielSchiavini/vyper-plugin/compare/v0.2.0-alpha.4...v0.2.0-alpha.5
 [0.2.0-alpha.4]: https://github.com/DanielSchiavini/vyper-plugin/compare/v0.2.0-alpha.3...v0.2.0-alpha.4
 [0.2.0-alpha.3]: https://github.com/DanielSchiavini/vyper-plugin/compare/v0.2.0-alpha.2...v0.2.0-alpha.3
 [0.2.0-alpha.2]: https://github.com/DanielSchiavini/vyper-plugin/compare/v0.2.0-alpha.1...v0.2.0-alpha.2
