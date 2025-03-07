@@ -65,7 +65,7 @@ dependencies {
     testImplementation group: "junit", name: "junit", version: "4.13.2" // v5 not supported by base JetBrains tests
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-    testImplementation group: "org.jetbrains.kotlinx", name: "kotlinx-coroutines-core", version: "1.8.1"
+    testImplementation group: "org.jetbrains.kotlinx", name: "kotlinx-coroutines-core", version: "1.10.1"
 
     // https://mvnrepository.com/artifact/io.mockk/mockk
     testImplementation group: "io.mockk", name: "mockk", version: "1.13.17"
