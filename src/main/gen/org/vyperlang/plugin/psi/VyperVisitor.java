@@ -124,10 +124,6 @@ public class VyperVisitor extends PsiElementVisitor {
     // visitNamedElement(o);
   }
 
-  public void visitImplementsDirective(@NotNull VyperImplementsDirective o) {
-    visitElement(o);
-  }
-
   public void visitImportDirective(@NotNull VyperImportDirective o) {
     visitNamedElement(o);
   }
@@ -178,6 +174,14 @@ public class VyperVisitor extends PsiElementVisitor {
 
   public void visitMemberAccessExpression(@NotNull VyperMemberAccessExpression o) {
     visitExpression(o);
+  }
+
+  public void visitModuleReference(@NotNull VyperModuleReference o) {
+    visitElement(o);
+  }
+
+  public void visitModuleReferenceDirective(@NotNull VyperModuleReferenceDirective o) {
+    visitElement(o);
   }
 
   public void visitMultDivExpression(@NotNull VyperMultDivExpression o) {
