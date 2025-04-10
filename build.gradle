@@ -68,7 +68,7 @@ dependencies {
     testImplementation group: "org.jetbrains.kotlinx", name: "kotlinx-coroutines-core", version: "1.8.1"
 
     // https://mvnrepository.com/artifact/io.mockk/mockk
-    testImplementation group: "io.mockk", name: "mockk", version: "1.13.17"
+    testImplementation group: "io.mockk", name: "mockk", version: "1.14.0"
 }
 
 configurations {
