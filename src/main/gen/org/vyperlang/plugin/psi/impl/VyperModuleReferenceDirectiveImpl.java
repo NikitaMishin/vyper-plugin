@@ -11,14 +11,14 @@ import static org.vyperlang.plugin.psi.VyperTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.vyperlang.plugin.psi.*;
 
-public class VyperImplementsDirectiveImpl extends ASTWrapperPsiElement implements VyperImplementsDirective {
+public class VyperModuleReferenceDirectiveImpl extends ASTWrapperPsiElement implements VyperModuleReferenceDirective {
 
-  public VyperImplementsDirectiveImpl(@NotNull ASTNode node) {
+  public VyperModuleReferenceDirectiveImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VyperVisitor visitor) {
-    visitor.visitImplementsDirective(this);
+    visitor.visitModuleReferenceDirective(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class VyperImplementsDirectiveImpl extends ASTWrapperPsiElement implement
 
   @Override
   @NotNull
-  public List<VyperVarLiteral> getVarLiteralList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperVarLiteral.class);
+  public List<VyperModuleReference> getModuleReferenceList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VyperModuleReference.class);
   }
 
 }

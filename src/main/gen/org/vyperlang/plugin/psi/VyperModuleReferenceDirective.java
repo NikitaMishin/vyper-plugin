@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VyperImportDirective extends VyperNamedElement {
+public interface VyperModuleReferenceDirective extends VyperElement {
 
   @NotNull
-  List<VyperImportPath> getImportPathList();
-
-  @NotNull
-  PsiElement getIdentifier();
+  List<VyperModuleReference> getModuleReferenceList();
 
 }
