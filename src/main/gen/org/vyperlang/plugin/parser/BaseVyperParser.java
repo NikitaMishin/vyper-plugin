@@ -1804,91 +1804,8 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // implements &INDNONE ':' &INDNONE VarLiteral (&INDNONE ',' &INDNONE VarLiteral)*
-  public static boolean ImplementsDirective(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImplementsDirective")) return false;
-    if (!nextTokenIs(b, IMPLEMENTS)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, IMPLEMENTS_DIRECTIVE, null);
-    r = consumeToken(b, IMPLEMENTS);
-    p = r; // pin = 1
-    r = r && report_error_(b, ImplementsDirective_1(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, COLON)) && r;
-    r = p && report_error_(b, ImplementsDirective_3(b, l + 1)) && r;
-    r = p && report_error_(b, VarLiteral(b, l + 1)) && r;
-    r = p && ImplementsDirective_5(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // &INDNONE
-  private static boolean ImplementsDirective_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImplementsDirective_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // &INDNONE
-  private static boolean ImplementsDirective_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImplementsDirective_3")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // (&INDNONE ',' &INDNONE VarLiteral)*
-  private static boolean ImplementsDirective_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImplementsDirective_5")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!ImplementsDirective_5_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "ImplementsDirective_5", c)) break;
-    }
-    return true;
-  }
-
-  // &INDNONE ',' &INDNONE VarLiteral
-  private static boolean ImplementsDirective_5_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImplementsDirective_5_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = ImplementsDirective_5_0_0(b, l + 1);
-    r = r && consumeToken(b, COMMA);
-    r = r && ImplementsDirective_5_0_2(b, l + 1);
-    r = r && VarLiteral(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // &INDNONE
-  private static boolean ImplementsDirective_5_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImplementsDirective_5_0_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // &INDNONE
-  private static boolean ImplementsDirective_5_0_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImplementsDirective_5_0_2")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // ( import &INDNONE Identifier )
-  //                    | ( import &INDNONE ImportPath &INDNONE as &INDNONE Identifier )
-  //                    | ( from &INDNONE ImportPath &INDNONE import &INDNONE Identifier )
+  // (from &INDNONE ImportPath import (&INDNONE ImportPath &INDNONE as)? &INDNONE Identifier) |
+  //         (import (&INDNONE ImportPath &INDNONE as)? &INDNONE Identifier)
   public static boolean ImportDirective(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportDirective")) return false;
     if (!nextTokenIs(b, "<import directive>", FROM, IMPORT)) return false;
@@ -1896,22 +1813,24 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, IMPORT_DIRECTIVE, "<import directive>");
     r = ImportDirective_0(b, l + 1);
     if (!r) r = ImportDirective_1(b, l + 1);
-    if (!r) r = ImportDirective_2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // import &INDNONE Identifier
+  // from &INDNONE ImportPath import (&INDNONE ImportPath &INDNONE as)? &INDNONE Identifier
   private static boolean ImportDirective_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportDirective_0")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, IMPORT);
-    p = r; // pin = 1
-    r = r && report_error_(b, ImportDirective_0_1(b, l + 1));
-    r = p && consumeToken(b, IDENTIFIER) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, FROM);
+    r = r && ImportDirective_0_1(b, l + 1);
+    r = r && ImportPath(b, l + 1);
+    r = r && consumeToken(b, IMPORT);
+    r = r && ImportDirective_0_4(b, l + 1);
+    r = r && ImportDirective_0_5(b, l + 1);
+    r = r && consumeToken(b, IDENTIFIER);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   // &INDNONE
@@ -1924,26 +1843,92 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // import &INDNONE ImportPath &INDNONE as &INDNONE Identifier
+  // (&INDNONE ImportPath &INDNONE as)?
+  private static boolean ImportDirective_0_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_0_4")) return false;
+    ImportDirective_0_4_0(b, l + 1);
+    return true;
+  }
+
+  // &INDNONE ImportPath &INDNONE as
+  private static boolean ImportDirective_0_4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_0_4_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ImportDirective_0_4_0_0(b, l + 1);
+    r = r && ImportPath(b, l + 1);
+    r = r && ImportDirective_0_4_0_2(b, l + 1);
+    r = r && consumeToken(b, AS);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ImportDirective_0_4_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_0_4_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ImportDirective_0_4_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_0_4_0_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ImportDirective_0_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_0_5")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // import (&INDNONE ImportPath &INDNONE as)? &INDNONE Identifier
   private static boolean ImportDirective_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportDirective_1")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, IMPORT);
-    p = r; // pin = 1
-    r = r && report_error_(b, ImportDirective_1_1(b, l + 1));
-    r = p && report_error_(b, ImportPath(b, l + 1)) && r;
-    r = p && report_error_(b, ImportDirective_1_3(b, l + 1)) && r;
-    r = p && report_error_(b, consumeToken(b, AS)) && r;
-    r = p && report_error_(b, ImportDirective_1_5(b, l + 1)) && r;
-    r = p && consumeToken(b, IDENTIFIER) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    r = r && ImportDirective_1_1(b, l + 1);
+    r = r && ImportDirective_1_2(b, l + 1);
+    r = r && consumeToken(b, IDENTIFIER);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
-  // &INDNONE
+  // (&INDNONE ImportPath &INDNONE as)?
   private static boolean ImportDirective_1_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportDirective_1_1")) return false;
+    ImportDirective_1_1_0(b, l + 1);
+    return true;
+  }
+
+  // &INDNONE ImportPath &INDNONE as
+  private static boolean ImportDirective_1_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_1_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ImportDirective_1_1_0_0(b, l + 1);
+    r = r && ImportPath(b, l + 1);
+    r = r && ImportDirective_1_1_0_2(b, l + 1);
+    r = r && consumeToken(b, AS);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ImportDirective_1_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_1_1_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -1952,8 +1937,8 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE
-  private static boolean ImportDirective_1_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImportDirective_1_3")) return false;
+  private static boolean ImportDirective_1_1_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_1_1_0_2")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -1962,55 +1947,8 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   // &INDNONE
-  private static boolean ImportDirective_1_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImportDirective_1_5")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // from &INDNONE ImportPath &INDNONE import &INDNONE Identifier
-  private static boolean ImportDirective_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImportDirective_2")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, FROM);
-    p = r; // pin = 1
-    r = r && report_error_(b, ImportDirective_2_1(b, l + 1));
-    r = p && report_error_(b, ImportPath(b, l + 1)) && r;
-    r = p && report_error_(b, ImportDirective_2_3(b, l + 1)) && r;
-    r = p && report_error_(b, consumeToken(b, IMPORT)) && r;
-    r = p && report_error_(b, ImportDirective_2_5(b, l + 1)) && r;
-    r = p && consumeToken(b, IDENTIFIER) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // &INDNONE
-  private static boolean ImportDirective_2_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImportDirective_2_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // &INDNONE
-  private static boolean ImportDirective_2_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImportDirective_2_3")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_);
-    r = indNone(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // &INDNONE
-  private static boolean ImportDirective_2_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ImportDirective_2_5")) return false;
+  private static boolean ImportDirective_1_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportDirective_1_2")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _AND_);
     r = indNone(b, l + 1);
@@ -2019,19 +1957,25 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Identifier  (&INDNONE '.' &INDNONE Identifier)*
+  // Identifier? (&INDNONE ('.'|ELLIPSIS) &INDNONE Identifier?)*
   public static boolean ImportPath(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportPath")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
+    Marker m = enter_section_(b, l, _NONE_, IMPORT_PATH, "<import path>");
+    r = ImportPath_0(b, l + 1);
     r = r && ImportPath_1(b, l + 1);
-    exit_section_(b, m, IMPORT_PATH, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // (&INDNONE '.' &INDNONE Identifier)*
+  // Identifier?
+  private static boolean ImportPath_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportPath_0")) return false;
+    consumeToken(b, IDENTIFIER);
+    return true;
+  }
+
+  // (&INDNONE ('.'|ELLIPSIS) &INDNONE Identifier?)*
   private static boolean ImportPath_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportPath_1")) return false;
     while (true) {
@@ -2042,15 +1986,15 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // &INDNONE '.' &INDNONE Identifier
+  // &INDNONE ('.'|ELLIPSIS) &INDNONE Identifier?
   private static boolean ImportPath_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportPath_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = ImportPath_1_0_0(b, l + 1);
-    r = r && consumeToken(b, DOT);
+    r = r && ImportPath_1_0_1(b, l + 1);
     r = r && ImportPath_1_0_2(b, l + 1);
-    r = r && consumeToken(b, IDENTIFIER);
+    r = r && ImportPath_1_0_3(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -2065,6 +2009,15 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  // '.'|ELLIPSIS
+  private static boolean ImportPath_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportPath_1_0_1")) return false;
+    boolean r;
+    r = consumeToken(b, DOT);
+    if (!r) r = consumeToken(b, ELLIPSIS);
+    return r;
+  }
+
   // &INDNONE
   private static boolean ImportPath_1_0_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportPath_1_0_2")) return false;
@@ -2073,6 +2026,13 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     r = indNone(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  // Identifier?
+  private static boolean ImportPath_1_0_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ImportPath_1_0_3")) return false;
+    consumeToken(b, IDENTIFIER);
+    return true;
   }
 
   /* ********************************************************** */
@@ -2395,6 +2355,185 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // VarLiteral (&INDNONE '.' &INDNONE Identifier)* (&INDNONE '[' &INDNONE VarLiteral &INDNONE ':=' &INDNONE VarLiteral &INDNONE ']')?
+  public static boolean ModuleReference(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = VarLiteral(b, l + 1);
+    r = r && ModuleReference_1(b, l + 1);
+    r = r && ModuleReference_2(b, l + 1);
+    exit_section_(b, m, MODULE_REFERENCE, r);
+    return r;
+  }
+
+  // (&INDNONE '.' &INDNONE Identifier)*
+  private static boolean ModuleReference_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!ModuleReference_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "ModuleReference_1", c)) break;
+    }
+    return true;
+  }
+
+  // &INDNONE '.' &INDNONE Identifier
+  private static boolean ModuleReference_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ModuleReference_1_0_0(b, l + 1);
+    r = r && consumeToken(b, DOT);
+    r = r && ModuleReference_1_0_2(b, l + 1);
+    r = r && consumeToken(b, IDENTIFIER);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ModuleReference_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_1_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ModuleReference_1_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_1_0_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (&INDNONE '[' &INDNONE VarLiteral &INDNONE ':=' &INDNONE VarLiteral &INDNONE ']')?
+  private static boolean ModuleReference_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_2")) return false;
+    ModuleReference_2_0(b, l + 1);
+    return true;
+  }
+
+  // &INDNONE '[' &INDNONE VarLiteral &INDNONE ':=' &INDNONE VarLiteral &INDNONE ']'
+  private static boolean ModuleReference_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ModuleReference_2_0_0(b, l + 1);
+    r = r && consumeToken(b, LBRACKET);
+    r = r && ModuleReference_2_0_2(b, l + 1);
+    r = r && VarLiteral(b, l + 1);
+    r = r && ModuleReference_2_0_4(b, l + 1);
+    r = r && consumeToken(b, WALRUS);
+    r = r && ModuleReference_2_0_6(b, l + 1);
+    r = r && VarLiteral(b, l + 1);
+    r = r && ModuleReference_2_0_8(b, l + 1);
+    r = r && consumeToken(b, RBRACKET);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ModuleReference_2_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_2_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ModuleReference_2_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_2_0_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ModuleReference_2_0_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_2_0_4")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ModuleReference_2_0_6(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_2_0_6")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ModuleReference_2_0_8(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReference_2_0_8")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // (implements|uses|exports|initializes) &INDNONE ':' (QuotedModuleReferences | UnquotedModuleReferences)
+  public static boolean ModuleReferenceDirective(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReferenceDirective")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, MODULE_REFERENCE_DIRECTIVE, "<module reference directive>");
+    r = ModuleReferenceDirective_0(b, l + 1);
+    p = r; // pin = 1
+    r = r && report_error_(b, ModuleReferenceDirective_1(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, COLON)) && r;
+    r = p && ModuleReferenceDirective_3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // implements|uses|exports|initializes
+  private static boolean ModuleReferenceDirective_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReferenceDirective_0")) return false;
+    boolean r;
+    r = consumeToken(b, IMPLEMENTS);
+    if (!r) r = consumeToken(b, USES);
+    if (!r) r = consumeToken(b, EXPORTS);
+    if (!r) r = consumeToken(b, INITIALIZES);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean ModuleReferenceDirective_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReferenceDirective_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // QuotedModuleReferences | UnquotedModuleReferences
+  private static boolean ModuleReferenceDirective_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ModuleReferenceDirective_3")) return false;
+    boolean r;
+    r = QuotedModuleReferences(b, l + 1);
+    if (!r) r = UnquotedModuleReferences(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
   // MultiLineStringToken
   public static boolean MultiLineString(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MultiLineString")) return false;
@@ -2456,6 +2595,84 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // '(' (ModuleReference (',' (ModuleReference | &')'))*)? ')'
+  static boolean QuotedModuleReferences(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "QuotedModuleReferences")) return false;
+    if (!nextTokenIs(b, LPAREN)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeToken(b, LPAREN);
+    p = r; // pin = 1
+    r = r && report_error_(b, QuotedModuleReferences_1(b, l + 1));
+    r = p && consumeToken(b, RPAREN) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // (ModuleReference (',' (ModuleReference | &')'))*)?
+  private static boolean QuotedModuleReferences_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "QuotedModuleReferences_1")) return false;
+    QuotedModuleReferences_1_0(b, l + 1);
+    return true;
+  }
+
+  // ModuleReference (',' (ModuleReference | &')'))*
+  private static boolean QuotedModuleReferences_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "QuotedModuleReferences_1_0")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = ModuleReference(b, l + 1);
+    p = r; // pin = 1
+    r = r && QuotedModuleReferences_1_0_1(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // (',' (ModuleReference | &')'))*
+  private static boolean QuotedModuleReferences_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "QuotedModuleReferences_1_0_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!QuotedModuleReferences_1_0_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "QuotedModuleReferences_1_0_1", c)) break;
+    }
+    return true;
+  }
+
+  // ',' (ModuleReference | &')')
+  private static boolean QuotedModuleReferences_1_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "QuotedModuleReferences_1_0_1_0")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeToken(b, COMMA);
+    p = r; // pin = 1
+    r = r && QuotedModuleReferences_1_0_1_0_1(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // ModuleReference | &')'
+  private static boolean QuotedModuleReferences_1_0_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "QuotedModuleReferences_1_0_1_0_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ModuleReference(b, l + 1);
+    if (!r) r = QuotedModuleReferences_1_0_1_0_1_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &')'
+  private static boolean QuotedModuleReferences_1_0_1_0_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "QuotedModuleReferences_1_0_1_0_1_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = consumeToken(b, RPAREN);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // raise StringLiteral?
   static boolean Raise(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Raise")) return false;
@@ -2476,15 +2693,13 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ',' 'bound' '=' (VarLiteral | NumberLiteral)
+  // ',' BOUND '=' (VarLiteral | NumberLiteral)
   public static boolean RangeBound(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RangeBound")) return false;
     if (!nextTokenIs(b, COMMA)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, COMMA);
-    r = r && consumeToken(b, "bound");
-    r = r && consumeToken(b, ASSIGN);
+    r = consumeTokens(b, 0, COMMA, BOUND, ASSIGN);
     r = r && RangeBound_3(b, l + 1);
     exit_section_(b, m, RANGE_BOUND, r);
     return r;
@@ -2578,7 +2793,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
   // ImportDirective
   //                         | ConstantDefinitionExpression
   //                         | ImmutableDefinitionExpression
-  //                         | ImplementsDirective
+  //                         | ModuleReferenceDirective
   //                         | StructDeclaration
   //                         | InterfaceDeclaration
   //                         | EventDeclaration
@@ -2592,7 +2807,7 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     r = ImportDirective(b, l + 1);
     if (!r) r = ConstantDefinitionExpression(b, l + 1);
     if (!r) r = ImmutableDefinitionExpression(b, l + 1);
-    if (!r) r = ImplementsDirective(b, l + 1);
+    if (!r) r = ModuleReferenceDirective(b, l + 1);
     if (!r) r = StructDeclaration(b, l + 1);
     if (!r) r = InterfaceDeclaration(b, l + 1);
     if (!r) r = EventDeclaration(b, l + 1);
@@ -3024,6 +3239,73 @@ public class BaseVyperParser implements PsiParser, LightPsiParser {
     if (!r) r = MapType(b, l + 1);
     if (!r) r = ValueType(b, l + 1);
     if (!r) r = StructType(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // &INDNONE ModuleReference (&INDNONE ',' &INDNONE ModuleReference)*
+  static boolean UnquotedModuleReferences(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnquotedModuleReferences")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = UnquotedModuleReferences_0(b, l + 1);
+    r = r && ModuleReference(b, l + 1);
+    r = r && UnquotedModuleReferences_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean UnquotedModuleReferences_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnquotedModuleReferences_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (&INDNONE ',' &INDNONE ModuleReference)*
+  private static boolean UnquotedModuleReferences_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnquotedModuleReferences_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!UnquotedModuleReferences_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "UnquotedModuleReferences_2", c)) break;
+    }
+    return true;
+  }
+
+  // &INDNONE ',' &INDNONE ModuleReference
+  private static boolean UnquotedModuleReferences_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnquotedModuleReferences_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = UnquotedModuleReferences_2_0_0(b, l + 1);
+    r = r && consumeToken(b, COMMA);
+    r = r && UnquotedModuleReferences_2_0_2(b, l + 1);
+    r = r && ModuleReference(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean UnquotedModuleReferences_2_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnquotedModuleReferences_2_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // &INDNONE
+  private static boolean UnquotedModuleReferences_2_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnquotedModuleReferences_2_0_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = indNone(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

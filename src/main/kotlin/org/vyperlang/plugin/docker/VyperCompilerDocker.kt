@@ -31,6 +31,8 @@ private const val DOCKER_IMAGE_NOT_FOUND_HTML = "<html>Image is not found in you
         "Please wait</html>"
 
 val LOG: Logger = Logger.getInstance(VyperCompilerDocker::class.java)
+const val IMAGE = "vyperlang/vyper"
+const val PROJECT_BIND_DIR = "/app/project"
 
 /**
  * Vyper compiler that runs inside docker container
@@ -43,9 +45,7 @@ class VyperCompilerDocker(
     vararg args: String
 ) {
     private val args = arrayOf(*args)
-    private val image = "vyperlang/vyper"
     private val imageTag = version?.toString() ?: "latest"
-    private val dockerBindDir = "/app/s"
 
     /**
      * preferred way to run docker within a project
@@ -68,7 +68,7 @@ class VyperCompilerDocker(
         }
 
     private fun hasImage() =
-        PluginDockerClient.listImagesCmd().exec().any { it.repoTags.any { tag -> tag.contains("$image:$imageTag") } }
+        PluginDockerClient.listImagesCmd().exec().any { it.repoTags.any { tag -> tag.contains("$IMAGE:$imageTag") } }
 
     private fun downloadImage(): ResultCallback.Adapter<PullResponseItem>? {
         VyperMessageProcessor.notificateInBalloon(
@@ -80,8 +80,8 @@ class VyperCompilerDocker(
                 project
             )
         )
-        LOG.info("Pulling docker image $image:$imageTag")
-        return PluginDockerClient.pullImageCmd(image)
+        LOG.info("Pulling docker image $IMAGE:$imageTag")
+        return PluginDockerClient.pullImageCmd(IMAGE)
             .withTag(imageTag)
             .exec(VyperPullImageAdapter(indicator))
             .awaitCompletion()
@@ -92,17 +92,17 @@ class VyperCompilerDocker(
         indicator?.isIndeterminate = true
 
         val containerId = PluginDockerClient
-            .createContainerCmd("$image:$imageTag")
+            .createContainerCmd("$IMAGE:$imageTag")
             .withHostConfig(
-                HostConfig().withBinds(Bind(file.parent.path, Volume(dockerBindDir)))
+                HostConfig().withBinds(Bind(project.basePath, Volume(PROJECT_BIND_DIR)))
             )
-            .withCmd(*this.args, file.name)
-            .withWorkingDir(dockerBindDir)
+            .withCmd(*this.args, file.path.replace(project.basePath!!, PROJECT_BIND_DIR))
+            .withWorkingDir(PROJECT_BIND_DIR)
             .exec()
             .id
 
         PluginDockerClient.startContainerCmd(containerId).exec()
-        LOG.info("Container $containerId started with $image:$imageTag")
+        LOG.info("Container $containerId started with $IMAGE:$imageTag")
 
         val frames = VyperFrameStreamAdapter()
         PluginDockerClient

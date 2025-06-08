@@ -60,6 +60,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "("                          { return LPAREN; }
   ")"                          { return RPAREN; }
   "..."                        { return ELLIPSIS; }
+  ":="                         { return WALRUS; }
   "+"                          { return PLUS; }
   "-"                          { return MINUS; }
   "*"                          { return MULT; }
@@ -89,6 +90,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "&"                          { return AMPERSAND; }
   "|"                          { return PIPE; }
   "^"                          { return CARET; }
+  "bound"                      { return BOUND; }
   "String"                     { return STRING; }
   "Bytes"                      { return BYTES; }
   "DynArray"                   { return DYNARRAY; }
@@ -96,10 +98,13 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "constant"                   { return CONSTANT; }
   "public"                     { return PUBLIC; }
   "immutable"                  { return IMMUTABLE; }
+  "from"                       { return FROM; }
   "import"                     { return IMPORT; }
   "as"                         { return AS; }
-  "from"                       { return FROM; }
   "implements"                 { return IMPLEMENTS; }
+  "uses"                       { return USES; }
+  "exports"                    { return EXPORTS; }
+  "initializes"                { return INITIALIZES; }
   "interface"                  { return INTERFACE; }
   "def"                        { return DEF; }
   "pure"                       { return PURE; }
@@ -124,7 +129,7 @@ IDENTIFIER=([A-Za-z_][a-zA-Z_0-9]*)
   "break"                      { return BREAK; }
   "return"                     { return RETURN; }
   "raise"                      { return RAISE; }
-  "PASS"                       { return PASS; }
+  "pass"                       { return PASS; }
   "log"                        { return LOG; }
   "extcall"                    { return EXTCALL; }
   "staticcall"                 { return STATICCALL; }

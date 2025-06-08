@@ -37,7 +37,6 @@ public interface VyperTypes {
   IElementType FUN_TYPE_ANNOTATION = new VyperElementType("FUN_TYPE_ANNOTATION");
   IElementType IF_STATEMENT = new VyperElementType("IF_STATEMENT");
   IElementType IMMUTABLE_DEFINITION_EXPRESSION = new VyperElementType("IMMUTABLE_DEFINITION_EXPRESSION");
-  IElementType IMPLEMENTS_DIRECTIVE = new VyperElementType("IMPLEMENTS_DIRECTIVE");
   IElementType IMPORT_DIRECTIVE = new VyperElementType("IMPORT_DIRECTIVE");
   IElementType IMPORT_PATH = new VyperElementType("IMPORT_PATH");
   IElementType INDEXED_DATA = new VyperElementType("INDEXED_DATA");
@@ -51,6 +50,8 @@ public interface VyperTypes {
   IElementType LOCAL_VARIABLE_DEFINITION = new VyperElementType("LOCAL_VARIABLE_DEFINITION");
   IElementType MAP_TYPE = new VyperElementType("MAP_TYPE");
   IElementType MEMBER_ACCESS_EXPRESSION = new VyperElementType("MEMBER_ACCESS_EXPRESSION");
+  IElementType MODULE_REFERENCE = new VyperElementType("MODULE_REFERENCE");
+  IElementType MODULE_REFERENCE_DIRECTIVE = new VyperElementType("MODULE_REFERENCE_DIRECTIVE");
   IElementType MULTI_LINE_STRING = new VyperElementType("MULTI_LINE_STRING");
   IElementType MULT_DIV_EXPRESSION = new VyperElementType("MULT_DIV_EXPRESSION");
   IElementType OR_EXPRESSION = new VyperElementType("OR_EXPRESSION");
@@ -83,6 +84,7 @@ public interface VyperTypes {
   IElementType ASSIGN = new VyperTokenType("=");
   IElementType BOOL = new VyperTokenType("bool");
   IElementType BOOLEANLITERAL = new VyperTokenType("booleanLiteral");
+  IElementType BOUND = new VyperTokenType("bound");
   IElementType BREAK = new VyperTokenType("break");
   IElementType BREAK_LINE = new VyperTokenType("BREAK_LINE");
   IElementType BYTES = new VyperTokenType("Bytes");
@@ -108,6 +110,7 @@ public interface VyperTypes {
   IElementType EQ = new VyperTokenType("==");
   IElementType EVENT = new VyperTokenType("event");
   IElementType EXPONENT = new VyperTokenType("**");
+  IElementType EXPORTS = new VyperTokenType("exports");
   IElementType EXTCALL = new VyperTokenType("extcall");
   IElementType EXTERNAL = new VyperTokenType("external");
   IElementType FIXEDNUMBER = new VyperTokenType("fixedNumber");
@@ -124,6 +127,7 @@ public interface VyperTypes {
   IElementType IMPORT = new VyperTokenType("import");
   IElementType IN = new VyperTokenType("in");
   IElementType INDEXED = new VyperTokenType("indexed");
+  IElementType INITIALIZES = new VyperTokenType("initializes");
   IElementType INTERFACE = new VyperTokenType("interface");
   IElementType INTERNAL = new VyperTokenType("internal");
   IElementType INTM = new VyperTokenType("intM");
@@ -176,7 +180,9 @@ public interface VyperTypes {
   IElementType TILDE = new VyperTokenType("~");
   IElementType TO = new VyperTokenType("=>");
   IElementType UINTM = new VyperTokenType("uintM");
+  IElementType USES = new VyperTokenType("uses");
   IElementType VIEW = new VyperTokenType("view");
+  IElementType WALRUS = new VyperTokenType(":=");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -265,9 +271,6 @@ public interface VyperTypes {
       else if (type == IMMUTABLE_DEFINITION_EXPRESSION) {
         return new VyperImmutableDefinitionExpressionImpl(node);
       }
-      else if (type == IMPLEMENTS_DIRECTIVE) {
-        return new VyperImplementsDirectiveImpl(node);
-      }
       else if (type == IMPORT_DIRECTIVE) {
         return new VyperImportDirectiveImpl(node);
       }
@@ -306,6 +309,12 @@ public interface VyperTypes {
       }
       else if (type == MEMBER_ACCESS_EXPRESSION) {
         return new VyperMemberAccessExpressionImpl(node);
+      }
+      else if (type == MODULE_REFERENCE) {
+        return new VyperModuleReferenceImpl(node);
+      }
+      else if (type == MODULE_REFERENCE_DIRECTIVE) {
+        return new VyperModuleReferenceDirectiveImpl(node);
       }
       else if (type == MULTI_LINE_STRING) {
         return new VyperMultiLineStringImpl(node);

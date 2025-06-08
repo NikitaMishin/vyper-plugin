@@ -28,6 +28,7 @@
         LPAREN='('
         RPAREN=')'
         ELLIPSIS='...'
+        WALRUS=':='
 
         PLUS='+'
         MINUS='-'
@@ -73,33 +74,6 @@
         hexNumber='regexp:(0[xX][_0-9a-fA-F]+)'
 
         // keywords
-//        def='def'
-//        if='if'
-//        elif='elif'
-//        else='else'
-//        for='for'
-//        in='in'
-//        return='return'
-//        raise='raise'
-//        pass='pass'
-//        assert='assert'
-//        log='log'
-//        range='range'
-//        enum='enum'
-//        flag='flag'
-//        struct='struct'
-//        interface='interface'
-//        event='event'
-//        implements='implements'
-//        external='external'
-//        internal='internal'
-//        deploy='deploy'
-//        pure='pure'
-//        view='view'
-//        nonpayable='nonpayable'
-//        payable='payable'
-//        self='self'
-//        indexed='indexed'
         BOUND='bound'
 
         intM = 'regexp:(int[0-9]+)'
@@ -129,7 +103,7 @@ external INDNONE ::= indNone
 private SourceUnit ::= ( ImportDirective
                         | ConstantDefinitionExpression
                         | ImmutableDefinitionExpression
-                        | ImplementsDirective
+                        | ModuleReferenceDirective
                         | StructDeclaration
                         | InterfaceDeclaration
                         | EventDeclaration
@@ -154,17 +128,18 @@ ImmutableDefinitionExpression ::= Identifier &INDNONE ':' ImmutableType {
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
 
-ImportDirective ::= ( import &INDNONE Identifier )
-                   | ( import &INDNONE ImportPath &INDNONE as &INDNONE Identifier )
-                   | ( from &INDNONE ImportPath &INDNONE import &INDNONE Identifier ) {
-    pin(".*")=1
+ImportDirective ::=
+        (from &INDNONE ImportPath import (&INDNONE ImportPath &INDNONE as)? &INDNONE Identifier) |
+        (import (&INDNONE ImportPath &INDNONE as)? &INDNONE Identifier) {
     mixin = "org.vyperlang.plugin.psi.VyperImportImpl"
     implements = "org.vyperlang.plugin.psi.VyperNamedElement"
 }
-ImportPath ::= Identifier  (&INDNONE '.' &INDNONE Identifier)*
+ImportPath ::= Identifier? (&INDNONE ('.'|ELLIPSIS) &INDNONE Identifier?)*
 
-// implements statements
-ImplementsDirective ::= implements &INDNONE ':' &INDNONE VarLiteral (&INDNONE ',' &INDNONE VarLiteral)* {
+ModuleReference ::= VarLiteral (&INDNONE '.' &INDNONE Identifier)* (&INDNONE '[' &INDNONE VarLiteral &INDNONE ':=' &INDNONE VarLiteral &INDNONE ']')?
+private UnquotedModuleReferences ::= &INDNONE ModuleReference (&INDNONE ',' &INDNONE ModuleReference)*
+private QuotedModuleReferences ::= '(' (ModuleReference (',' (ModuleReference | &')'))*)? ')' {pin(".*")=1}
+ModuleReferenceDirective ::= (implements|uses|exports|initializes) &INDNONE ':' (QuotedModuleReferences | UnquotedModuleReferences) {
     pin=1
 }
 

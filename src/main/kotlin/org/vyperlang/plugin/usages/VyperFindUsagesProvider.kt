@@ -30,7 +30,7 @@ class VyperFindUsagesProvider : FindUsagesProvider {
             is VyperStructDeclaration -> "struct"
             is VyperConstantDefinitionExpression -> "constant"
             is VyperImmutableDefinitionExpression -> "immutable"
-            is VyperImplementsDirective -> "implements"
+            is VyperModuleReferenceDirective -> "implements"
             is VyperInterfaceFunction -> "interface function"
             is VyperFlagOption -> "flag option"
             is VyperFlagDeclaration -> "flag"
